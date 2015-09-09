@@ -1,0 +1,33 @@
+<div class="properties-title">
+    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-type">Category <span class="ti-folder"></span></div>
+    <span class="title-bar-links">
+        {{#if hasChildren}}
+            {{#if hasMultipleChildren}}
+                {{childCount}} children
+            {{else}}
+                1 child
+            {{/if}}
+        {{else}}
+            No children
+        {{/if}}
+    </span>
+</div>
+
+<div class="properties-scrollable-content">
+    <div display="table">
+        {{#if description}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">Full description</div>
+                <div class="read-only-field-value">{{description}}</div>
+            </div>
+        {{/if}}
+
+        {{#if shortDescription}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">Short description</div>
+                <div class="read-only-field-value">{{shortDescription}}</div>
+            </div>
+        {{/if}}
+    </div>
+</div>

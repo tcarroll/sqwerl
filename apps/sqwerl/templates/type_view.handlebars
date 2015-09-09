@@ -1,0 +1,21 @@
+<div class="properties-title">
+    <div class="title-bar-title">{{name}}</div>
+    <div class="tile-bar-type">Type of thing</div>
+    <span class="title-bar-links">
+        {{#if hasChildren}}
+            {{#if hasMultipleChildren}}{{childCount}} children
+            {{else}}1 child
+            {{/if}}
+        {{else}}No children
+        {{/if}}
+    </span>
+</div>
+
+<div class="properties-scrollable-content">
+    <div>
+        {{#if shortDescription tagName="tr"}}
+            <td class="read-only-field-label">Short description</td>
+            <td class="read-only-field-value">{{shortDescription}}</td>
+        {{/if}}
+    </div>
+</div>

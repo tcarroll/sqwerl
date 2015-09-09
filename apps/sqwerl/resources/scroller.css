@@ -1,0 +1,355 @@
+$scroller-color: black;
+$scroller-track-width: 11px;
+$scroller-thumb-width: 11px;
+$scroller-thumb-left-full: 5px;
+$scroller-thumb-left-partial: 13px;
+
+@keyframes slide-in {
+    0% {
+        left: $scroller-thumb-left-full;
+    }
+    20% {
+        left: $scroller-thumb-left-full + 2;
+    }
+    40% {
+        left: $scroller-thumb-left-full + 3;
+    }
+    60% {
+        left: $scroller-thumb-left-full + 4;
+    }
+    80% {
+        left: $scroller-thumb-left-full + 6;
+    }
+    90% {
+        left: $scroller-thumb-left-partial + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-partial;
+    }
+}
+
+@-moz-keyframes slide-in {
+    0% {
+        left: $scroller-thumb-left-full;
+    }
+    20% {
+        left: $scroller-thumb-left-full + 2;
+    }
+    40% {
+        left: $scroller-thumb-left-full + 3;
+    }
+    60% {
+        left: $scroller-thumb-left-full + 4;
+    }
+    80% {
+        left: $scroller-thumb-left-full + 6;
+    }
+    90% {
+        left: $scroller-thumb-left-partial + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-partial;
+    }
+}
+
+@-webkit-keyframes slide-in {
+    0% {
+        left: $scroller-thumb-left-full;
+    }
+    20% {
+        left: $scroller-thumb-left-full + 2;
+    }
+    40% {
+        left: $scroller-thumb-left-full + 3;
+    }
+    60% {
+        left: $scroller-thumb-left-full + 4;
+    }
+    80% {
+        left: $scroller-thumb-left-full + 6;
+    }
+    90% {
+        left: $scroller-thumb-left-partial + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-partial;
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        left: $scroller-thumb-left-partial - 1;
+    }
+    20% {
+        left: $scroller-thumb-left-partial - 2;
+    }
+    40% {
+        left: $scroller-thumb-left-partial - 3;
+    }
+    60% {
+        left: $scroller-thumb-left-partial -4;
+    }
+    80% {
+        left: $scroller-thumb-left-partial -6;
+    }
+    90% {
+        left: $scroller-thumb-left-full + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-full;
+    }
+}
+
+@-moz-keyframes slide-out {
+    0% {
+        left: $scroller-thumb-left-partial - 1;
+    }
+    20% {
+        left: $scroller-thumb-left-partial - 2;
+    }
+    40% {
+        left: $scroller-thumb-left-partial - 3;
+    }
+    60% {
+        left: $scroller-thumb-left-partial -4;
+    }
+    80% {
+        left: $scroller-thumb-left-partial -6;
+    }
+    90% {
+        left: $scroller-thumb-left-full + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-full;
+    }
+}
+
+@-webkit-keyframes slide-out {
+    0% {
+        left: $scroller-thumb-left-partial - 1;
+    }
+    20% {
+        left: $scroller-thumb-left-partial - 2;
+    }
+    40% {
+        left: $scroller-thumb-left-partial - 3;
+    }
+    60% {
+        left: $scroller-thumb-left-partial -4;
+    }
+    80% {
+        left: $scroller-thumb-left-partial -6;
+    }
+    90% {
+        left: $scroller-thumb-left-full + 1;
+    }
+    100% {
+        left: $scroller-thumb-left-full;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0.0;
+    }
+    25% {
+        opacity: 0.15;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    75% {
+        opacity: 0.45;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@-moz-keyframes fade-in {
+    0% {
+        opacity: 0.0;
+    }
+    25% {
+        opacity: 0.15;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    75% {
+        opacity: 0.45;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0.0;
+    }
+    25% {
+        opacity: 0.15;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    75% {
+        opacity: 0.45;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 0.75;
+    }
+    25% {
+        opacity: 0.55;
+    }
+    50% {
+        opacity: 0.35;
+    }
+    75% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+@-moz-keyframes fade-out {
+    0% {
+        opacity: 0.75;
+    }
+    25% {
+        opacity: 0.55;
+    }
+    50% {
+        opacity: 0.35;
+    }
+    75% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes fade-out {
+    0% {
+        opacity: 0.75;
+    }
+    25% {
+        opacity: 0.55;
+    }
+    50% {
+        opacity: 0.35;
+    }
+    75% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+$theme.sc-scroller-view {
+     background: none;
+
+    .thumb-center {
+        animation: fade-out .3s, slide-in .15s;
+        left: $scroller-thumb-left-partial;
+        opacity: 0.25;
+        transform: translateY(-14px);
+        -moz-animation: fade-out .3s, slide-in .15s;
+        -o-animation: fade-out .3s, slide-in .15s;
+        -webkit-animation: fade-out .3s, slide-in .15s;
+        -moz-transform: translateY(-14px);
+        -o-transform: translateY(-14px);
+        -webkit-transform: translateY(-14px);
+    }
+
+    &:hover, &:active {
+        &.sc-vertical .thumb-center {
+             animation: fade-in .3s, slide-out .15s;
+             left: $scroller-thumb-left-full;
+             opacity: 0.6;
+             -moz-animation: fade-in .3s, slide-out .15s;
+             -o-animation: fade-in .3s, slide-out .15s;
+             -webkit-animation: fade-in .3s, slide-out .15s;
+        }
+    }
+
+    &.scrollbar {
+         width: $scroller-track-width;
+    }
+
+    &.sc-vertical .cap {
+         background: none;
+         height: 0px;
+         left: 0px;
+         visibility: hidden;
+         width: 0px;
+    }
+
+    &.sc-vertical .button-bottom {
+         background: none;
+         display: none;
+         height: 0px;
+         visibility: hidden;
+         width: 0px;
+    }
+
+    &.sc-vertical .button-left {
+         background: none;
+         height: 0px;
+         visibility: hidden;
+         width: 0px;
+    }
+
+    &.sc-vertical .button-right {
+         background: none;
+         height: 0px;
+         visibility: hidden;
+         width: 0px;
+    }
+
+    &.sc-vertical .button-top {
+         background: none;
+         height: 0px;
+         visibility: hidden;
+         width: 0px;
+    }
+
+    &.sc-vertical .endcap {
+         background: none;
+         height: 0px;
+         left: 0px;
+         width: 0px;
+    }
+
+    &.sc-vertical .thumb-bottom {
+         visibility: hidden;
+    }
+
+    &.sc-vertical .thumb-center {
+         background: $scroller-color;
+    }
+
+    &.sc-vertical .thumb .thumb-top {
+         height: 0px;
+         width: 0px;
+    }
+
+    &.sc-vertical .track {
+         background: none;
+         bottom: 0px;
+         position: absolute;
+         right: 0px;
+         top: 0px;
+         width: $scroller-track-width;
+    }
+}

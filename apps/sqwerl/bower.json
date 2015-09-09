@@ -1,0 +1,21 @@
+{
+    "name": "Sqwerl",
+    "version": "0.0.2",
+    "authors": [
+        "tom.carroll@sqwerl.com"
+    ],
+    "description": "Sqwerl personal knowledge management system client application.",
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "d3": "3.5.5",
+        "sweetalert2": "0.2.2"
+    }
+}

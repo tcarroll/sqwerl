@@ -1,0 +1,22 @@
+.ace.sc-regular-size.button > .bottom {
+    background-image: none !important;
+}
+
+.ace.sc-regular-size.button > .left {
+    background-image: none !important;
+}
+
+.ace.sc-regular-size.button > .middle {
+    background-image: none !important;
+}
+
+.ace.sc-regular-size.button > .right {
+    background-image: none !important;
+}
+
+.ace.button {
+}
+
+$theme.button {
+
+}

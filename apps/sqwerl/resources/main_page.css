@@ -1,0 +1,446 @@
+$application-bar-background: #0A3815;
+$navigation-scroll-view-background: #DEE6E0;
+
+@keyframes menu-hover {
+    from {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    to {
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+}
+
+@keyframes navigation-hover {
+    from {
+        background: none;
+    }
+    to {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+@keyframes search-field-focused {
+    from {
+        background: $application-bar-background;
+    }
+    to {
+        background: lightgray;
+    }
+}
+
+@keyframes spin-clockwise {
+    0% {
+        transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-counterclockwise {
+    0% {
+        transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+a.navigation-back-button-link {
+    bottom: 0;
+    left: 0;
+    padding-left: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+a.logo-link {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &:hover {
+        animation: navigation-hover 0.3s linear 0s 1;
+        background: rgba(255, 255, 255, 0.3);
+        -moz-animation: navigation-hover 0.3s linear 0s 1;
+        -webkit-animation: navigation-hover 0.3s linear 0s 1;
+    }
+}
+
+.application-bar {
+    background: $application-bar-background;
+}
+
+.application-menu {
+    font-size: 14px;
+    font-weight: lighter;
+    line-height: $row-height;
+    right: 0;
+    text-align: center;
+    vertical-align: middle;
+    width: 3em;
+
+    a.menu-button {
+        color: #f0f0f0;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+    }
+}
+
+.application-search-field {
+    right: 3em;
+    width: 270px;
+
+    &.focus .padding .hint.ellipsis {
+        /* TODO - Animate this so that the hint text fades out. */
+        visibility: hidden;
+    }
+}
+
+body {
+    overflow: hidden !important;
+}
+
+.hint.ellipsis {
+    font-style: italic;
+}
+
+.sc-view.create-account-menu {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: $row-height;
+    text-align: center;
+    vertical-align: middle;
+
+    &:hover {
+        animation: menu-hover 0.3s linear 0s 1;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        -moz-animation: menu-hover 0.3s linear 0s 1;
+        -webkit-animation: menu-hover 0.3s linear 0s 1;
+    }
+
+    a.menu-button {
+        bottom: 4px;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        letter-spacing: 0.02em;
+        position: relative;
+        text-decoration: none;
+    }
+}
+
+.sc-view.sc-text-field-view.application-search-field {
+     background: $application-bar-background;
+     border: 1px solid #326F32;
+     color: #f0f0f0;
+     width: 27em;
+
+    .hint.ellipsis {
+        color: #f0f0f0;
+        font-size: 14px;
+        font-smoothing: none;
+        line-height: 20px;
+        margin-right: 30px;
+        letter-spacing: 0.024em;
+        padding-left: 0.5em;
+    }
+
+    .ti-search {
+        color: white;
+        font-weight: bold !important;
+        line-height: 20px;
+        padding-left: 4px;
+        padding-right: 8px;
+    }
+
+    input {
+        color: white;
+        margin-left: 0.5em;
+        width: 87%;
+    }
+}
+
+.sc-view.sc-text-field-view.application-search-field.focus {
+    animation: search-field-focused 0.3s linear 0s 1;
+    background: lightgray;
+    border: 1px solid lightgray;
+    color: black;
+    outline: none !important;
+    -moz-animation: search-field-focused 0.3s linear 0s 1;
+
+    .hint.ellipsis {
+        color: black;
+        font-size: 14px;
+        font-smoothing: none;
+        line-height: 20px;
+    }
+
+    .ti-search {
+        color: black;
+        font-weight: bold !important;
+        line-height: 20px;
+        padding-left: 2px;
+    }
+
+    input {
+        color: black;
+    }
+}
+
+body {
+    font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
+    font-size: 11pt;
+}
+
+.circle1 {
+    animation: spin-clockwise 0.5s infinite linear;
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 100px;
+    border-top: 5px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 0 35px #2187e7;
+    height: 100px;
+    left: 45%;
+    margin-left: 25px;
+    opacity: 0.9;
+    position: absolute;
+    top: 35%;
+    visibility: visible;
+    width: 100px;
+    -moz-animation: spin-clockwise 0.5s infinite linear;
+    -webkit-animation: spin-clockwise 0.5s infinite linear;
+}
+
+.circle2 {
+    animation: spin-counterclockwise 0.5s infinite linear;
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 50px;
+    border-top: 5px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 0 15px #2187e7;
+    height: 87px;
+    left: 48.8%;
+    margin: 0 auto;
+    opacity: 0.9;
+    position: absolute;
+    width: 87px;
+    top: 36%;
+    visibility: visible;
+    -moz-animation: spin-counterclockwise 0.5s infinite linear;
+    -webkit-animation: spin-counterclockwise 0.5s infinite linear;
+}
+
+html {
+    overflow: hidden;
+}
+
+.error-pane {
+    background: rgba(0, 0, 0, 0.3);
+    cursor: no-drop;
+}
+
+.loading-properties {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.main-pane {
+    position: absolute;
+}
+
+.navigation-back-button {
+    display: block;
+    float: left;
+    font-smoothing: antialiased;
+    line-height: $row-height;
+    outline: none;
+    padding: 0 10px 0 25px;
+    position: absolute;
+    -moz-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+
+    &:hover {
+         animation-name: hover;
+         animation-duration: 0.5s;
+         background: rgba(51, 152, 254, 0.2);
+         -moz-animation-name: hover;
+         -moz-animation-duration: 0.5s;
+         -webkit-animation-name: hover;
+         -webkit-animation-duration: 0.5s;
+    }
+}
+
+.navigation-back-button:before {
+    border-bottom: 1px solid $chevron-top-edge-color;
+    border-left: 1px solid $chevron-bottom-edge-color;
+    border-right: none !important;
+    border-top: none !important;
+    content: "";
+    height: 36px;
+    left: 0;
+    position: absolute;
+    right: 0px;
+    top: 0;
+    transform: scale(0.707) rotate(45deg);
+    width: 36px;
+    z-index: 1;
+    -moz-transform: scale(0.707) rotate(45deg);
+    -webkit-transform: scale(0.707) rotate(45deg);
+}
+
+.navigation-back-link-container {
+    background: $title-bar-background;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+}
+
+.navigation-toolbar {
+    border-bottom: $title-bar-bottom-border !important;
+    height: $row-height;
+}
+
+.sc-outline span.has-children {
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: 1px solid darkgray;
+    border-top: 1px solid darkgray;
+    content: "";
+    height: 36px;
+    position: absolute;
+    right: 0px;
+    top: 0;
+    transform: scale(0.707) rotate(45deg);
+    width: 36px;
+    z-index: 1;
+    -moz-transform: scale(0.707) rotate(45deg);
+    -webkit-transform: scale(0.707) rotate(45deg);
+}
+
+.sc-view.navigation-busy-panel {
+    cursor: wait;
+    display: none;
+    opacity: 0.0;
+    position: absolute;
+
+    &.visible {
+        display: block;
+    }
+}
+
+.sc-view.navigation-bar {
+    border-bottom: 1px solid darkgray;
+}
+
+.sc-view.sc-button-view.sc-image-button-view.logo {
+    cursor: hand;
+}
+
+.sc-view.sc-scroll-view.navigation-list-scroll-view {
+    background: $navigation-scroll-view-background;
+}
+
+.search-pane {
+    background: white;
+}
+
+.sc-view.sign-in-menu {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    /* display: none; TODO - Make visible after signing in is supported */
+    font-size: 14px;
+    line-height: $row-height;
+    text-align: center;
+    vertical-align: middle;
+
+    &:hover {
+        animation: menu-hover 0.3s linear 0s 1;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        -moz-animation: menu-hover 0.3s linear 0s 1;
+        -webkit-animation: menu-hover 0.3s linear 0s 1;
+    }
+
+
+    a.menu-button {
+        bottom: 4px;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        letter-spacing: 0.02em;
+        position: relative;
+        text-decoration: none;
+    }
+}
+
+.small-sqwerl-logo {
+    background-image: static_url('images/small-sqwerl-logo.png');
+}
+
+$theme.sc-label-view.welcome-label {
+    font-size: 11pt;
+    line-height: 24px;
+    text-align: center;
+    text-shadow: rgba(255, 255, 255, 0.5) 0 1px 1px;
+}
+
+$theme.details-container-view {
+     border-left: 1px solid darkgray;
+}
+
+$theme.details-view {
+     overflow-x: scroll;
+}
+
+$theme.details-view:first-child {
+     overflow-x: auto;
+}
+
+$theme.sc-list-view.navigation-list {
+     background: $navigation-list-background;
+}
+
+$theme.sc-modal {
+     cursor: wait;
+}
+
+.trail-bar li {
+    display: inline;
+    line-height: $row-height;
+
+    span.trail-bar-item {
+        cursor: pointer;
+    }
+}

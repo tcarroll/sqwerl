@@ -1,0 +1,67 @@
+<div class="properties-title">
+    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-type">Group <span class="ti-user"></span></div>
+    <span class="title-bar-links">
+        {{#if hasConnections}}
+            {{#if hasMultipleConnections}}
+                {{connectionCount}} links
+            {{else}}
+                1 link
+            {{/if}}
+        {{else}}
+            No links
+        {{/if}}
+    </span>
+</div>
+
+<div class="properties-scrollable-content">
+    <div>
+        {{#if description}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">Full description</div>
+                <div class="read-only-field-value">{{description}}</div>
+            </div>
+        {{/if}}
+
+        {{#if parent}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">Parent group</div>
+                <div class="read-only-field-value"><a href="#{{id}}">{{parent}}</a> has {{numberFormat
+                childrenCount}} sub-groups</div>
+            </div>
+        {{/if}}
+
+        {{#if hasSubgroups}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleSubgroups}}Sub-groups ({{subgroups.totalCount}}){{else}}Sub-group{{/if}}
+                </div>
+                {{#each subgroups.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="#{{id}}">{{name}}</a></span>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        {{#if hasRoles}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleRoles}}Roles ({{roles.totalCount}}){{else}}Role{{/if}}
+                </div>
+                {{#each roles.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="#{{id}}">{{name}}</a></span>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        {{#if hasUsers}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleUsers}}Users ({{users.totalCount}}){{else}}User{{/if}}
+                </div>
+                {{#each users.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="#{{id}}">{{name}}</a></span>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</div>

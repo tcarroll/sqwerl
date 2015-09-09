@@ -1,0 +1,38 @@
+<div class="properties-title">
+    <div class="title-bar-title">{{text}}</div>
+    <div class="title-bar-type">Tag <span class="ti-tag"></span></div>
+    <span class="title-bar-links">
+        {{#if hasConnections}}
+            {{#if hasMultipleConnections}}
+                {{connectionCount}} links
+            {{else}}
+                1 link
+            {{/if}}
+        {{else}}
+            No links
+        {{/if}}
+    </span>
+</div>
+
+<div class="properties-scrollable-content">
+    <div>
+        {{#if description}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">Full Description</div>
+                <div class="read-only-field-value">{{description}}</div>
+            </div>
+        {{/if}}
+
+        {{#if hasTagged}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleTagged}}Tagged things ({{tagged.totalCount}}){{else}}Tagged thing{{/if}}
+                </div>
+                {{#each tagged.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
+                    tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</div>

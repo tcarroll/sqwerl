@@ -1,0 +1,35 @@
+<div class="properties-title">
+    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-type">Notes <span class="ti-notepad"></span></div>
+    <span class="title-bar-links">
+        {{#if hasConnections}}
+            {{#if hasMultipleConnections}}
+                {{connectionCount}} links
+            {{else}}
+                1 link
+            {{/if}}
+        {{else}}
+            No links
+        {{/if}}
+    </span>
+</div>
+
+<div class="properties-scrollable-content">
+    <div>
+        {{#if hasNotesFor}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleNotesFor}}Notes for {{notesFor.totalCount}} things{{else}}Notes for{{/if}}
+                </div>
+                {{#each notesFor.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        <div class="read-only-label-and-value">
+            <div class="read-only-field-label">Finished</div>
+            <div class="read-only-field-value">{{#if done}}Yes{{else}}No (still working on them){{/if}}</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+$properties-value-max-width: 90%;
+
+.properties-title {
+    background: $title-bar-background;
+    border-bottom: $title-bar-bottom-border;
+    height: $row-height;
+    line-height: $row-height;
+    padding-right: 20px;
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+    width: 100%;
+
+    .title-bar-title {
+        display: inline-table;
+        height: $row-height;
+        font-size: 14pt;
+        padding-left: 20px;
+    }
+
+    .title-bar-type {
+        display: inline-table;
+        height: $row-height;
+        line-height: $row-height;
+
+        &:after {
+            color: #404040;
+            content: '\25cf';
+            font-size: 8px;
+            margin: 0 2px;
+            vertical-align: middle;
+        }
+
+        &:before {
+            color: #404040;
+            content: '\25cf';
+            font-size: 8px;
+            margin: 0 0.5em 0 0;
+            vertical-align: middle;
+        }
+
+        & span {
+            margin-right: 4px;
+        }
+    }
+}
+
+$theme.properties-view {
+    ul li {
+        display: inline;
+        list-style-type: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.properties-scrollable-content {
+    background: #F2F9EE;
+    border-top: 1px solid $navigation-list-background;
+    bottom: 0;
+    left: 0;
+    overflow-y: scroll;
+    position: absolute;
+    right: 0;
+    top: $row-height + 1;
+}
+
+.read-only-form-section-heading {
+    font-weight: bold;
+    height: $row-height;
+    max-width: $properties-value-max-width;
+}
+
+.read-only-field-label {
+    font-weight: bold;
+    line-height: 1em;
+    padding: 1em 20px 0.35em 20px;
+    white-space: nowrap;
+}
+
+.read-only-field-value {
+    max-width: $properties-value-max-width;
+    padding: 0 20px 0 20px;
+
+    div {
+        margin-bottom: 0.25em;
+    }
+}
+
+.read-only-field-value-inline {
+}

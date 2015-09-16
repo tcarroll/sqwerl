@@ -1,21 +1,21 @@
 {
-    "name": "sqwerl",
-    "private": true,
-    "version": "0.0.2",
-    "devDependencies": {
-        "cover": "~0.2.9",
-        "del": "1.2.0",
-        "gulp": "3.9.0",
-        "gulp-jscs": "1.6.0",
-        "gulp-jshint": "1.11.0",
-        "gulp-load-plugins": "1.0.0-rc.1",
-        "gulp-zip": "3.0.2",
-        "jquery": "1.11.3",
-        "jscs-jsdoc": "1.0.1",
-        "jshint-stylish": "1.0.2",
-        "moment": "2.10.6"
-    },
-    "engines": {
-        "node": ">=0.10.28"
-    }
+  "name": "sqwerl",
+  "private": true,
+  "version": "0.0.2",
+  "devDependencies": {
+    "cover": "~0.2.9",
+    "del": "1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-jscs": "1.6.0",
+    "gulp-jshint": "1.11.0",
+    "gulp-load-plugins": "1.0.0-rc.1",
+    "gulp-zip": "3.0.2",
+    "jquery": "1.11.3",
+    "jscs-jsdoc": "1.0.1",
+    "jshint-stylish": "1.0.2",
+    "moment": "2.10.6"
+  },
+  "engines": {
+    "node": ">=0.10.28"
+  }
 }

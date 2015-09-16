@@ -129,78 +129,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
                         errorCallback(response);
                     },
                     onSuccess: function (results) {
-                        var current = controller.get('current'),
-                            length,
-                            parent,
-                            pathComponents,
-                            trailComponents;
-                        if (results.hasOwnProperty('children') && (results.children.totalCount > 0)) {
-                            trailComponents = results.path.split('/');
-                            if (path === '/') {
-                                controller.set('parent', null);
-                                controller.set('parentName', '');
-                                controller.set('goBackUrl', '');
-                                controller.set('trail', {ids: ['/'], paths: ['/']});
-                                controller.set('current', null);
-                                controller.set('currentPath', null);
-                            } else {
-                                length = trailComponents.length;
-                                controller.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
-                                controller.set('parentName', trailComponents[length - 2]);
-                                pathComponents = path.split('/');
-                                controller.set('trail', {
-                                    ids: (pathComponents.length < 2) ? ['/'] : pathComponents.slice(0, pathComponents.length - 1),
-                                    names: trailComponents.slice(0, length - 1)
-                                });
-                                controller.set('goBackUrl', '#' + encodeURI(pathComponents.slice(0, pathComponents.length - 1).join('/')));
-                                Sqwerl.mainPage.showContent(controller.typeForId(path), results);
-                                controller.set('current', path);
-                                controller.set('currentPath', results.path);
-                            }
-                            controller.populate(results);
-                        } else {
-                            parent = controller.get('parent');
-                            pathComponents = path.split('/');
-                            if (parent) {
-                                trailComponents = results.path.split('/');
-                                length = trailComponents.length;
-                                if (length > 0) {
-                                    if (current === pathComponents.slice(0, length - 1).join('/')) {
-                                        controller.set('current', path);
-                                        controller.set('currentPath', trailComponents.slice(0, trailComponents.length - 1).join('/'));
-                                    }
-                                    parent = current;
-                                    controller.set('parent', current);
-                                }
-                                controller.set('trail', {
-                                    ids: parent.split('/'),
-                                    names: controller.get('currentPath').split('/')
-                                });
-                            } else {
-                                controller.set('current', path);
-                                controller.set('currentPath', results.path);
-                                trailComponents = path.split('/');
-                                length = trailComponents.length;
-                                if (length > 0) {
-                                    controller.set('parent', trailComponents.slice(0, length - 1).join('/'));
-                                }
-                            }
-                        }
-                        Sqwerl.store.find(SC.Query.create({
-                            conditions: 'id = {id}',
-                            parameters: {
-                                id: (path === '/') ? '/types/views/initial' : path,
-                                onError: function (response) {
-                                    SC.error('%@: Could not fetch data at \'%@\'.', this, path);
-                                    Sqwerl.mainPage.setNavigationBusy(false);
-                                    errorCallback(response);
-                                },
-                                onSuccess: function (results) {
-                                    Sqwerl.mainPage.showContent((path === '/') ? 'home' : controller.typeForId(path), results);
-                                    Sqwerl.mainPage.setNavigationBusy(false);
-                                }
-                            }
-                        }));
+                        controller.nodeFound(path, results, errorCallback);
                     }
                 },
                 recordType: Sqwerl.Thing
@@ -269,6 +198,83 @@ Sqwerl.NavigationController = SC.TreeController.extend({
                 recordType: Sqwerl.Thing
             }));
         }
+    },
+
+    nodeFound: function (path, results, errorCallback) {
+        'use strict';
+        var controller = this,
+            current = this.get('current'),
+            length,
+            parent,
+            pathComponents,
+            trailComponents;
+        if (results.hasOwnProperty('children') && (results.children.totalCount > 0)) {
+            trailComponents = results.path.split('/');
+            if (path === '/') {
+                this.set('parent', null);
+                this.set('parentName', '');
+                this.set('goBackUrl', '');
+                this.set('trail', {ids: ['/'], paths: ['/']});
+                this.set('current', null);
+                this.set('currentPath', null);
+            } else {
+                length = trailComponents.length;
+                this.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
+                this.set('parentName', trailComponents[length - 2]);
+                pathComponents = path.split('/');
+                this.set('trail', {
+                    ids: (pathComponents.length < 2) ? ['/'] : pathComponents.slice(0, pathComponents.length - 1),
+                    names: trailComponents.slice(0, length - 1)
+                });
+                this.set('goBackUrl', '#' + encodeURI(pathComponents.slice(0, pathComponents.length - 1).join('/')));
+                Sqwerl.mainPage.showContent(controller.typeForId(path), results);
+                this.set('current', path);
+                this.set('currentPath', results.path);
+            }
+            this.populate(results);
+        } else {
+            parent = this.get('parent');
+            pathComponents = path.split('/');
+            if (parent) {
+                trailComponents = results.path.split('/');
+                length = trailComponents.length;
+                if (length > 0) {
+                    if (current === pathComponents.slice(0, length - 1).join('/')) {
+                        this.set('current', path);
+                        this.set('currentPath', trailComponents.slice(0, trailComponents.length - 1).join('/'));
+                    }
+                    parent = current;
+                    this.set('parent', current);
+                }
+                this.set('trail', {
+                    ids: parent.split('/'),
+                    names: this.get('currentPath').split('/')
+                });
+            } else {
+                this.set('current', path);
+                this.set('currentPath', results.path);
+                trailComponents = path.split('/');
+                length = trailComponents.length;
+                if (length > 0) {
+                    this.set('parent', trailComponents.slice(0, length - 1).join('/'));
+                }
+            }
+        }
+        Sqwerl.store.find(SC.Query.create({
+            conditions: 'id = {id}',
+            parameters: {
+                id: (path === '/') ? '/types/views/initial' : path,
+                onError: function (response) {
+                    SC.error('%@: Could not fetch data at \'%@\'.', this, path);
+                    Sqwerl.mainPage.setNavigationBusy(false);
+                    errorCallback(response);
+                },
+                onSuccess: function (results) {
+                    Sqwerl.mainPage.showContent((path === '/') ? 'home' : controller.typeForId(path), results);
+                    Sqwerl.mainPage.setNavigationBusy(false);
+                }
+            }
+        }));
     },
 
     /**

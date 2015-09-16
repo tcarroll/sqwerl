@@ -65,19 +65,17 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
 
     convertToModel: function (data) {
         'use strict';
-        var model = SC.Object.create(),
-            property,
+        var controller = this,
+            model = SC.Object.create(),
             value;
-        for (property in data) {
-            if (data.hasOwnProperty(property)) {
-                value = data[property];
-                if ((value instanceof Array) || (typeof value !== 'object')) {
-                    model.set(property, value);
-                } else if (value instanceof Object) {
-                    model.set(property, this.convertToModel(value));
-                }
+        Object.keys(data).forEach(function (property) {
+            value = data[property];
+            if ((value instanceof Array) || (typeof value !== 'object')) {
+                model.set(property, value);
+            } else if (value instanceof Object) {
+                model.set(property, controller.convertToModel(value));
             }
-        }
+        });
         return model;
     }
 });

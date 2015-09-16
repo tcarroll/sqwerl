@@ -136,7 +136,7 @@ try {
         isSignedIn: function () {
             'use strict';
             var userName = this.get('userName');
-            return !(userName === this.get('anonymousUserName'));
+            return (userName !== this.get('anonymousUserName'));
         }.property('userName'),
 
         observes: function (f) {

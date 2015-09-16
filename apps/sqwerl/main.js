@@ -45,103 +45,6 @@ Sqwerl.handleError = function handleError(error) {
 };
 
 /**
- * Notifies the user that this application has encountered a problem that it can potentially recover from.
- *
- * @param {String} messageId                String that uniquely identifies the problem.
- * @param {Array} [messageArguments]        Values to insert into text messages that describe the problem.
- * @param {Function} [tryAgainFunction]     Function to call to attempt to fix the problem.
- * @param {Array} [tryAgainParameters]      Arguments to pass to the try again function.
- * @param response                          Response from a remote server.
- */
-Sqwerl.handleProblem = function (messageId, messageArguments, tryAgainFunction, tryAgainParameters, response) {
-    'use strict';
-/*
-    var caption = (messageId + '.caption').loc().fmt(messageArguments),
-        description = (messageId + '.description').loc().fmt(messageArguments),
-        details = messageId + '.details'.loc().fmt(messageArguments),
-        emailContent = '',
-        message = (messageId + '.message').loc().fmt(messageArguments),
-        request,
-        controller;
-*/
-    // TODO - Implement a try again button (only exists if callback is provided) and a Report Problem button.
-    sweetAlert({
-        html: (messageId + '.description').loc().fmt(messageArguments),
-        title: (messageId + '.caption').loc().fmt(messageArguments),
-        type: 'warning'
-    }, function () {
-        var emailContent = '';
-        emailContent += 'applicationVersion=\'' + Sqwerl.VERSION + '\'\n';
-        emailContent += 'browserVendor=\'' + navigator.vendor + '\'\n';
-        emailContent += 'browserVersion=\'' + navigator.appVersion + '\'\n';
-        emailContent += 'platform=\'' + navigator.platform + '\'\n';
-        emailContent += 'screenResolution=\'' + window.screen.width + 'x' + window.screen.height + '\'\n';
-        emailContent += 'time=\'' + new Date().toISOString() + '\'\n';
-///        emailContent += 'trace=\'' + error.stack + '\'\n';
-        emailContent += 'user=\'' + Sqwerl.userName + '\'\n';
-        emailContent += 'userAgent=\'' + navigator.userAgent + '\'\n';
-        window.open('mailto:sqwerl@sqwerl.com?subject=Sqwerl Problem Report&body=%@'.fmt(encodeURI(emailContent)));
-    });
-
-    /*jslint unparam:true*/
-/*
-    controller = SC.Object.create({
-        alertPaneDidDismiss: function (pane, status) {
-            switch (status) {
-            case SC.BUTTON1_STATUS:
-                if (tryAgainFunction) {
-                    tryAgainFunction.apply(SC.databasesController, tryAgainParameters);
-                }
-                break;
-
-            case SC.BUTTON3_STATUS:
-                // TODO - Add timestamps for when request was sent and response was received.
-                // TODO - Add user ID.
-                // TODO - Add stack trace.
-                // TODO - Add client version number
-                // TODO - Add unique error ID.
-                // TODO - Add environment information (web browser, version, OS, memory)
-                emailContent += 'error=\'' + message + '\'\n';
-                request = response.rawRequest;
-                if (request) {
-                    emailContent += 'responseText=\'' + request.responseText + '\'\n';
-                    emailContent += 'responseStatusCode=\'' + request.status + '\'\n';
-                    emailContent += 'responseStatusText=\'' + request.statusText + '\'\n';
-                }
-                Sqwerl.databasesController.moreInformationPanel.showMoreInformationPanel(message, details, emailContent);
-                break;
-            }
-        }
-    });
-*/
-    /*jslint unparam:false*/
-/*
-    Sqwerl.SqwerlAlertPane.error({
-        buttons: [
-            {   hoverMessage: 'problemDialog.okButton.hoverMessage',
-                title: 'problemDialog.okButton.title'
-                },
-            {   hoverMessage: 'problemDialog.cancelButton.hoverMessage',
-                title: 'problemDialog.cancelButton.title'
-                },
-            {   hoverMessage: 'problemDialog.reportButton.hoverMessage',
-                title: 'problemDialog.reportButton.title'
-                }
-        ],
-        caption: (caption || 'Please try again.'),
-        delegate: controller,
-        description: description,
-        message: message,
-        messageArguments: messageArguments,
-        messageId: messageId,
-        response: response
-    });
-*/
-    SC.info("%@: %@", this, messageId);
-    SC.info("%@: %@", this, response.get('body'));
-};
-
-/**
  * Starts this application.
  */
 Sqwerl.main = function () {
@@ -248,4 +151,4 @@ window.onerror = function (errorMessage, url, lineNumber) {
     var error = new Error(errorMessage);
     error.stack = 'At line number ' + lineNumber + ' in ' + url;
     Sqwerl.handleError(error);
-}
+};

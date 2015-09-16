@@ -699,12 +699,12 @@ Sqwerl.mainPage = SC.Page.design({
                 layout: { left: 20, right: 20, top: 184 },
                 title: 'Sign In'
             })
-/*
+            /*
             forgotPasswordLink: SC.ButtonView.create({
                 layout: { top: 184, right: 20, height: 36 },
                 title: 'Forgot password?'
             }),
-*/
+            */
         }),
 
         email: null,

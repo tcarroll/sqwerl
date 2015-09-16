@@ -4,7 +4,7 @@ var del = require('del'),
     gulp = require('gulp'),
     gzip = require('gulp-zip'),
     moment = require('moment'),
-    plugins = require('gulp-load-plugins');
+    plugins = require('gulp-load-plugins')();
 
 gulp.task('all', ['default'], function () {
     'use strict';
@@ -42,10 +42,9 @@ gulp.task('lint:js', function () {
         'apps/sqwerl/core.js',
         'apps/sqwerl/main.js',
         'apps/sqwerl/theme.js'
-    ]).pipe(plugins.jcs())
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.report('jshint-stylish'))
-        .pipe(plugins.jsjint.reporter('fail'));
+    ]).pipe(plugins.jscs())
+            .pipe(plugins.jshint())
+            .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('pack', ['stage'], function () {

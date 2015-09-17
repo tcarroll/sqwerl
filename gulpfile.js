@@ -1,32 +1,31 @@
-/*globals require*/
+/*globals process, require*/
 
-var del = require('del'),
+/**
+ * Instructions for Gulp build tool for the Sqwerl Sproutcore-generated web client application.
+ */
+var childProcess = require('child_process'),
+    del = require('del'),
     gulp = require('gulp'),
+    gutil = require('gulp-util'),
     gzip = require('gulp-zip'),
     moment = require('moment'),
     plugins = require('gulp-load-plugins')();
 
-gulp.task('all', ['default'], function () {
-    'use strict';
-});
+gulp.task('all', ['clean', 'lint:js', 'test', 'stage']);
 
-gulp.task('build', ['clean', 'lint:js', 'test'], function () {
-    'use strict';
-});
+gulp.task('build', ['clean', 'lint:js', 'test']);
 
 gulp.task('clean', function () {
     'use strict';
-    del(['./builds', './tmp', './apps/sqwerl/tmp']);
+    return del(['./builds', './tmp', './apps/sqwerl/tmp']);
 });
 
 gulp.task('default', ['clean', 'lint:js', 'test'], function () {
     'use strict';
-    gulp.start('deploy');
+    return gulp.start('deploy');
 });
 
-gulp.task('deploy', ['pack'], function () {
-    'use strict';
-});
+gulp.task('deploy', ['pack']);
 
 gulp.task('lint:js', function () {
     'use strict';
@@ -47,20 +46,30 @@ gulp.task('lint:js', function () {
             .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('pack', ['stage'], function () {
+gulp.task('pack', function () {
     'use strict';
     var time = moment().format('MM-DD-YYYY');
-    return gulp.src(['./tmp/build'])
+    return gulp.src(['./tmp/staging/**'])
         .pipe(gzip('sqwerl-' + time + '.zip'))
-        .pipe(gulp.dest('target'));
+        .pipe(gulp.dest('./tmp/target'));
 });
 
 gulp.task('stage', ['build'], function () {
     'use strict';
-    // TODO - Copy apps/sqwerl/jquery.flypanels.min.js to tmp/build/static
-    // TODO - Copy apps/sqwerl/sweetalert2.min.js to tmp/build/static
+    var child = childProcess.spawn('sproutcore', ['build', 'sqwerl', '-v'], { cwd: process.cwd() });
+    child.stdout.on('data', function (data) {
+        gutil.log(data);
+    });
+    child.stderr.on('data', function (data) {
+        gutil.log(gutil.colors.red(data));
+    });
+    child.on('close', function (code) {
+        gutil.log('Exit code for stage process: ', code);
+    });
+    return child;
 });
 
 gulp.task('test', function () {
     'use strict';
+    // TODO
 });

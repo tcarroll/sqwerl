@@ -406,7 +406,7 @@ html {
 }
 
 .small-sqwerl-logo {
-    background-image: static_url('images/small-sqwerl-logo.png');
+    background-image: static_url('small-sqwerl-logo.png');
 }
 
 $theme.sc-label-view.welcome-label {

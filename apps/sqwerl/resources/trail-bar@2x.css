@@ -1,0 +1,46 @@
+.trail-bar {
+    background: #D0DACF;
+    display: block;
+    height: $row-height;
+    overflow: hidden;
+}
+
+.trail-bar a {
+    display: block;
+    float: left;
+    line-height: $row-height;
+    outline: none;
+    padding: 0 10px 0 35px;
+    position: relative;
+
+    :hover {
+        text-decoration: underline;
+    }
+}
+
+.trail-bar a:first-child {
+    padding: 0px 20px 0px 20px;
+}
+
+a.trail-bar-item {
+    background: $title-bar-background;
+    padding-right: 18px;
+}
+
+.trail-bar a:after {
+    background: $title-bar-background;
+    border-bottom: none;
+    border-left: none;
+    border-right: 1px solid $chevron-top-edge-color;
+    border-top: 1px solid $chevron-bottom-edge-color;
+    content: "";
+    height: $row-height;
+    position: absolute;
+    right: -18px;
+    top: 0;
+    transform: scale(0.707) rotate(45deg);
+    width: 36px;
+    z-index: 1;
+    -moz-transform: scale(0.707) rotate(45deg);
+    -webkit-transform: scale(0.707) rotate(45deg);
+}

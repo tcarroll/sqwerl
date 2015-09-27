@@ -11,18 +11,34 @@ var childProcess = require('child_process'),
     moment = require('moment'),
     plugins = require('gulp-load-plugins')();
 
-gulp.task('all', ['clean', 'lint:js', 'test', 'stage']);
+gulp.task('all', function () {
+    'use strict';
+    return gulp.start('pack');
+});
 
-gulp.task('build', ['clean', 'lint:js', 'test']);
+gulp.task('build', function () {
+    'use strict';
+    var child = childProcess.spawn('sproutcore', ['build', 'sqwerl', '-v'], { cwd: process.cwd() });
+    child.stdout.on('data', function (data) {
+        gutil.log(data);
+    });
+    child.stderr.on('data', function (data) {
+        gutil.log(gutil.colors.red(data));
+    });
+    child.on('close', function (code) {
+        gutil.log('Exit code for build process: ', code);
+    });
+    return child;
+});
 
 gulp.task('clean', function () {
     'use strict';
     return del(['./builds', './tmp', './apps/sqwerl/tmp']);
 });
 
-gulp.task('default', ['clean', 'lint:js', 'test'], function () {
+gulp.task('default', function () {
     'use strict';
-    return gulp.start('deploy');
+    return gulp.start('build');
 });
 
 gulp.task('deploy', ['pack']);
@@ -48,25 +64,20 @@ gulp.task('lint:js', function () {
 
 gulp.task('pack', function () {
     'use strict';
-    var time = moment().format('MM-DD-YYYY');
-    return gulp.src(['./tmp/staging/**'])
-        .pipe(gzip('sqwerl-' + time + '.zip'))
-        .pipe(gulp.dest('./tmp/target'));
-});
-
-gulp.task('stage', ['build'], function () {
-    'use strict';
-    var child = childProcess.spawn('sproutcore', ['build', 'sqwerl', '-v'], { cwd: process.cwd() });
-    child.stdout.on('data', function (data) {
-        gutil.log(data);
-    });
-    child.stderr.on('data', function (data) {
-        gutil.log(gutil.colors.red(data));
-    });
-    child.on('close', function (code) {
-        gutil.log('Exit code for stage process: ', code);
-    });
-    return child;
+    var file,
+        time = moment().format('MM-DD-YYYY');
+    gulp.src('./tmp/build/static/sqwerl/en/*').pipe(
+       plugins.map(function (file) {
+           var id = file.history[0].split('/').pop();
+           gulp.src('./tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css')
+               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+           gulp.src('./apps/sqwerl/themify.ttf')
+               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+           return gulp.src(['./tmp/staging/**'])
+               .pipe(gzip('sqwerl-' + time + '.zip'))
+               .pipe(gulp.dest('./tmp/target'));
+       })
+    );
 });
 
 gulp.task('test', function () {

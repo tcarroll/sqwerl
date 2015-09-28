@@ -2,12 +2,11 @@
 	font-family: 'themify';
     font-style: normal;
 	font-weight: normal;
-    src: static_url('themify.ttf') format('truetype');
+    src: url('themify.ttf') format('truetype');
 }
 
 [class^="ti-"], [class*=" ti-"] {
 	font-family: 'themify';
-	speak: none;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;

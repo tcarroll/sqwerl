@@ -1,2 +1,2 @@
-config :sqwerl, :javascript_libs => ['stylesheet@2x-packed.css', 'sweetalert2.min.js', 'jquery.flypanels.min.js', 'themify.ttf'],
+config :sqwerl, :javascript_libs => ['sweetalert2.min.js', 'jquery.flypanels.min.js'],
        :required => [:sproutcore, 'sproutcore/template_view']

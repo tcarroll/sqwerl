@@ -64,19 +64,22 @@ gulp.task('lint:js', function () {
 
 gulp.task('pack', function () {
     'use strict';
-    var file,
-        time = moment().format('MM-DD-YYYY');
+    var time = moment().format('MM-DD-YYYY');
     gulp.src('./tmp/build/static/sqwerl/en/*').pipe(
-       plugins.map(function (file) {
-           var id = file.history[0].split('/').pop();
-           gulp.src('./tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css')
-               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
-           gulp.src('./apps/sqwerl/themify.ttf')
-               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
-           return gulp.src(['./tmp/staging/**'])
-               .pipe(gzip('sqwerl-' + time + '.zip'))
-               .pipe(gulp.dest('./tmp/target'));
-       })
+        plugins.map(function (file) {
+            var id = file.history[0].split('/').pop();
+            gulp.src('./tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css')
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+            gulp.src('./apps/sqwerl/themify.ttf')
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+            gulp.src('./apps/sqwerl/resources/small-sqwerl-logo.png')
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+            gulp.src('./apps/sqwerl/resources/favicon.ico')
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+            return gulp.src(['./tmp/staging/**'])
+                .pipe(gzip('sqwerl-' + time + '.zip'))
+                .pipe(gulp.dest('./tmp/target'));
+        })
     );
 });
 

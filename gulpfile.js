@@ -70,12 +70,12 @@ gulp.task('pack', function () {
             var id = file.history[0].split('/').pop();
             gulp.src('./tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css')
                 .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
-            gulp.src('./apps/sqwerl/themify.ttf')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+            gulp.src('./apps/sqwerl/resources/themify.ttf')
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
             gulp.src('./apps/sqwerl/resources/small-sqwerl-logo.png')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
             gulp.src('./apps/sqwerl/resources/favicon.ico')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
             return gulp.src(['./tmp/staging/**'])
                 .pipe(gzip('sqwerl-' + time + '.zip'))
                 .pipe(gulp.dest('./tmp/target'));

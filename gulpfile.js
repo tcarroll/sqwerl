@@ -62,25 +62,26 @@ gulp.task('lint:js', function () {
             .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('pack', function () {
+gulp.task('pack', ['stage'], function () {
     'use strict';
     var time = moment().format('MM-DD-YYYY');
-    gulp.src('./tmp/build/static/sqwerl/en/*').pipe(
-        plugins.map(function (file) {
+    return gulp.src(['./tmp/staging/**'])
+        .pipe(gzip('sqwerl-' + time + '.zip'))
+        .pipe(gulp.dest('./tmp/target'));
+});
+
+gulp.task('stage', function () {
+    'use strict';
+    return gulp.src('./tmp/build/static/sqwerl/en/*')
+        .pipe(plugins.map(function (file) {
             var id = file.history[0].split('/').pop();
-            gulp.src('./tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
-            gulp.src('./apps/sqwerl/resources/themify.ttf')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
-            gulp.src('./apps/sqwerl/resources/small-sqwerl-logo.png')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
-            gulp.src('./apps/sqwerl/resources/favicon.ico')
-                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'));
-            return gulp.src(['./tmp/staging/**'])
-                .pipe(gzip('sqwerl-' + time + '.zip'))
-                .pipe(gulp.dest('./tmp/target'));
-        })
-    );
+            gulp.src([
+                './tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css',
+                './apps/sqwerl/resources/themify.ttf',
+                './apps/sqwerl/resources/small-sqwerl-logo.png',
+                './apps/sqwerl/resources/favicon.ico'])
+               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'))
+       }));
 });
 
 gulp.task('test', function () {

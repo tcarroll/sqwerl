@@ -2,7 +2,8 @@
 	font-family: 'themify';
     font-style: normal;
 	font-weight: normal;
-    src: url('themify.ttf') format('truetype');
+/*    src: url('themify.ttf') format('truetype'); */
+	src: static_url('themify.ttf') format('truetype');
 }
 
 [class^="ti-"], [class*=" ti-"] {

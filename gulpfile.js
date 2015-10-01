@@ -80,8 +80,8 @@ gulp.task('stage', function () {
                 './apps/sqwerl/resources/themify.ttf',
                 './apps/sqwerl/resources/small-sqwerl-logo.png',
                 './apps/sqwerl/resources/favicon.ico'])
-               .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'))
-       }));
+                .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'));
+        }));
 });
 
 gulp.task('test', function () {

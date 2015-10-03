@@ -15,7 +15,7 @@ SC.stringsFor('en', {
 
     'mainPage.searchField.promptText': 'Search for things',
 
-    'navigationItemView.loadingText': 'Loading',
+    'navigationItemView.loadingText': 'loading',
 
     'signInMenuItem.title': 'Sign in',
 

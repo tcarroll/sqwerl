@@ -27,7 +27,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
 
     isReusableInCollections: YES,
 
-    layout: { left: 10 },
+    layout: { left: 25 },
 
     /**
      * Handles when the user double-clicks on an item.
@@ -126,6 +126,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
                 content.load();
             }
             working.addClass('loading');
+            classArray.push('loading');
         } else if (value && SC.typeOf(value) !== SC.T_STRING) {
             value = value.toString();
             working.removeClass('loading');
@@ -209,7 +210,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
      */
     renderLabel: function (context, id, label, isLoading) {
         'use strict';
-        context.push('<label><a class="underline" ' + (id ? ' href="#' + encodeURI(id) + '"' : '') + '>', label || '', '</a>');
+        context.push('<label class="' + (isLoading ? 'loading' : 'underline') + '">', label || '');
         if (isLoading) {
             context.begin('span').addClass('loading-indicator').end();
         }

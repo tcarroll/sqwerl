@@ -61,7 +61,7 @@ $selected-list-item-background: #1E69DE;
     0%,
     60%,
     100% {
-        opacity: 0.1;
+        opacity: 0.4;
     }
     30% {
         opacity: 1;
@@ -72,7 +72,7 @@ $selected-list-item-background: #1E69DE;
     0%,
     60%,
     100% {
-        opacity: 0.1;
+        opacity: 0.4;
     }
     30% {
         opacity: 1;
@@ -83,7 +83,7 @@ $selected-list-item-background: #1E69DE;
     0%,
     60%,
     100% {
-        opacity: 0.1;
+        opacity: 0.4;
     }
     30% {
         opacity: 1;
@@ -199,11 +199,12 @@ $selected-list-item-background: #1E69DE;
 }
 
 .loading-indicator, .loading-indicator:after, .loading-indicator:before {
+    -moz-animation: loading-indicator 800ms infinite ease-in-out;
+    -webkit-animation: loading-indicator 800ms infinite ease-in-out;
     animation: loading-indicator 800ms infinite ease-in-out;
     color: $loading-text-color;
     content: '.';
-    -moz-animation: loading-indicator 800ms infinite ease-in-out;
-    -webkit-animation: loading-indicator 800ms infinite ease-in-out;
+    font-weight: bold;
 }
 
 .loading-indicator {
@@ -223,25 +224,66 @@ $theme.sc-list-item-view.sc-regular-size {
  }
 
 $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
-     background: $even-list-item-background;
-     cursor: pointer;
-     font-smoothing: antialiased;
-     height: $row-height;
-     margin: 1px 0px -1px 0px;
-     -moz-font-smoothing: antialiased;
-     -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    background: $even-list-item-background;
+    cursor: pointer;
+    font-smoothing: antialiased;
+    height: $row-height;
+    margin: 1px 0px -1px 0px;
+
+    .sc-outline.loading {
+        animation: none;
+
+        label {
+            color: $loading-text-color;
+            font-style: italic;
+        }
+    }
 
     &.odd {
         background: $odd-list-item-background;
+
+        .sc-outline.loading {
+            color: $loading-text-color;
+            font-style: italic;
+         }
     }
 
-    &.even.list-item-selected, &.odd.list-item-selected {
+    &.even.list-item-selected {
         animation: none;
         background: $selected-list-item-background;
         color: white;
-        pointer: default;
+        cursor: default;
         -moz-animation: none;
         -webkit-animation: none;
+
+        .loading {
+            cursor: wait;
+        }
+
+        .sc-outline.loading {
+            background: $even-list-item-background;
+            color: $loading-text-color;
+         }
+    }
+
+    &.odd.list-item-selected {
+        -moz-animation: none;
+        -webkit-animation: none;
+        animation: none;
+        background: $selected-list-item-background;
+        color: white;
+        cursor: default;
+
+        .loading {
+            cursor: wait;
+        }
+
+        .sc-outline.loading {
+            background: $odd-list-item-background;
+            color: $loading-text-color;
+        }
     }
 
     &.even.sel.unfocused, &.odd.sel.unfocused {
@@ -249,7 +291,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
         color: white;
     }
 
-    &.even.list-item-hover, &.odd.list-item-hover {
+    &.even.list-item-hover {
         animation-name: hover;
         animation-duration: .5s;
         background: rgba(51, 152, 254, 0.2);
@@ -259,7 +301,38 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
         -webkit-animation-name: hover;
         -webkit-animation-duration: .5s;
 
-        .sc-outline label a {
+        &.loading {
+            -moz-animation: none;
+            -webkit-animation: none;
+            animation: none;
+            background: $even-list-item-background;
+            cursor: default;
+        }
+
+        .sc-outline label:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &.odd.list-item-hover {
+        animation-name: hover;
+        animation-duration: .5s;
+        background: rgba(51, 152, 254, 0.2);
+        cursor: pointer;
+        -moz-animation-name: hover;
+        -moz-animation-duration: .5s;
+        -webkit-animation-name: hover;
+        -webkit-animation-duration: .5s;
+
+        &.loading {
+            -moz-animation: none;
+            -webkit-animation: none;
+            animation: none;
+            background: $odd-list-item-background;
+            cursor: default;
+        }
+
+        .sc-outline label:hover {
             text-decoration: underline;
         }
     }
@@ -279,10 +352,14 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
         }
 
         .sc-outline.loading {
-            & label a {
+            & label.loading {
                 color: $loading-text-color;
                 cursor: wait;
-                text-decoration: none;
+                font-style: italic;
+
+                &:hover {
+                    text-decoration: none;
+                }
             }
         }
     }
@@ -317,11 +394,11 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
 
     &.sel {
         label {
+            color: white;
             cursor: default;
-            a {
-                color: white;
-                cursor: default;
-                text-decoration: none;
+
+            &:hover {
+                 text-decoration: none;
             }
         }
     }
@@ -338,6 +415,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     label {
+        color: rgb(0, 22, 228);
         cursor: pointer;
         font-smoothing: antialiased;
         height: auto;

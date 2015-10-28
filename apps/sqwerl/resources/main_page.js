@@ -98,25 +98,6 @@ Sqwerl.mainPage = SC.Page.design({
         return Sqwerl.mainPage.mainPane.navigationBar.trailBar.get('isNotHome') ? Sqwerl.rowHeight : (Sqwerl.rowHeight * 2) + 1;
     }.property('Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome'),
 
-    // TODO - See if this can be done at a lower level (for example, within the data source/store).
-    convertToModel: function (data) {
-        'use strict';
-        var model = SC.Object.create(),
-            property,
-            value;
-        for (property in data) {
-            if (data.hasOwnProperty(property)) {
-                value = data[property];
-                if ((value instanceof Array) || (typeof value !== 'object')) {
-                    model.set(property, value);
-                } else if (value instanceof Object) {
-                    model.set(property, this.convertToModel(value));
-                }
-            }
-        }
-        return model;
-    },
-
     createAccountDialog: SC.PanelPane.create({
 
         contentView: SC.View.create({
@@ -212,7 +193,7 @@ Sqwerl.mainPage = SC.Page.design({
      * User interface.
      */
     mainPane: SC.MainPane.design({
-        childViews: 'applicationBar navigationBar horizontalSplitView errorPane searchPane'.w(),
+        childViews: 'applicationBar navigationBar horizontalSplitView errorPane'.w(),
         classNames: ['mainPane'],
         layout: { bottom: 0, left: 0, right: 0, top: 0 },
 
@@ -262,7 +243,7 @@ Sqwerl.mainPage = SC.Page.design({
                         'use strict';
                         context.begin('a').addClass('menu-button').setAttr('href', '/create-account').text(this.get('title')).end();
                     },
-                    title: 'Create account'
+                    title: 'createAccountMenuItem.title'.loc()
                 }),
 
                 signOutButton: SC.View.extend({
@@ -284,8 +265,7 @@ Sqwerl.mainPage = SC.Page.design({
                         var userName = Sqwerl.get('userName');
                         if (Sqwerl.get('isSignedIn')) {
                             if (this.isRollover) {
-                                // TODO: Localize.
-                                context.begin('span').addClass(['sign-out-button']).text('Sign out').end();
+                                context.begin('span').addClass(['sign-out-button']).text(this.get('title')).end();
                             } else {
                                 context.begin('span').text(userName).end();
                             }
@@ -293,7 +273,7 @@ Sqwerl.mainPage = SC.Page.design({
                             context.begin('span').text(userName).end();
                         }
                     },
-                    title: 'Sign Out'
+                    title: 'signOutMenuItem.title'.loc()
                 })
             }),
 
@@ -345,8 +325,8 @@ Sqwerl.mainPage = SC.Page.design({
         }),
 
         navigationBar: SC.View.design({
-            classNames: ['navigation-bar'],
             childViews: ['trailBar'],
+            classNames: ['navigation-bar'],
             isVisibleBinding: 'Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome',
             layout: { height: Sqwerl.rowHeight, left: 0, top: Sqwerl.rowHeight },
 
@@ -362,15 +342,6 @@ Sqwerl.mainPage = SC.Page.design({
             classNames: ['error-pane'],
             isVisible: NO,
             layout: { left: 0, right: 0 }
-        }),
-
-        searchPane: SC.ScrollView.design({
-            classNames: ['search-pane'],
-            contentView: SC.ContainerView.design({
-                layout: { bottom: 0, left: 0, right: 0, top: 0 }
-            }),
-            isVisibleBinding: 'Sqwerl.mainPage.isSearching',
-            layout: { bottom: 0, left: 0, top: Sqwerl.rowHeight }
         }),
 
         horizontalSplitView: SC.SplitView.design({
@@ -542,23 +513,30 @@ Sqwerl.mainPage = SC.Page.design({
     onSearchCompleted: function (response, parameters) {
         'use strict';
         var foundInProperties,
-            results = this.convertToModel(response.body()),
-            searchResult,
+            results,
             things = [];
-        results.get('things').forEach(function (thing) {
-            foundInProperties = thing.foundInProperties;
-            if (foundInProperties && (foundInProperties.length > 0)) {
-                thing.firstFoundInProperty = foundInProperties[0];
-                thing.hasFoundInProperties = true;
-                thing.relativeUrl = '#' + encodeURI(thing.id);
-            } else {
-                thing.hasFoundInProperties = false;
-            }
-            things.push(SC.Object.create(thing));
-        });
-        results.set('things', new SC.ArrayController().set('content', things));
-        Sqwerl.get('SearchResultsController').set('content', results);
-        Sqwerl.mainPage.mainPane.searchPane.contentView.set('nowShowing', Sqwerl.get('SearchResultsView'));
+        if (response.status === 200) {
+            results = Sqwerl.convertToModel(response.body());
+            results.get('things').forEach(function (thing) {
+                foundInProperties = thing.foundInProperties;
+                if (foundInProperties && (foundInProperties.length > 0)) {
+                    thing.firstFoundInProperty = foundInProperties[0];
+                    thing.hasFoundInProperties = true;
+                    thing.relativeUrl = '#' + encodeURI(thing.id);
+                    thing.typeIcon = Sqwerl.Node.typeIcons[Sqwerl.idToTypeId(thing.id)];
+                } else {
+                    thing.hasFoundInProperties = false;
+                }
+                things.push(SC.Object.create(thing));
+            });
+            results.set('things', new SC.ArrayController().set('content', things));
+            Sqwerl.get('SearchResultsController').set('content', results);
+            Sqwerl.mainPage.searchDialog.show();
+            Sqwerl.mainPage.searchDialog.contentView.scrollPane.contentView.set('nowShowing', Sqwerl.get('SearchResultsView'));
+        } else {
+            // TODO - Notify the user that search failed.
+            console.log('Search failed with status code: ' + response.status + ', error: ' + response.errorObject.message);
+        }
     },
 
     /**
@@ -567,10 +545,7 @@ Sqwerl.mainPage = SC.Page.design({
     onSearchTextChanged: function () {
         'use strict';
         var searchText = this.get('searchText');
-        console.log('Search text: \'' + searchText + '\'');
         this.set('isSearching', searchText);
-        // TODO - Start local search.
-        // Start timer, if timer expires, then perform server search.
     }.observes('Sqwerl.mainPage.searchText'),
 
     /**
@@ -581,9 +556,11 @@ Sqwerl.mainPage = SC.Page.design({
         var request,
             searchText = this.get('searchText');
         if (searchText) {
+            Sqwerl.mainPage.searchDialog.show();
             this.set('isSearching', true);
+            Sqwerl.get('SearchResultsController').set('content', null);
             request = new SC.Request();
-            request.set('address', encodeURI('/db/search?q=' + searchText));
+            request.set('address', encodeURI('/db/search?q=' + encodeURI(searchText)));
             request.set('type', 'GET');
             request.header('Accept', 'vnd.sqwerl.com.%@+json; version=0.1,application/json'.fmt(Sqwerl.serverDataTypes.searchResults));
             request.set('isJSON', YES);
@@ -591,6 +568,100 @@ Sqwerl.mainPage = SC.Page.design({
             request.send();
         }
     },
+
+    searchDialog: SC.PanelPane.create({
+        classNames: ['search-dialog'],
+        contentView: SC.View.create({
+            childViews: 'titleBar scrollPane'.w(),
+
+            titleBar: SC.View.extend({
+                childViews: 'searchTitle searchClose'.w(),
+                classNames: ['search-title-bar'],
+                layout: { height: Sqwerl.rowHeight, left: 0, right: 0, top: 0 },
+
+                searchTitle: SC.LabelView.extend({
+                    classNames: ['search-title'],
+                    layout: { bottom: 0, height: Sqwerl.rowHeight, left: 0, right: 60, top: 0 },
+                    valueBinding: 'Sqwerl.mainPage.searchDialog.title'
+                }),
+
+                searchClose: SC.ButtonView.design({
+                    action: 'hide',
+                    classNames: ['search-close'],
+                    layout: { bottom: 0, right: 0, top: 0, width: 60 },
+                    title: 'Close'
+                })
+            }),
+
+            scrollPane: SC.ScrollView.design({
+                classNames: ['search-pane'],
+                contentView: SC.ContainerView.design({
+                    layout: { bottom: 0, left: 0, right: 0, top: 0 }
+                }),
+                layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight }
+            })
+        }),
+
+        hide: function () {
+            'use strict';
+            this.set('searchDialogIsVisible', false);
+        },
+
+        isVisibleDidChange: function () {
+            'use strict';
+            if (this.get('searchDialogIsVisible')) {
+                this.layout.height = 0;
+                this.append();
+                this.animate(
+                    { opacity: 1, height: Sqwerl.mainPage.mainPane.$().height() - (Sqwerl.rowHeight * 3) },
+                    { duration: 0.3, timing: 'ease-out' }
+                );
+            } else {
+                this.animate(
+                    { opacity: 0, height: 0 },
+                    { duration: 0.3, timing: 'ease-out' },
+                    this,
+                    'remove'
+                );
+            }
+        }.observes('searchDialogIsVisible'),
+
+        modalPane: SC.ModalPane.extend({
+            classNames: ['sqwerl-modal-pane'],
+            mouseDown: function () {
+                'use strict';
+                Sqwerl.mainPage.searchDialog.hide();
+            }
+        }),
+
+        searchDialogIsVisible: NO,
+
+        show: function () {
+            'use strict';
+            var mainPane = Sqwerl.mainPage.mainPane,
+                width = mainPane.$().width() - 20,
+                y = mainPane.applicationBar.layout.top + 40;
+            this.set('layout', { height: mainPane.$().height() - y - Sqwerl.rowHeight, left: 10, top: y, width: width });
+            this.updateTitle();
+            this.set('searchDialogIsVisible', true);
+        },
+
+        title: '',
+
+        updateTitle: function () {
+            'use strict';
+            var results = Sqwerl.get('SearchResultsController').get('content'),
+                searchText = Sqwerl.mainPage.get('searchText'),
+                text = '';
+            // TODO - Internationalize.
+            if (results && (results.total > 0)) {
+                text = 'Found ' + results.total + ((results.total > 1) ? ' things' : 'thing') + ' that matched \'' + searchText + '\'';
+            } else {
+                text = 'Nothing found that matched the \'' + searchText + '\'';
+            }
+            Sqwerl.mainPage.searchDialog.set('title', text);
+        }
+    }),
 
     searchText: '',
 
@@ -631,7 +702,7 @@ Sqwerl.mainPage = SC.Page.design({
         }
         controller = Sqwerl.get(viewName  + 'Controller');
         if (controller) {
-            controller.set('content', this.convertToModel(data));
+            controller.set('content', Sqwerl.convertToModel(data));
         }
         viewName += 'View';
         view = Sqwerl.get(viewName);

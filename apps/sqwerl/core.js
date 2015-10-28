@@ -94,6 +94,29 @@ try {
         userName: 'guest',
 
         /**
+         * Converts the given data to a data model object.
+         * @param data An object.
+         * @returns {SC.Object} A data model object.
+         */
+        convertToModel: function (data) {
+            'use strict';
+            var model = SC.Object.create(),
+                property,
+                value;
+            for (property in data) {
+                if (data.hasOwnProperty(property)) {
+                    value = data[property];
+                    if ((value instanceof Array) || (typeof value !== 'object')) {
+                        model.set(property, value);
+                    } else if (value instanceof Object) {
+                        model.set(property, this.convertToModel(value));
+                    }
+                }
+            }
+            return model;
+        },
+
+        /**
          * Sends a GET request to a Sqwerl server.
          *
          * @param {String} url          Required URL to get.

@@ -1,23 +1,15 @@
 <div class="search-results">
-    <div style="height: 36px; width: 100%;"><div style="float: right;">X</div></div>
     <div style="padding: 1em 2em">
-        {{#if hasMoreThanOne}}
-            <p>There are {{numberFormat total}} things that contain the text '{{text}}'.</p>
-            <p>Showing {{things.length}} things.</p>
-        {{else}}
-            <p>There is one thing that contains the text '{{text}}'.</p>
-        {{/if}}
-
         {{#each things tagName="ul" class="search-results"}}
-            <a {{bindAttr href="relativeUrl"}}>{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})<br>
+            <a {{bindAttr href="relativeUrl"}}>{{name}}</a> <span {{bindAttr class="typeIcon"}}></span><span>({{#typeOfThingName}}{{/typeOfThingName}})</span><br>
             {{#if hasFoundInProperties}}
                 {{#if hasMoreThanOneFoundInProperty}}
-                    <p>Search text found in the properties:</p>
+                    <p class="found-in-properties-title">Search text found in:</p>
                     {{#each foundInProperties tagName="ul"}}
-                        {{this}}
+                        <span class="found-in-property-name">{{this}}</span>
                     {{/each}}
                 {{else}}
-                    The {{firstFoundInProperty}} property contains the search text.
+                    The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text
                 {{/if}}
             {{/if}}
         {{/each}}

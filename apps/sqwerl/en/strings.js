@@ -1,6 +1,8 @@
 /*globals SC*/
 
 SC.stringsFor('en', {
+    'createAccountMenuItem.title': 'Create account',
+
     'main.fatalErrorDialog.confirmButton.text': 'Report Error',
     'main.fatalErrorDialog.text': 'It\'s not your fault. We\'re sorry. We screwed up.<br>Help us fix Sqwerl by telling us what happened.',
     'main.fatalErrorDialog.title': 'Nuts! Sqwerl is road kill.',
@@ -14,10 +16,13 @@ SC.stringsFor('en', {
     'mainPage.busyPanel.contentView.label.value6': 'Thanks for being patient...',
 
     'mainPage.searchField.promptText': 'Search for things',
+    'mainPage.createAccountButton.title': 'Create account',
+    'mainPage.signOutButton.title': 'Sign out',
 
     'navigationItemView.loadingText': 'loading',
 
     'signInMenuItem.title': 'Sign in',
+    'signOutMenuItem.title': 'Sign out',
 
     'sqwerl-logo-tooltip': 'Sqwerl home page'
 });

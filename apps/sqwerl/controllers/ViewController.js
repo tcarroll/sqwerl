@@ -110,8 +110,7 @@ Sqwerl.ViewController = SC.ObjectController.extend({
             id = this.get('id'),
             typeName = '';
         if (id) {
-            components = this.get('id').split('/');
-            typeName = (components.length > 2) ? components[2] : (components.length > 0) ? components[1] : '';
+            typeName = Sqwerl.idToTypeId(id);
         }
         return this.typesToIcons[typeName];
     })

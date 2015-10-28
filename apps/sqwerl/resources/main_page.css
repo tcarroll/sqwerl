@@ -23,6 +23,15 @@ $navigation-scroll-view-background: #DEE6E0;
     }
 }
 
+@keyframes search-close-button-hover {
+    from {
+        background: $application-bar-button-background;
+    }
+    to {
+        background: rgba(0, 83, 0, 0.77);
+    }
+}
+
 @keyframes search-field-focused {
     from {
         background: $application-bar-background;
@@ -75,9 +84,9 @@ a.logo-link {
     top: 0;
 
     &:hover {
-        -moz-animation: navigation-hover 0.3s linear 0s 1;
-        -webkit-animation: navigation-hover 0.3s linear 0s 1;
-        animation: navigation-hover 0.3s linear 0s 1;
+        -moz-animation: navigation-hover 0.3s ease 0s 1;
+        -webkit-animation: navigation-hover 0.3s ease 0s 1;
+        animation: navigation-hover 0.3s ease 0s 1;
         background: rgba(255, 255, 255, 0.3);
     }
 }
@@ -134,9 +143,9 @@ body {
     vertical-align: middle;
 
     &:hover {
-        -moz-animation: menu-button-hover 0.3s linear 0s 1;
-        -webkit-animation: menu-button-hover 0.3s linear 0s 1;
-        animation: menu-button-hover 0.3s linear 0s 1;
+        -moz-animation: menu-button-hover 0.3s ease 0s 1;
+        -webkit-animation: menu-button-hover 0.3s ease 0s 1;
+        animation: menu-button-hover 0.3s ease 0s 1;
         background: rgba(255, 255, 255, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.4);
     }
@@ -185,8 +194,8 @@ body {
 }
 
 .sc-view.sc-text-field-view.application-search-field.focus {
-    -moz-animation: search-field-focused 0.3s linear 0s 1;
-    animation: search-field-focused 0.3s linear 0s 1;
+    -moz-animation: search-field-focused 0.3s ease 0s 1;
+    animation: search-field-focused 0.3s ease 0s 1;
     background: lightgray;
     border: 1px solid lightgray;
     color: black;
@@ -371,8 +380,46 @@ html {
     background: $navigation-scroll-view-background;
 }
 
-.search-pane {
+.search-dialog {
     background: white;
+    opacity: 0.92;
+    z-index: 100;
+
+    .search-title-bar {
+        background: $application-bar-background;
+
+        .sc-view.search-title {
+            color: #e0e0e0;
+            letter-spacing: 0.02em;
+            line-height: $row-height;
+            text-align: center;
+        }
+        .search-close {
+            height: $row-height;
+
+            label.sc-button-label {
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+                color: #e0e0e0;
+                height: $row-height;
+                letter-spacing: 0.02em;
+                line-height: $row-height;
+                text-align: center;
+                text-shadow: none;
+            }
+
+            &:hover {
+                -moz-animation: search-close-button-hover 0.3s ease 0s 1;
+                -webkit-animation: search-close-button-hover 0.3s ease 0s 1;
+                animation: search-close-button-hover 0.3s ease 0s 1;
+                background: rgba(255, 255, 255, 0.3);
+                /* border: 1px solid rgba(255, 255, 255, 0.4); */
+            }
+        }
+    }
+
+    .search-dialog-content {
+        background: #e0e0e0;
+    }
 }
 
 .sc-view.sign-in-menu {
@@ -387,9 +434,9 @@ html {
     vertical-align: middle;
 
     &:hover {
-        -moz-animation: menu-button-hover 0.3s linear 0s 1;
-        -webkit-animation: menu-button-hover 0.3s linear 0s 1;
-        animation: menu-button-hover 0.3s linear 0s 1;
+        -moz-animation: menu-button-hover 0.3s ease 0s 1;
+        -webkit-animation: menu-button-hover 0.3s ease 0s 1;
+        animation: menu-button-hover 0.3s ease 0s 1;
         background: rgba(255, 255, 255, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.4);
     }

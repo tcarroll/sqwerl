@@ -4,7 +4,7 @@
     <span class="title-bar-links">
         {{#if hasConnections}}
             {{#if hasMultipleConnections}}
-                {{numberFormat connectionCount}} links
+                {{connectionCount}} links
             {{else}}
                 1 link
             {{/if}}
@@ -39,7 +39,7 @@
         {{#if hasAuthors}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleAuthors}}Authors ({{numberFormat totalCount}}){{else}}Author{{/if}}
+                    {{#if hasMultipleAuthors}}Authors ({{numberFormat authors.totalCount}}){{else}}Author{{/if}}
                 </div>
                 {{#each authors.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}

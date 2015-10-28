@@ -44,6 +44,12 @@ Sqwerl.handleError = function handleError(error) {
     SC.error('%@: A serious error has occurred. %@', this, error.stack);
 };
 
+Sqwerl.idToTypeId = function (id) {
+    'use strict';
+    var components = id.split('/');
+    return (components.length > 2) ? components[2] : (components.length > 0) ? components[1] : '';
+};
+
 /**
  * Starts this application.
  */
@@ -77,9 +83,15 @@ Sqwerl.main = function () {
  */
 Sqwerl.registerHandlebarsHelpers = function () {
     'use strict';
+    var convertToTypeId = function (id) {
+        return Sqwerl.idToTypeId(id);
+    };
+    Handlebars.registerHelper('typeOfThingIcon', function () {
+        var typeId = convertToTypeId(this.id);
+        return typeId ? Sqwerl.Node.typeIcons[this.get('typeId')] : 'ti-folder';
+    });
     Handlebars.registerHelper('typeOfThingName', function () {
-        var components = this.id.split('/'),
-            typeName = (components.length > 2) ? components[2] : (components.length > 0) ? components[1] : '';
+        var typeName = convertToTypeId(this.id);
         return {
             'articles': 'Article',
             'authors': 'Author',
@@ -143,6 +155,8 @@ Sqwerl.registerHandlebarsHelpers = function () {
 
 Sqwerl.route = function (parameters) {
     'use strict';
+    Sqwerl.mainPage.searchDialog.hide();
+    Sqwerl.mainPage.set('isSearching', false);
     Sqwerl.navigationController.goTo('/' + parameters['']);
 };
 

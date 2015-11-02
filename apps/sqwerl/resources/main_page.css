@@ -380,6 +380,37 @@ html {
     background: $navigation-scroll-view-background;
 }
 
+.sc-view.sign-in-menu {
+    background: $application-bar-button-background;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    /* display: none; TODO - Make visible after signing in is supported */
+    font-size: 14px;
+    line-height: $row-height;
+    text-align: center;
+    vertical-align: middle;
+
+    &:hover {
+        -moz-animation: menu-button-hover 0.3s ease 0s 1;
+        -webkit-animation: menu-button-hover 0.3s ease 0s 1;
+        animation: menu-button-hover 0.3s ease 0s 1;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    a.menu-button {
+        bottom: 4px;
+        color: $application-bar-menu-button-text-color;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        letter-spacing: 0.02em;
+        position: relative;
+        text-decoration: none;
+    }
+}
+
 .search-dialog {
     background: white;
     opacity: 0.92;
@@ -422,35 +453,9 @@ html {
     }
 }
 
-.sc-view.sign-in-menu {
-    background: $application-bar-button-background;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
-    cursor: pointer;
-    /* display: none; TODO - Make visible after signing in is supported */
-    font-size: 14px;
-    line-height: $row-height;
-    text-align: center;
-    vertical-align: middle;
-
-    &:hover {
-        -moz-animation: menu-button-hover 0.3s ease 0s 1;
-        -webkit-animation: menu-button-hover 0.3s ease 0s 1;
-        animation: menu-button-hover 0.3s ease 0s 1;
-        background: rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    a.menu-button {
-        bottom: 4px;
-        color: $application-bar-menu-button-text-color;
-        cursor: pointer;
-        font-family: Arial, sans-serif;
-        font-size: 11pt;
-        letter-spacing: 0.02em;
-        position: relative;
-        text-decoration: none;
-    }
+.sign-in-menu {
+    /* TODO - Hidden for now until we implement signing in. */
+    display: none;
 }
 
 .small-sqwerl-logo {

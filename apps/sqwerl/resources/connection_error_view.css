@@ -162,12 +162,13 @@
 }
 
 .connection-error-h1 {
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: bold;
+    margin-bottom: 0.5em;
 }
 
 .connection-error-h2 {
-    font-size: 12pt;
+    font-size: 14pt;
 
     a {
         text-decoration: underline;
@@ -191,29 +192,25 @@
     visibility: hidden;
     width: 60em;
 
-    p.connection-error-h1 {
-        font-weight: bold;
-        padding-bottom: 0.5em;
-    }
-
     ol {
         margin-bottom: 0.5em;
-        margin-left: 3em;
+        margin-left: 1.5em;
         margin-right: 1em;
 
         li {
             font-size: 12pt;
-            font-weight: bold;
+            margin-bottom: 0.5em;
         }
 
         li ul {
             list-item-position: inside;
             margin-bottom: 0.5em;
             margin-left: 2em;
+            margin-top: 0.5em;
 
             li {
                 font-size: 11pt;
-                font-weight: bold;
+                padding-bottom: 0.2em;
 
                 a {
                     text-decoration: underline;
@@ -227,5 +224,11 @@
                 }
             }
         }
+    }
+
+    p.possible-reasons-title {
+        font-size: 12pt;
+        font-weight: bold;
+        padding-bottom: 0.5em;
     }
 }

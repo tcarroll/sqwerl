@@ -1,17 +1,15 @@
 <div class="search-results">
-    <div style="padding: 1em 2em">
-        {{#each things tagName="ul" class="search-results"}}
-            <a {{bindAttr href="relativeUrl"}}>{{name}}</a> <span {{bindAttr class="typeIcon"}}></span><span>({{#typeOfThingName}}{{/typeOfThingName}})</span><br>
-            {{#if hasFoundInProperties}}
-                {{#if hasMoreThanOneFoundInProperty}}
-                    <p class="found-in-properties-title">Search text found in:</p>
-                    {{#each foundInProperties tagName="ul"}}
-                        <span class="found-in-property-name">{{this}}</span>
-                    {{/each}}
-                {{else}}
-                    The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text
-                {{/if}}
+    {{#each things tagName="ul" class="search-results"}}
+        <div class="search-result"><span {{bindAttr class="typeIcon search-results-type-icon"}}></span><a {{bindAttr href="relativeUrl"}}>{{name}}</a><span class="search-results-type-name">({{#typeOfThingName}}{{/typeOfThingName}})</span></div>
+        {{#if hasFoundInProperties}}
+            {{#if hasMoreThanOneFoundInProperty}}
+                <p class="found-in-properties-title">Search text found in:</p>
+                {{#each foundInProperties tagName="ul"}}
+                    <span class="found-in-property-name">{{this}}</span>
+                {{/each}}
+            {{else}}
+                <div class="search-result-found-in">The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text</div>
             {{/if}}
-        {{/each}}
-    </div>
+        {{/if}}
+    {{/each}}
 </div>

@@ -411,6 +411,12 @@ html {
     }
 }
 
+.search-close {
+    label {
+        font-size: 0.8em;
+    }
+}
+
 .search-dialog {
     background: white;
     opacity: 0.92;

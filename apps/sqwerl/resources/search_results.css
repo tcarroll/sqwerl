@@ -1,13 +1,43 @@
-ul.search-results {
-    list-style-type: none;
-
-    & li {
-        line-height: $row-height;
-        list-style-type: none;
-        padding-left: 1em;
-    }
+.found-in-property-name {
+    font-style: italic;
 }
 
 .sc-view.sc-scroll-view.search-pane {
     z-index: 1000;
+}
+
+.search-result {
+
+    &:nth-child(0) {
+         line-height: 1em;
+         padding-left: 1em;
+         padding-right: 0.3em;
+         vertical-align: middle;
+    }
+}
+
+.search-result {
+    line-height: 2rem;
+    padding: 0.5em 2em 0;
+}
+
+.search-result-found-in {
+    line-height: 1em;
+    padding: 0 2em 0.2em 3em;
+}
+
+.search-results-type-name {
+    font-size: 0.85em;
+    line-height: 1em;
+    padding-left: 0.5em;
+    vertical-align: middle;
+}
+
+ul.search-results {
+    list-style-type: none;
+
+    & li {
+        line-height: 1em;
+        list-style-type: none;
+    }
 }

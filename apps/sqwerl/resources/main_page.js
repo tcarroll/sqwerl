@@ -185,11 +185,6 @@ Sqwerl.mainPage = SC.Page.design({
     }),
 
     /**
-     * If true, then this application is busy searching for things.
-     */
-    isSearching: false,
-
-    /**
      * User interface.
      */
     mainPane: SC.MainPane.design({
@@ -519,11 +514,11 @@ Sqwerl.mainPage = SC.Page.design({
             results = Sqwerl.convertToModel(response.body());
             results.get('things').forEach(function (thing) {
                 foundInProperties = thing.foundInProperties;
+                thing.relativeUrl = '#' + encodeURI(thing.id);
+                thing.typeIcon = Sqwerl.Node.typeIcons[Sqwerl.idToTypeId(thing.id)];
                 if (foundInProperties && (foundInProperties.length > 0)) {
                     thing.firstFoundInProperty = foundInProperties[0];
                     thing.hasFoundInProperties = true;
-                    thing.relativeUrl = '#' + encodeURI(thing.id);
-                    thing.typeIcon = Sqwerl.Node.typeIcons[Sqwerl.idToTypeId(thing.id)];
                 } else {
                     thing.hasFoundInProperties = false;
                 }
@@ -531,12 +526,12 @@ Sqwerl.mainPage = SC.Page.design({
             });
             results.set('things', new SC.ArrayController().set('content', things));
             Sqwerl.get('SearchResultsController').set('content', results);
-            Sqwerl.mainPage.searchDialog.show();
             Sqwerl.mainPage.searchDialog.contentView.scrollPane.contentView.set('nowShowing', Sqwerl.get('SearchResultsView'));
         } else {
             // TODO - Notify the user that search failed.
-            console.log('Search failed with status code: ' + response.status + ', error: ' + response.errorObject.message);
+            console.log('Search failed with status code: ' + response.status + (response.errorObject ? ', error: ' + response.errorObject.message : ''));
         }
+        Sqwerl.mainPage.searchDialog.set('isSearching', false);
     },
 
     /**
@@ -545,7 +540,6 @@ Sqwerl.mainPage = SC.Page.design({
     onSearchTextChanged: function () {
         'use strict';
         var searchText = this.get('searchText');
-        this.set('isSearching', searchText);
     }.observes('Sqwerl.mainPage.searchText'),
 
     /**
@@ -556,9 +550,9 @@ Sqwerl.mainPage = SC.Page.design({
         var request,
             searchText = this.get('searchText');
         if (searchText) {
-            Sqwerl.mainPage.searchDialog.show();
-            this.set('isSearching', true);
             Sqwerl.get('SearchResultsController').set('content', null);
+            Sqwerl.mainPage.searchDialog.show();
+            Sqwerl.mainPage.searchDialog.set('isSearching', true);
             request = new SC.Request();
             request.set('address', encodeURI('/db/search?q=' + encodeURI(searchText)));
             request.set('type', 'GET');
@@ -607,6 +601,8 @@ Sqwerl.mainPage = SC.Page.design({
             this.set('searchDialogIsVisible', false);
         },
 
+        isSearching: false,
+
         isVisibleDidChange: function () {
             'use strict';
             if (this.get('searchDialogIsVisible')) {
@@ -642,25 +638,28 @@ Sqwerl.mainPage = SC.Page.design({
                 width = mainPane.$().width() - 20,
                 y = mainPane.applicationBar.layout.top + 40;
             this.set('layout', { height: mainPane.$().height() - y - Sqwerl.rowHeight, left: 10, top: y, width: width });
-            this.updateTitle();
+            // TODO - Internationalize
             this.set('searchDialogIsVisible', true);
         },
 
-        title: '',
-
-        updateTitle: function () {
+        title: function () {
             'use strict';
-            var results = Sqwerl.get('SearchResultsController').get('content'),
+            var isSearching = Sqwerl.mainPage.searchDialog.get('isSearching'),
+                results = Sqwerl.get('SearchResultsController').get('content'),
                 searchText = Sqwerl.mainPage.get('searchText'),
                 text = '';
             // TODO - Internationalize.
-            if (results && (results.total > 0)) {
-                text = 'Found ' + results.total + ((results.total > 1) ? ' things' : 'thing') + ' that matched \'' + searchText + '\'';
-            } else {
-                text = 'Nothing found that matched the \'' + searchText + '\'';
+            if (searchText) {
+                if (isSearching) {
+                    text = 'Searching for \'' + Sqwerl.mainPage.get('searchText') + '\'...';
+                } else if (results && (results.total > 0)) {
+                    text = 'Found ' + results.total + ((results.total > 1) ? ' things' : 'thing') + ' that matched \'' + searchText + '\'';
+                } else {
+                    text = 'Nothing found that matched \'' + searchText + '\'';
+                }
             }
-            Sqwerl.mainPage.searchDialog.set('title', text);
-        }
+            return text;
+        }.property('Sqwerl.mainPage.searchDialog.searchDialogIsVisible', 'Sqwerl.mainPage.sqwerlDialog.isSearching', 'Sqwerl.SearchResultsController.content')
     }),
 
     searchText: '',

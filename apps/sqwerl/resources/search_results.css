@@ -19,11 +19,15 @@
 .search-result {
     line-height: 2rem;
     padding: 0.5em 2em 0;
+
+    a {
+        padding-left: 0.5em;
+    }
 }
 
 .search-result-found-in {
     line-height: 1em;
-    padding: 0 2em 0.2em 3em;
+    padding: 0 2em 0.2em 3.5em;
 }
 
 .search-results-type-name {
@@ -33,11 +37,17 @@
     vertical-align: middle;
 }
 
+.showing-partial-results-description {
+    line-height: 2rem;
+    padding: 0.5em 2em 0;
+}
+
 ul.search-results {
     list-style-type: none;
 
     & li {
         line-height: 1em;
         list-style-type: none;
+        padding-bottom: 0.5em;
     }
 }

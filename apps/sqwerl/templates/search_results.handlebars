@@ -1,8 +1,5 @@
 <div class="search-results">
-    {{#if isShowingPartialResults}}
-        <div class="showing-partial-results-description">Showing things {{startingAt}} through {{limit}} of {{total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
-    {{/if}}
-    {{#each things tagName="ul" class="search-results"}}
+    {{#if hasOnlyOne}}
         <div class="search-result"><span {{bindAttr class="typeIcon search-results-type-icon"}}></span><a {{bindAttr href="relativeUrl"}}>{{#thingPath}}{{/thingPath}}</a><span class="search-results-type-name">({{#typeOfThingName}}{{/typeOfThingName}})</span></div>
         {{#if hasFoundInProperties}}
             {{#if hasMoreThanOneFoundInProperty}}
@@ -14,5 +11,25 @@
                 <div class="search-result-found-in">The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text</div>
             {{/if}}
         {{/if}}
-    {{/each}}
+    {{else}}
+        {{#if isShowingPartialResults}}
+            <div class="showing-partial-results-description">Showing {{startingAt}} through {{limit}} of {{total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
+            <table>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Description</td>
+                        <td>Type</td>
+                        <td>Links</td>
+                    </tr>
+                </thead>
+                {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsController.searchItems" tagName="tbody" itemTagName="tr"}}
+                    <td>{{content.index}}</td><td>{{content.name}}</td><td></td>{{content.id}}<td>{{content.links}}</td>
+                {{/collection}}
+            </table>
+            <div class="search-refine-link">
+                <a href="">These are not the things I'm looking for...</a>
+            </div>
+        {{/if}}
+    {{/if}}
 </div>

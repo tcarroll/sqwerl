@@ -7,6 +7,11 @@ Sqwerl.SearchResultsController = SC.ObjectController.create({
         return (this.get('total') > 1);
     }),
 
+    hasOnlyOne: Sqwerl.property(function () {
+        'use strict';
+        return this.get('total') === 0;
+    }),
+
     isShowingPartialResults: Sqwerl.property(function () {
         'use strict';
         return this.get('total') > this.get('limit');

@@ -92,10 +92,10 @@ Sqwerl.ViewController = SC.ObjectController.extend({
      */
     sumConnections : function (propertyNames) {
         'use strict';
-        var sum = 0,
-            that = this;
+        var controller = this,
+            sum = 0;
         propertyNames.forEach(function (propertyName) {
-            sum += that.count(propertyName);
+            sum += controller.count(propertyName);
         });
         return sum;
     },
@@ -106,8 +106,7 @@ Sqwerl.ViewController = SC.ObjectController.extend({
      */
     typeIcon: Sqwerl.property(function () {
         'use strict';
-        var components,
-            id = this.get('id'),
+        var id = this.get('id'),
             typeName = '';
         if (id) {
             typeName = Sqwerl.idToTypeId(id);

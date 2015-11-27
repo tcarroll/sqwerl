@@ -431,6 +431,7 @@ html {
             line-height: $row-height;
             text-align: center;
         }
+
         .search-close {
             height: $row-height;
 

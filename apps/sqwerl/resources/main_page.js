@@ -100,6 +100,8 @@ Sqwerl.mainPage = SC.Page.design({
 
     createAccountDialog: SC.PanelPane.create({
 
+        classNames: ['create-account-dialog'],
+
         contentView: SC.View.create({
             childViews: 'descriptionLabel emailField okButton closeButton'.w(),
 
@@ -107,7 +109,7 @@ Sqwerl.mainPage = SC.Page.design({
                 layout: { height: Sqwerl.rowHeight * 4, left: 15, top: 15, width: 320 },
                 render: function (renderContext) {
                     'use strict';
-                    renderContext.push('<p id="create-account-intro-paragraph">We can\'t create accounts at this time.</p>');
+                    renderContext.push('<p id="create-account-intro-paragraph">Sorry, we can\'t create accounts at this time.</p>');
                     renderContext.push('<p>Enter your email address, and we will send you an email once Sqwerl is up and running. No spam, we promise.</p>');
                 }
             }),
@@ -512,6 +514,7 @@ Sqwerl.mainPage = SC.Page.design({
             things = [];
         if (response.status === 200) {
             results = Sqwerl.convertToModel(response.body());
+/*
             results.get('things').forEach(function (thing) {
                 foundInProperties = thing.foundInProperties;
                 thing.relativeUrl = '#' + encodeURI(thing.id);
@@ -525,8 +528,12 @@ Sqwerl.mainPage = SC.Page.design({
                 things.push(SC.Object.create(thing));
             });
             results.set('things', new SC.ArrayController().set('content', things));
+*/
             Sqwerl.get('SearchResultsController').set('content', results);
-            Sqwerl.mainPage.searchDialog.contentView.scrollPane.contentView.set('nowShowing', Sqwerl.get('SearchResultsView'));
+            Sqwerl.mainPage.searchDialog.contentView.containerView.set('nowShowing', Sqwerl.get('SearchResultsView'));
+        } else if (response.status === 413) {
+            // TODO - Ask, and allow the user, to refine his or her search criteria.
+            console.log('Search failed with status code ' + response.status + (response.errorObject ? ', error: ' + response.errorObject.message : ''));
         } else {
             // TODO - Notify the user that search failed.
             console.log('Search failed with status code: ' + response.status + (response.errorObject ? ', error: ' + response.errorObject.message : ''));
@@ -566,7 +573,7 @@ Sqwerl.mainPage = SC.Page.design({
     searchDialog: SC.PanelPane.create({
         classNames: ['search-dialog'],
         contentView: SC.View.create({
-            childViews: 'titleBar scrollPane'.w(),
+            childViews: 'titleBar containerView'.w(),
 
             titleBar: SC.View.extend({
                 childViews: 'searchTitle searchClose'.w(),
@@ -587,11 +594,8 @@ Sqwerl.mainPage = SC.Page.design({
                 })
             }),
 
-            scrollPane: SC.ScrollView.design({
+            containerView: SC.ContainerView.design({
                 classNames: ['search-pane'],
-                contentView: SC.ContainerView.design({
-                    layout: { bottom: 0, left: 0, right: 0, top: 0 }
-                }),
                 layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight }
             })
         }),

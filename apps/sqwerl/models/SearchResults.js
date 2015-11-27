@@ -6,7 +6,7 @@ Sqwerl.SearchResults = SC.Record.extend({
 
     'offset': SC.Record.attr(Number),
 
-    'things': SC.Record.attr(Array),
+    'searchItems': SC.Record.toMany('Sqwerl.SearchItem', { isMaster: SC.YES }),
 
     'text': SC.Record.attr(String),
 

@@ -100,28 +100,69 @@ Sqwerl.mainPage = SC.Page.design({
 
     createAccountDialog: SC.PanelPane.create({
 
+        allowRegistration: false,
+
         classNames: ['create-account-dialog'],
 
         contentView: SC.View.create({
             childViews: 'descriptionLabel emailField okButton closeButton'.w(),
+            classNames: ['create-account-dialog-content'],
 
             descriptionLabel: SC.View.extend({
                 layout: { height: Sqwerl.rowHeight * 4, left: 15, top: 15, width: 320 },
                 render: function (renderContext) {
                     'use strict';
-                    renderContext.push('<p id="create-account-intro-paragraph">Sorry, we can\'t create accounts at this time.</p>');
-                    renderContext.push('<p>Enter your email address, and we will send you an email once Sqwerl is up and running. No spam, we promise.</p>');
+                    renderContext.push('<p class="create-account-text">Enter your email address, and we will send you a single email with instructions for creating your account.</p>');
                 }
             }),
 
             emailField: SC.TextFieldView.create({
-                layout: { left: 15, top: (Sqwerl.rowHeight * 3) + 15, height: Sqwerl.rowHeight, width: 320 }
+                hint: 'example: your.name@email.com',
+                keyUp: function (event) {
+                    'use strict';
+                    var handledEvent = NO;
+                    if (event.keyCode === 13) {
+                        // TODO - Handle this. Send email if valid, show error message otherwise.
+                        handledEvent = YES;
+                    } else if (event.keyCode === 27) {
+                        // TODO - Handle Escape key has been pressed.
+                    }
+                    return handledEvent;
+                },
+                layout: { left: 15, top: (Sqwerl.rowHeight * 3) + 15, height: Sqwerl.rowHeight, width: 320 },
+                onValueChanged: Sqwerl.observes(function () {
+                    'use strict';
+                    var dialog = Sqwerl.mainPage.createAccountDialog,
+                        email = this.get('value'),
+                        okButton = $('.sc-view.create-account-ok');
+                    if (email && (email.length > 0)) {
+                        if (/^[a-zA-Z0-9_\.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/.test(this.get('value'))) {
+                            okButton.removeClass('disabled');
+                            dialog.set('wasValid', true);
+                            dialog.set('okButtonText', 'Send email address');
+                            dialog.set('allowRegistration', true);
+                        } else {
+                            if (dialog.get('wasValid')) {
+                                // TODO - Use JQuery to change OK button's appearance.
+                                dialog.set('okButtonText', 'Not a valid email address. Please fix.');
+                            }
+                            okButton.addClass('disabled');
+                            dialog.set('allowRegistration', false);
+                            dialog.set('wasValid', false);
+                        }
+                    } else {
+                        okButton.addClass('disabled');
+                        dialog.set('allowRegistration', false);
+                        dialog.set('okButtonText', 'Please enter your email address');
+                    }
+                }, 'value')
             }),
 
             okButton: SC.ButtonView.create({
-                classNames: ['create-account-ok'],
+                classNames: 'create-account-ok disabled'.w(),
+                enabledBinding: "Sqwerl.mainPage.createAccountDialog.allowRegistration",
                 layout: { left: 15, top: (Sqwerl.rowHeight * 4) + 25, height: Sqwerl.rowHeight, width: 320 },
-                title: 'Please enter your email address'
+                titleBinding: "Sqwerl.mainPage.createAccountDialog.okButtonText"
             }),
 
             closeButton: SC.ButtonView.create({
@@ -171,6 +212,8 @@ Sqwerl.mainPage = SC.Page.design({
             }
         }),
 
+        okButtonText: 'Please enter your email address',
+
         show: function () {
             'use strict';
             var element = $('.create-account-menu'),
@@ -183,7 +226,9 @@ Sqwerl.mainPage = SC.Page.design({
             }
             this.set('layout', { height: 270, left: x, top: y, width: this.createAccountDialogWidth });
             this.set('createAccountDialogIsVisible', YES);
-        }
+        },
+
+        wasValid: false
     }),
 
     /**
@@ -737,7 +782,7 @@ Sqwerl.mainPage = SC.Page.design({
                             // TOOD - Invalidate the field.
                         }
                     } else {
-                        message = 'Please enter your email address.';
+                        message = 'Enter your email address.';
                         warning = YES;
                         // TODO - Invalidate the field.
                     }

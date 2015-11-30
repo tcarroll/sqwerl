@@ -20,13 +20,13 @@ Sqwerl.SearchItemController = SC.ObjectController.create({
         return foundInProperties && (foundInProperties.length > 1);
     }),
 
+    pathName: Sqwerl.property(function () {
+        'use strict';
+        return 'Thing';
+    }),
+
     relativeUrl: Sqwerl.property(function () {
         'use strict';
         return '#' + encodeURI(this.get('id'));
-    }),
-
-    typeName: Sqwerl.property(function () {
-        'use strict';
-        return 'Thing';
     })
 });

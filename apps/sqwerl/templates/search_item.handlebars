@@ -1,15 +1,4 @@
-<td></td>
- <td><a {{bindAttr href="relativeUrl"}}>{{#thingPath}}{{/thingPath}}</a>
-    {{#if hasFoundInProperties}} 
-        {{#if hasMoreThanOneFoundInProperty}}
-            <p class="found-in-properties-title">Search text found in:</p> 
-            {{#each foundInProperties tagName="ul"}}
-                <span class="found-in-property-name">{{this}}</span>
-            {{/each}}
-        {{else}} 
-            <div class="search-result-found-in">The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text</div> 
-        {{/if}}
-    {{/if}} 
-</td>
-<td><span class="search-results-type-name">({{#typeOfThingName}}{{/typeOfThingName}})</span> </td>
- <td>{{links}}</td>
+<td>{{index}}</td>
+<td>{{pathName}}</td>
+<td>Type goes here</td>
+<td>{{links}}</td>

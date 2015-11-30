@@ -128,6 +128,122 @@ body {
     overflow: hidden !important;
 }
 
+.create-account-cancel {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.create-account-dialog .panel-background > .bottom-left {
+    background: rgb(238, 238, 238);
+    border: rgb(238, 238, 238) solid 1px;
+    border-radius: 5px;
+    bottom: 15px !important;
+    left: 10px !important;
+}
+
+.create-account-dialog .panel-background > .bottom-right {
+    background: rgb(238, 238, 238);
+    border: rgb(238, 238, 238) solid 1px;
+    border-radius: 5px;
+    bottom: 15px !important;
+    right: 10px !important;
+}
+
+.create-account-dialog .panel-background > .left {
+    background: rgb(238, 238, 238);
+    left: 10px !important;
+    width: 5px !important;
+}
+
+.create-account-dialog .panel-background .right {
+    background: rgb(238, 238, 238);
+    right: 10px !important;
+}
+
+.create-account-dialog .panel-background > .top {
+    border-bottom: rgb(234, 234, 234) solid 20px;
+    border-left: rgba(0, 0, 0, 0) solid 10px;
+    border-right: rgba(0, 0, 0, 0) solid 10px;
+    border-top: rgb(234, 234, 234) solid 0;
+    bottom: auto;
+    display: block;
+    height: 0 !important;
+    left: 50% !important;
+    position: absolute;
+    right: 50px;
+    top: 0;
+    width: 0;
+}
+
+.create-account-dialog .panel-background > .top-left {
+    background: rgb(238, 238, 238);
+    border: rgb(238, 238, 238) solid 1px;
+    border-radius: 5px;
+    left: 10px !important;
+    top: 15px !important;
+}
+
+.create-account-dialog .panel-background > .top-right {
+    background: rgb(238, 238, 238);
+    border: rgb(238, 238, 238) solid 1px;
+    border-radius: 5px;
+    right: 10px !important;
+    top: 15px !important;
+}
+
+.sc-button-view.create-account-cancel {
+    background: red;
+    border: 1px solid darkred;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+
+    & label {
+        color: white;
+        cursor: pointer;
+        height: $row-height !important;
+        letter-spacing: 0.02em;
+        line-height: $row-height !important;
+        padding-top: 0;
+        text-shadow: none;
+    }
+}
+
+.sc-button-view.create-account-ok {
+    background: green;
+    border: 1px solid darkgreen;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+
+    &.disabled {
+        background: none;
+        border: 1px solid rgba(80, 80, 80, 0.4);
+        cursor: not-allowed;
+    }
+    &.disabled label {
+        color: #606060;
+        cursor: not-allowed;
+        font-style: italic;
+    }
+    & label {
+        color: white;
+        cursor: pointer;
+        height: $row-height !important;
+        letter-spacing: 0.02em;
+        line-height: $row-height !important;
+        padding-top: 0;
+        text-shadow: none;
+    }
+}
+
 .hint.ellipsis {
     font-style: italic;
 }
@@ -340,6 +456,11 @@ html {
     height: $row-height;
 }
 
+p.create-account-text {
+    line-height: 1.3em;
+    padding-bottom: 0.4em;
+}
+
 .sc-outline span.has-children {
     -moz-transform: scale(0.707) rotate(45deg);
     -webkit-transform: scale(0.707) rotate(45deg);
@@ -458,6 +579,21 @@ html {
     .search-dialog-content {
         background: #e0e0e0;
     }
+}
+
+.search-dialog .panel-background > .top {
+    border-bottom: $application-bar-background solid 20px;
+    border-left: rgba(0, 0, 0, 0) solid 10px;
+    border-right: rgba(0, 0, 0, 0) solid 10px;
+    border-top: $application-bar-background solid 0;
+    bottom: auto;
+    display: block;
+    height: 0 !important;
+    left: 85% !important;
+    position: absolute;
+    right: 50px;
+    top: 0;
+    width: 0;
 }
 
 .sign-in-menu {

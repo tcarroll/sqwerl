@@ -14,22 +14,22 @@
     {{else}}
         {{#if isShowingPartialResults}}
             <div class="showing-partial-results-description">Showing {{startingAt}} through {{limit}} of {{total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
-            <table>
-                <thead>
-                    <tr>
-                        <td></td>
-                        <td>Description</td>
-                        <td>Type</td>
-                        <td>Links</td>
-                    </tr>
-                </thead>
-                {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsController.searchItems" tagName="tbody" itemTagName="tr"}}
-                    <td>{{content.index}}</td><td>{{content.name}}</td><td></td>{{content.id}}<td>{{content.links}}</td>
-                {{/collection}}
-            </table>
-            <div class="search-refine-link">
-                <a href="">These are not the things I'm looking for...</a>
-            </div>
         {{/if}}
+        <table>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Description</td>
+                    <td>Type</td>
+                    <td>Links</td>
+                </tr>
+            </thead>
+            {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsController.searchItems" tagName="tbody" itemTagName="tr"}}
+                {{view Sqwerl.SearchItemView}}
+            {{/collection}}
+        </table>
+        <div class="search-refine-link">
+            <a href="">These are not the things I'm looking for...</a>
+        </div>
     {{/if}}
 </div>

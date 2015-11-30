@@ -1,14 +1,24 @@
 /*globals SC, Sqwerl*/
 
-Sqwerl.SearchItemView = SC.TemplateCollectionView.create({
+Sqwerl.SearchItemView = SC.TemplateView.create({
 
     firstFoundInPropertyBinding: 'Sqwerl.SearchItemController.firstFoundInProperty',
+
+    foundInPropertiesBinding: 'Sqwerl.SearchItemController.foundInProperties',
 
     hasFoundInPropertiesBinding: 'Sqwerl.SearchItemController.hasFoundInProperties',
 
     hasMoreThanOneFoundInPropertyBinding: 'Sqwerl.SearchItemController.hasMoreThanOneFoundInProperty',
 
+    indexBinding: 'Sqwerl.SearchItemController.index',
+
+    linksBinding: 'Sqwerl.SearchItemController.links',
+
+    nameBinding: 'Sqwerl.SearchItemController.name',
+
+    pathNameBinding: 'Sqwerl.SqwerchItemController.pathName',
+
     relativeUrlBinding: 'Sqwerl.SearchItemController.relativeUrl',
 
-    itemViewTemplateName: 'search_item'
+    templateName: 'search_item'
 });

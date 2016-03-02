@@ -1,15 +1,14 @@
 <div class="properties-title">
     <div class="title-bar-title">{{name}}</div>
-    <div class="title-bar-type">Role <span class="ti-face-smile"></span></div>
+    <div class="title-bar-type">is a security role</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
+            <span>with</span>
             {{#if hasMultipleConnections}}
                 {{connectionCount}} links
             {{else}}
-                1 link
+                one link
             {{/if}}
-        {{else}}
-            No links
         {{/if}}
     </span>
 </div>

@@ -1,15 +1,14 @@
 <div class="properties-title">
     <div class="title-bar-title">{{name}}</div>
-    <div class="title-bar-type">Category <span class="ti-folder"></span></div>
+    <div class="title-bar-type">is a category</div>
     <span class="title-bar-links">
         {{#if hasChildren}}
+            <span>with</span>
             {{#if hasMultipleChildren}}
                 {{childCount}} children
             {{else}}
-                1 child
+                one child
             {{/if}}
-        {{else}}
-            No children
         {{/if}}
     </span>
 </div>

@@ -1,12 +1,14 @@
 <div class="properties-title">
     <div class="title-bar-title">{{name}}</div>
-    <div class="tile-bar-type">Type of thing</div>
+    <div class="tile-bar-type">is a type of thing</div>
     <span class="title-bar-links">
         {{#if hasChildren}}
-            {{#if hasMultipleChildren}}{{childCount}} children
-            {{else}}1 child
+            <span>that has</span>
+            {{#if hasMultipleChildren}}
+                {{childCount}} children
+            {{else}}
+                one child
             {{/if}}
-        {{else}}No children
         {{/if}}
     </span>
 </div>

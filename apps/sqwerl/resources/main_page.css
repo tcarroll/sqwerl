@@ -95,25 +95,6 @@ a.logo-link {
     background: $application-bar-background;
 }
 
-.application-menu {
-    font-size: 14px;
-    font-weight: lighter;
-    line-height: $row-height;
-    right: 0;
-    text-align: center;
-    vertical-align: middle;
-    width: 3em;
-
-    a.menu-button {
-        color: #f0f0f0;
-        cursor: pointer;
-        font-family: Arial, sans-serif;
-        font-size: 11pt;
-        font-weight: 400;
-        letter-spacing: 0.05em;
-    }
-}
-
 .application-search-field {
     right: 3em;
     width: 270px;
@@ -246,6 +227,36 @@ body {
 
 .hint.ellipsis {
     font-style: italic;
+}
+
+.sc-view.application-menu {
+    background: $application-bar-button-background;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: $row-height;
+    text-align: center;
+    vertical-align: middle;
+
+    &:hover {
+        -moz-animation: menu-button-hover 0.3s ease 0s 1;
+        -webkit-animation: menu-button-hover 0.3s ease 0s 1;
+        animation: menu-button-hover 0.3s ease 0s 1;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    a.menu-button {
+        bottom: 4px;
+        color: $application-bar-menu-button-text-color;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        letter-spacing: 0.02em;
+        position: relative;
+        text-decoration: none;
+    }
 }
 
 .sc-view.create-account-menu {
@@ -506,7 +517,6 @@ p.create-account-text {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 3px;
     cursor: pointer;
-    /* display: none; TODO - Make visible after signing in is supported */
     font-size: 14px;
     line-height: $row-height;
     text-align: center;
@@ -533,9 +543,7 @@ p.create-account-text {
 }
 
 .search-close {
-    label {
-        font-size: 0.8em;
-    }
+    line-height: $row-height;
 }
 
 .search-dialog {
@@ -562,6 +570,7 @@ p.create-account-text {
                 height: $row-height;
                 letter-spacing: 0.02em;
                 line-height: $row-height;
+                padding-top: 0;
                 text-align: center;
                 text-shadow: none;
             }
@@ -598,7 +607,7 @@ p.create-account-text {
 
 .sign-in-menu {
     /* TODO - Hidden for now until we implement signing in. */
-    display: none;
+    /* display: none; */
 }
 
 .small-sqwerl-logo {

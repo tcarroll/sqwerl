@@ -1,32 +1,70 @@
-/*globals SC, Sqwerl*/
+/*globals Handlebars, SC, Sqwerl*/
 
-Sqwerl.SearchItemController = SC.ObjectController.create({
+Sqwerl.SearchItemController = SC.Object.extend({
+
+    model: null,
 
     firstFoundInProperty: Sqwerl.property(function () {
         'use strict';
-        var foundInProperties = this.get('foundInProperties');
+        var foundInProperties = this.model.foundInProperties;
         return (foundInProperties && (foundInProperties.length > 0)) ? foundInProperties[0] : null;
+    }),
+
+    foundInProperties: Sqwerl.property(function () {
+        'use strict';
+        return this.model.foundInProperties;
     }),
 
     hasFoundInProperties: Sqwerl.property(function () {
         'use strict';
-        var foundInProperties = this.get('foundInProperties');
+        var foundInProperties = this.model.foundInProperties;
         return foundInProperties && (foundInProperties.length > 0);
     }),
 
     hasMoreThanOneFoundInProperty: Sqwerl.property(function () {
         'use strict';
-        var foundInProperties = this.get('foundInProperties');
+        var foundInProperties = this.model.foundInProperties;
         return foundInProperties && (foundInProperties.length > 1);
+    }),
+
+    index: Sqwerl.property(function () {
+        'use strict';
+        return this.model.index;
+    }),
+
+    links: Sqwerl.property(function () {
+        'use strict';
+        return this.model.links;
+    }),
+
+    name: Sqwerl.property(function () {
+        'use strict';
+        return this.model.name;
     }),
 
     pathName: Sqwerl.property(function () {
         'use strict';
-        return 'Thing';
+        var path = Handlebars.helpers.thingPath.call(this.model),
+            searchText = Sqwerl.mainPage.get('searchText');
+        if (searchText) {
+            path = Sqwerl.highlightSearchTextInValue(searchText.toLowerCase(), path);
+        }
+        return path;
     }),
 
     relativeUrl: Sqwerl.property(function () {
         'use strict';
-        return '#' + encodeURI(this.get('id'));
+        return '#' + encodeURI(this.model.id);
+    }),
+
+    typeIcon: Sqwerl.property(function () {
+        'use strict';
+        var typeId = Sqwerl.idToTypeId(this.model.id);
+        return (typeId ? Sqwerl.Node.typeIcons[typeId] : 'ti-folder') + ' search-results-type-icon';
+    }),
+
+    typeName: Sqwerl.property(function () {
+        'use strict';
+        return Handlebars.helpers.typeOfThingName.call(this.model);
     })
 });

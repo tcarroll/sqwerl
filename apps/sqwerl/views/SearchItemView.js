@@ -16,7 +16,7 @@ Sqwerl.SearchItemView = SC.TemplateView.create({
 
     nameBinding: 'Sqwerl.SearchItemController.name',
 
-    pathNameBinding: 'Sqwerl.SqwerchItemController.pathName',
+    pathNameBinding: 'Sqwerl.SearchItemController.pathName',
 
     relativeUrlBinding: 'Sqwerl.SearchItemController.relativeUrl',
 

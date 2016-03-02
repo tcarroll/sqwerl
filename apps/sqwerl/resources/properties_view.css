@@ -22,7 +22,7 @@ $properties-value-max-width: 90%;
         display: inline-table;
         height: $row-height;
         line-height: $row-height;
-
+/*
         &:after {
             color: #404040;
             content: '\25cf';
@@ -38,7 +38,7 @@ $properties-value-max-width: 90%;
             margin: 0 0.5em 0 0;
             vertical-align: middle;
         }
-
+*/
         & span {
             margin-right: 4px;
         }

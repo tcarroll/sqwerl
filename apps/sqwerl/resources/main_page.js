@@ -256,7 +256,7 @@ Sqwerl.mainPage = SC.Page.design({
 
             identityButtons: SC.View.design({
                 childViews: 'signInButton createAccountButton signOutButton'.w(),
-                layout: { bottom: 0, right: 330, top: 0, width: 300 },
+                layout: { bottom: 0, right: 375, top: 0, width: 300 },
 
                 signInButton: SC.View.extend({
                     classNames: ['sign-in-menu'],
@@ -322,7 +322,7 @@ Sqwerl.mainPage = SC.Page.design({
             searchBar: SC.View.design({
                 childViews: ['searchTextField'],
                 classNames: ['search-bar'],
-                layout: { bottom: 0, right: 60, top: 0, width: 270 },
+                layout: { bottom: 0, right: 105, top: 0, width: 270 },
 
                 searchTextField: SC.TextFieldView.extend({
                     classNames: ['application-search-field'],
@@ -351,16 +351,14 @@ Sqwerl.mainPage = SC.Page.design({
 
             menu: SC.View.extend({
                 classNames: ['application-menu'],
-                layout: { bottom: 0, right: 0, top: 0, width: 60 },
+                layout: { bottom: 4, right: 10, top: 4, width: 90 },
                 mouseDown: function () {
                     'use strict';
                     // TODO
                 },
-                render: function (renderContext) {
+                render: function (context) {
                     'use strict';
-                    var context = renderContext.begin('div');
-                    context.begin('a').addClass('menu-button').begin('span').addClass('ti-more-alt').end().end();
-                    renderContext = context.end();
+                    context.begin('a').addClass('menu-button').text(this.get('title')).begin('span').end().end();
                 },
                 title: 'mainPage.menu.title'.loc()
             })
@@ -518,7 +516,7 @@ Sqwerl.mainPage = SC.Page.design({
                 }),
 
                 applicationMenuView: SC.View.extend({
-                    classNames: ['application-menu'],
+                    classNames: ['application-menu-view'],
                     layout: { bottom: 0, top: 0, right: 0, width: 150 }
                 })
             })
@@ -554,28 +552,44 @@ Sqwerl.mainPage = SC.Page.design({
      */
     onSearchCompleted: function (response, parameters) {
         'use strict';
-        var foundInProperties,
+        var searchItemController,
+            searchItems = [],
             results,
-            things = [];
+            searchText;
         if (response.status === 200) {
             results = Sqwerl.convertToModel(response.body());
-/*
-            results.get('things').forEach(function (thing) {
-                foundInProperties = thing.foundInProperties;
-                thing.relativeUrl = '#' + encodeURI(thing.id);
-                thing.typeIcon = Sqwerl.Node.typeIcons[Sqwerl.idToTypeId(thing.id)];
-                if (foundInProperties && (foundInProperties.length > 0)) {
-                    thing.firstFoundInProperty = foundInProperties[0];
-                    thing.hasFoundInProperties = true;
-                } else {
-                    thing.hasFoundInProperties = false;
-                }
-                things.push(SC.Object.create(thing));
-            });
-            results.set('things', new SC.ArrayController().set('content', things));
-*/
+            searchText = results.text.toLowerCase();
             Sqwerl.get('SearchResultsController').set('content', results);
+            results.get('searchItems').forEach(function (searchItem) {
+                searchItemController = Sqwerl.SearchItemController.create();
+                searchItemController.set('model', searchItem);
+                if (searchItem.foundInProperties) {
+                    searchItem.foundInProperties.forEach(function (foundInProperty) {
+                        foundInProperty.value = Sqwerl.highlightSearchTextInValue(searchText, foundInProperty.value);
+                    });
+                }
+                searchItems.push(searchItemController);
+            });
+            Sqwerl.get('SearchResultsTableController').set('content', searchItems);
             Sqwerl.mainPage.searchDialog.contentView.containerView.set('nowShowing', Sqwerl.get('SearchResultsView'));
+            $('body').on('click', '#search-links-column-header', function () {
+                if (!Sqwerl.mainPage.searchDialog.get('isSearching')) {
+                    Sqwerl.get('SearchResultsController').toggleSortOrder('Links');
+                    Sqwerl.mainPage.search();
+                }
+            });
+            $('body').on('click', '#search-description-column-header', function () {
+                if (!Sqwerl.mainPage.searchDialog.get('isSearching')) {
+                    Sqwerl.get('SearchResultsController').toggleSortOrder('Name');
+                    Sqwerl.mainPage.search();
+                }
+            });
+            $('body').on('click', '#search-type-column-header', function () {
+                if (!Sqwerl.mainPage.searchDialog.get('isSearching')) {
+                    Sqwerl.get('SearchResultsController').toggleSortOrder('Type');
+                    Sqwerl.mainPage.search();
+                }
+            });
         } else if (response.status === 413) {
             // TODO - Ask, and allow the user, to refine his or her search criteria.
             console.log('Search failed with status code ' + response.status + (response.errorObject ? ', error: ' + response.errorObject.message : ''));
@@ -592,6 +606,7 @@ Sqwerl.mainPage = SC.Page.design({
     onSearchTextChanged: function () {
         'use strict';
         var searchText = this.get('searchText');
+        // TODO?
     }.observes('Sqwerl.mainPage.searchText'),
 
     /**
@@ -627,14 +642,14 @@ Sqwerl.mainPage = SC.Page.design({
 
                 searchTitle: SC.LabelView.extend({
                     classNames: ['search-title'],
-                    layout: { bottom: 0, height: Sqwerl.rowHeight, left: 0, right: 60, top: 0 },
+                    layout: { bottom: 0, height: Sqwerl.rowHeight, left: 0, right: 92, top: 0 },
                     valueBinding: 'Sqwerl.mainPage.searchDialog.title'
                 }),
 
                 searchClose: SC.ButtonView.design({
                     action: 'hide',
                     classNames: ['search-close'],
-                    layout: { bottom: 0, right: 0, top: 0, width: 60 },
+                    layout: { bottom: 0, right: 0, top: 0, width: 92 },
                     title: 'Close'
                 })
             }),
@@ -702,9 +717,9 @@ Sqwerl.mainPage = SC.Page.design({
                 if (isSearching) {
                     text = 'Searching for \'' + Sqwerl.mainPage.get('searchText') + '\'...';
                 } else if (results && (results.total > 0)) {
-                    text = 'Found ' + results.total + ((results.total > 1) ? ' things' : 'thing') + ' that matched \'' + searchText + '\'';
+                    text = 'Found ' + results.total + ((results.total > 1) ? ' things' : 'thing');
                 } else {
-                    text = 'Nothing found that matched \'' + searchText + '\'';
+                    text = 'Found nothing matching \'' + searchText + '\'';
                 }
             }
             return text;

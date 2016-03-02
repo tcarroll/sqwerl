@@ -44,6 +44,22 @@ Sqwerl.handleError = function handleError(error) {
     SC.error('%@: A serious error has occurred. %@', this, error.stack);
 };
 
+Sqwerl.highlightSearchTextInValue = function (searchText, value) {
+    'use strict';
+    var i = 0;
+    if (value) {
+        i = value.toLowerCase().indexOf(searchText);
+        if (i !== -1) {
+            return value.substring(0, i) +
+                    '<span class="highlighted-search-text">' +
+                    value.substring(i, i + searchText.length) +
+                    '</span>' +
+                    Sqwerl.highlightSearchTextInValue(searchText, value.substring(i + searchText.length));
+        }
+    }
+    return value;
+};
+
 Sqwerl.idToTypeId = function (id) {
     'use strict';
     var components = id.split('/');
@@ -93,6 +109,7 @@ Sqwerl.registerHandlebarsHelpers = function () {
     Handlebars.registerHelper('typeOfThingName', function () {
         var typeName = convertToTypeId(this.id);
         return {
+            'accounts': 'Account',
             'articles': 'Article',
             'authors': 'Author',
             'books': 'Book',

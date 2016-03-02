@@ -1,31 +1,49 @@
 <div class="search-results">
     {{#if hasOnlyOne}}
-        <div class="search-result"><span {{bindAttr class="typeIcon search-results-type-icon"}}></span><a {{bindAttr href="relativeUrl"}}>{{#thingPath}}{{/thingPath}}</a><span class="search-results-type-name">({{#typeOfThingName}}{{/typeOfThingName}})</span></div>
-        {{#if hasFoundInProperties}}
-            {{#if hasMoreThanOneFoundInProperty}}
-                <p class="found-in-properties-title">Search text found in:</p>
-                {{#each foundInProperties tagName="ul"}}
-                    <span class="found-in-property-name">{{this}}</span>
-                {{/each}}
-            {{else}}
-                <div class="search-result-found-in">The thing's <span class="found-in-property-name">{{firstFoundInProperty}}</span> contains the search text</div>
+        {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsTableController"}}
+            <div class="search-result"><a {{bindAttr href="content.relativeUrl"}}>{{{content.pathName}}}</a><span class="search-results-type-name"><span {{bindAttr class="content.typeIcon"}}></span> ({{content.typeName}})</span></div>
+            {{#if content.hasFoundInProperties}}
+                {{#if content.hasMoreThanOneFoundInProperty}}
+                    <p class="found-in-properties-title">Found in:
+                        {{#each content.foundInProperties tagName="div"}}
+                            <span class="found-in-property-name-list-item">{{this.name}}</span>&nbsp;&ndash;&nbsp;<span class="search-property-value">{{{this.value}}}</span>
+                        {{/each}}
+                    </p>
+                {{else}}
+                    <div class="search-result-found-in">Found in <span class="found-in-property-name">{{content.firstFoundInProperty.name}}</span>&nbsp;&ndash;&nbsp;<span>{{{content.firstFoundInProperty.value}}}</span></div>
+                {{/if}}
             {{/if}}
-        {{/if}}
+        {{/collection}}
     {{else}}
         {{#if isShowingPartialResults}}
             <div class="showing-partial-results-description">Showing {{startingAt}} through {{limit}} of {{total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
         {{/if}}
-        <table>
+        <table class="search-results-table">
             <thead>
                 <tr>
-                    <td></td>
-                    <td>Description</td>
-                    <td>Type</td>
-                    <td>Links</td>
+                    <td class="search-results-index-cell"></td>
+                    <td class="search-results-description-cell"><div id="search-description-column-header">Name <span {{bindAttr class="isSortedAscendinglyByName isSortedDescendinglyByName"}}></span></div></td>
+                    <td class="search-results-type-cell"><div id="search-type-column-header">Type <span {{bindAttr class="isSortedAscendinglyByType isSortedDescendinglyByType"}}></span></div></td>
+                    <td class="search-results-links-cell"><div id="search-links-column-header">Links <span {{bindAttr class="isSortedAscendinglyByLinks isSortedDescendinglyByLinks"}}></span></div></td>
                 </tr>
             </thead>
-            {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsController.searchItems" tagName="tbody" itemTagName="tr"}}
-                {{view Sqwerl.SearchItemView}}
+            {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsTableController" tagName="tbody" itemTagName="tr"}}
+                <td class="search-results-index-cell">{{content.index}}</td>
+                <td class="search-results-description-cell"><a {{bindAttr href="content.relativeUrl"}}>{{{content.pathName}}}</a><span {{bindAttr class="content.typeIcon"}}></span>
+                    {{#if content.hasFoundInProperties}}
+                        {{#if content.hasMoreThanOneFoundInProperty}}
+                            <p class="found-in-properties-title">Found in:
+                                {{#each content.foundInProperties tagName="div"}}
+                                    <span class="found-in-property-name-list-item">{{this.name}}</span>&nbsp;&ndash;&nbsp;<span class="search-property-value">{{{this.value}}}</span>
+                                {{/each}}
+                            </p>
+                        {{else}}
+                            <div class="search-results-found-in">Found in <span class="found-in-property-name">{{content.firstFoundInProperty.name}}</span>&nbsp;&ndash;&nbsp;<span>{{{content.firstFoundInProperty.value}}}</span></div>
+                        {{/if}}
+                    {{/if}}
+                </td>
+                <td class="search-results-type-cell"><span class="search-results-type-name">{{content.typeName}}</span></td>
+                <td class="search-results-links-cell">{{content.links}}</td>
             {{/collection}}
         </table>
         <div class="search-refine-link">

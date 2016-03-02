@@ -15,7 +15,9 @@ SC.stringsFor('en', {
     'mainPage.busyPanel.contentView.label.value5': 'U can haz data realz soon...',
     'mainPage.busyPanel.contentView.label.value6': 'Thanks for being patient...',
 
-    'mainPage.searchField.promptText': 'Search for things',
+    'mainPage.menu.title': 'Menu...',
+
+    'mainPage.searchField.promptText': 'Search things',
     'mainPage.createAccountButton.title': 'Create account',
     'mainPage.signOutButton.title': 'Sign out',
 

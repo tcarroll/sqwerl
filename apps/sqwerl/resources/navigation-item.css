@@ -1,4 +1,5 @@
 $even-list-item-background: #F4FFF4;
+$list-item-bottom-border: 1px solid #f0f0f0;
 $loading-text-color: #606060;
 $odd-list-item-background: #F1FBF1;
 $selected-list-item-background: #1E69DE;
@@ -371,7 +372,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     .sc-outline {
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: $list-item-bottom-border;
 
         .count {
             background-color: transparent;

@@ -1,15 +1,13 @@
 <div class="properties-title">
     <div class="title-bar-title">{{name}}</div>
-    <div class="title-bar-type">Collection</div>
+    <div class="title-bar-type">contains</div>
     <span class="title-bar-links">
         {{#if hasChildren}}
             {{#if hasMultipleChildren}}
-                {{childCount}} children
+                {{childCount}} things
             {{else}}
-                1 child
+                 one thing
             {{/if}}
-        {{else}}
-            0 children
         {{/if}}
     </span>
 </div>

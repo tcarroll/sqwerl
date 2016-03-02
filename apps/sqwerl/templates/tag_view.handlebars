@@ -1,15 +1,14 @@
 <div class="properties-title">
     <div class="title-bar-title">{{text}}</div>
-    <div class="title-bar-type">Tag <span class="ti-tag"></span></div>
+    <div class="title-bar-type">is a tag</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
+            <span>with</span>
             {{#if hasMultipleConnections}}
                 {{connectionCount}} links
             {{else}}
-                1 link
+                one link
             {{/if}}
-        {{else}}
-            No links
         {{/if}}
     </span>
 </div>

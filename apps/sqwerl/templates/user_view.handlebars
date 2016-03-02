@@ -1,15 +1,14 @@
 <div class="properties-title">
     <div class="title-bar-title">{{name}}</div>
-    <div class="title-bar-type">User <span class="ti-user"></span></div>
+    <div class="title-bar-type">is a user</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
+            <span>who has</span>
             {{#if hasMultipleConnections}}
                 {{connectionCount}} links
             {{else}}
-                1 link
+                one link
             {{/if}}
-        {{else}}
-            No links
         {{/if}}
     </span>
 </div>
@@ -75,7 +74,7 @@
         {{#if hasHasListenedTo}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleHasListenedTo}}Has listened to {hasListenedTo.totalCount}} things{{else}}Has listened to{{/if}}
+                    {{#if hasMultipleHasListenedTo}}Has listened to {{hasListenedTo.totalCount}} things{{else}}Has listened to{{/if}}
                 </div>
                 {{#each hasListenedTo.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat

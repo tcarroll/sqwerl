@@ -255,7 +255,8 @@ Sqwerl.mainPage = SC.Page.design({
             }),
 
             identityButtons: SC.View.design({
-                childViews: 'signInButton createAccountButton signOutButton'.w(),
+//                childViews: 'signInButton createAccountButton signOutButton'.w(),
+                childViews: 'createAccountButton'.w(),
                 layout: { bottom: 0, right: 375, top: 0, width: 300 },
 
                 signInButton: SC.View.extend({

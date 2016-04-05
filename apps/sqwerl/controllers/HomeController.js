@@ -29,32 +29,26 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         'use strict';
         var controller = this,
             thingCount = 0;
-        if (this.catalogDatabase && this.defaultDatabase) {
-            thingCount = this.catalogDatabase.get('thingCount') + this.defaultDatabase.get('thingCount');
+        if (this.defaultDatabase) {
+            thingCount = this.defaultDatabase.get('thingCount');
         } else {
-            if (!this.catalogDatabase) {
-                this.fetchDatabase(Sqwerl.catalogDatabaseName, function (results) {
-                    controller.set('catalogDatabase', controller.convertToModel(results));
-                });
-            }
-            if (!this.defaultDatabase) {
-                this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
-                    controller.set('defaultDatabase', controller.convertToModel(results));
-                });
-            }
+            this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
+                controller.set('defaultDatabase', controller.convertToModel(results));
+            });
         }
-        return thingCount;
-    }, 'catalogDatabase', 'defaultDatabase'),
+        return thingCount.toLocaleString();
+    }),
 
     fetchDatabase: function (databaseName, callback) {
         'use strict';
         var id = '/types/databases/' + databaseName;
-        Sqwerl.store.find(SC.Query.create({
+        return Sqwerl.store.find(SC.Query.create({
             conditions: 'id = {id}',
             parameters: {
                 id: id,
                 onError: function (response) {
                     // TODO
+                    console.log('Error: ' + response);
                 },
                 onSuccess: function (results) {
                     callback(results);

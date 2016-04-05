@@ -20,6 +20,7 @@ function main() {
  */
 Sqwerl.handleError = function handleError(error) {
     'use strict';
+    var stack = new Error().stack;
     SC.error('%@ Nuts! Sqwerl has encountered an error condition that it can\'t recover from.\n%@', this, error.stack);
     sweetAlert({
         confirmButtonColor: 'rgba(0, 40, 0, 0.8)',
@@ -36,7 +37,7 @@ Sqwerl.handleError = function handleError(error) {
         emailContent += 'platform=\'' + navigator.platform + '\'\n';
         emailContent += 'screenResolution=\'' + window.screen.width + 'x' + window.screen.height + '\'\n';
         emailContent += 'time=\'' + new Date().toISOString() + '\'\n';
-        emailContent += 'trace=\'' + error.stack + '\'\n';
+        emailContent += 'trace=\'' + stack + '\'\n';
         emailContent += 'user=\'' + Sqwerl.userName + '\'\n';
         emailContent += 'userAgent=\'' + navigator.userAgent + '\'\n';
         window.open('mailto:sqwerl@sqwerl.com?subject=Sqwerl Error Report&body=%@'.fmt(encodeURI(emailContent)));
@@ -174,7 +175,7 @@ Sqwerl.route = function (parameters) {
     'use strict';
     Sqwerl.mainPage.searchDialog.hide();
     Sqwerl.mainPage.set('isSearching', false);
-    Sqwerl.navigationController.goTo('/' + parameters['']);
+    Sqwerl.navigationController.goTo('/' + parameters[''], window.onerror);
 };
 
 window.onerror = function (errorMessage, url, lineNumber) {

@@ -147,6 +147,8 @@ Sqwerl.RestDataSource =  SC.DataSource.create({
                             onSuccess(responseBody);
                         }
                     } else {
+                        // TODO - Handle retrying the query. The query may have failed due to network problems,
+                        // or the server going down temporarily.
                         store.dataSourceDidErrorQuery(query, response);
                         if (onError) {
                             onError(response);

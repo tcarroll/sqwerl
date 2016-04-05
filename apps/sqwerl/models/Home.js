@@ -4,5 +4,6 @@ sc_require('models/Thing');
 
 Sqwerl.Home = SC.Object.extend({
 
-    defaultDatabaseDescription: ''
+    defaultDatabaseDescription: '',
+    numberOfThings: 0
 });

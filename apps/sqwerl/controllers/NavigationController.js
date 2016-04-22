@@ -98,7 +98,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
         var controller = this,
             id;
         SC.info('%@: Go to: %@', this, path);
-        Sqwerl.mainPage.setNavigationBusy(true);
+        Sqwerl.mainPage.setNavigationBusy(true, this.oldSelectedNode);
         if (this.oldSelectedNode) {
             id = this.oldSelectedNode.get('id');
             Sqwerl.store.find(SC.Query.create({

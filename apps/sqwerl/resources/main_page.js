@@ -105,70 +105,416 @@ Sqwerl.mainPage = SC.Page.design({
         classNames: ['create-account-dialog'],
 
         contentView: SC.View.create({
-            childViews: 'descriptionLabel emailField okButton closeButton'.w(),
+            childViews: 'currentStepIndicator step1 step2 step3'.w(),
             classNames: ['create-account-dialog-content'],
 
-            descriptionLabel: SC.View.extend({
-                layout: { height: Sqwerl.rowHeight * 4, left: 15, top: 15, width: 320 },
-                render: function (renderContext) {
-                    'use strict';
-                    renderContext.push('<p class="create-account-text">Enter your email address, and we will send you a single email with instructions for creating your account.</p>');
+            hide: function () {
+                Sqwerl.mainPage.createAccountDialog.hide();
+            },
+
+            next: function () {
+                var view = Sqwerl.mainPage.createAccountDialog.contentView;
+                view.set('step', view.get('step') + 1);
+            },
+
+            step: 1,
+
+            currentStepIndicator: SC.View.create({
+                childViews: 'dot1 dash1 dot2 dash2 dot3'.w(),
+                classNames: ['step-indicator'],
+                layout: { height: Sqwerl.rowHeight / 2, top: 15, width: Sqwerl.rowHeight * 2.5  },
+
+                dot1: SC.View.create({
+                    classNames: ['dot1', 'dot'],
+                    layout: { height: Sqwerl.rowHeight / 2, width: Sqwerl.rowHeight / 2 }
+                }),
+
+                dash1: SC.View.create({
+                    classNames: ['dash1', 'dash'],
+                    layout: { height: Sqwerl.rowHeight / 2, width: Sqwerl.rowHeight / 2 }
+                }),
+
+                dot2: SC.View.create({
+                    classNames: ['dot2', 'dot'],
+                    layout: { height: Sqwerl.rowHeight / 2, width: Sqwerl.rowHeight / 2 }
+                }),
+
+                dash2: SC.View.create({
+                    classNames: ['dash2', 'dash'],
+                    layout: { height: Sqwerl.rowHeight / 2, width: Sqwerl.rowHeight / 2 }
+                }),
+
+                dot3: SC.View.create({
+                    classNames: ['dot3', 'dot'],
+                    layout: { height: Sqwerl.rowHeight / 2, width: Sqwerl.rowHeight / 2 }
+                })
+            }),
+
+            step1: SC.View.create({
+                childViews: 'descriptionLabel emailField okButton closeButton'.w(),
+                classNames: ['step1'],
+
+                descriptionLabel: SC.View.extend({
+                    layout: { height: Sqwerl.rowHeight, left: 15, top: 0, width: 320 },
+                    render: function (renderContext) {
+                        'use strict';
+                        renderContext.push(
+                            '<p class="create-account-text">Enter your email address. We promise we won\'t share it.</p>');
+                    }
+                }),
+
+                emailField: SC.TextFieldView.create({
+                    hint: 'For example: you@somewhere.com',
+                    classNames: ['create-account-email-field'],
+                    keyUp: function (event) {
+                        'use strict';
+                        var handledEvent = NO;
+                        if (event.keyCode === 13) {
+                            // TODO - Handle this. Send email if valid, show error message otherwise.
+                            handledEvent = YES;
+                        } else if (event.keyCode === 27) {
+                            // TODO - Handle Escape key has been pressed by hiding create account dialog.
+                        }
+                        return handledEvent;
+                    },
+
+                    layout: { left: 15, top: Sqwerl.rowHeight + 6, height: Sqwerl.rowHeight, width: 320 },
+
+                    onValueChanged: function () {
+                        'use strict';
+                        var cancelButton = $('.sc-view.step1create-account-cancel'),
+                            contentView = Sqwerl.mainPage.createAccountDialog.contentView,
+                            dialog = Sqwerl.mainPage.createAccountDialog,
+                            email = this.get('value'),
+                            emailField = $('.sc-view.step1.create-account-email-field'),
+                            okButton = dialog.contentView.step1.okButton,
+                            step = dialog.contentView.get('step');
+                        if (email && (email.length > 0)) {
+                            if (/^[a-zA-Z0-9_\.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/.test(this.get('value'))) {
+                                okButton.animate({
+                                    opacity: 1, height: Sqwerl.rowHeight, width: 320
+                                }, {
+                                    duration: 0.3, timing: 'ease-in'
+                                });
+                                dialog.contentView.step1.closeButton.animate({
+                                    top: (Sqwerl.rowHeight * 3) + 30
+                                }, {
+                                    duration: 0.3,
+                                    timing: 'ease-in'
+                                });
+                                Sqwerl.mainPage.createAccountDialog.animate({
+                                    height: Sqwerl.rowHeight * 6.5
+                                }, {
+                                    duration: 0.3,
+                                    timing: 'ease-in'
+                                });
+                                dialog.set('wasValid', true);
+                                dialog.set('okButtonText', 'Go to step 2 &#x27A4;');
+                                dialog.set('allowRegistration', true);
+                            } else {
+                                if (dialog.get('wasValid')) {
+                                    // TODO - Use JQuery to change OK button's appearance.
+                                    dialog.set('okButtonText', 'Not a valid email address. Please fix.');
+                                    okButton.animate({
+                                        opacity: 1,
+                                        height: Sqwerl.rowHeight, width: 320
+                                    }, {
+                                        duration: 0.3,
+                                        timing: 'ease-in'
+                                    });
+                                }
+                                dialog.set('allowRegistration', false);
+                                dialog.set('wasValid', false);
+                            }
+                        } else {
+                            okButton.animate({
+                                opacity: 0, height: 0, width: 0
+                            }, {
+                                duration: 0.3, timing: 'ease-out'
+                            });
+                            dialog.contentView.step1.closeButton.animate({
+                                top: (Sqwerl.rowHeight * 2) + 18
+                            }, {
+                                duration: 0.3
+                            });
+                            dialog.set('allowRegistration', false);
+                        }
+                    }.observes('value')
+                }),
+
+                okButton: SC.ButtonView.create({
+                    action: 'next',
+                    classNames: 'create-account-ok'.w(),
+                    enabledBinding: "Sqwerl.mainPage.createAccountDialog.allowRegistration",
+                    layout: { left: 15, top: (Sqwerl.rowHeight * 2) + 18, height: 0, width: 0 },
+                    titleBinding: "Sqwerl.mainPage.createAccountDialog.okButtonText"
+                }),
+
+                closeButton: SC.ButtonView.create({
+                    action: 'hide',
+                    classNames: ['create-account-cancel'],
+                    layout: { left: 15, top: (Sqwerl.rowHeight * 2) + 18, height: Sqwerl.rowHeight, width: 320 },
+                    title: 'No thanks'
+                }),
+
+                hide: function () {
+                    Sqwerl.mainPage.createAccountDialog.set('createAccountDialogIsVisible', NO);
+                },
+
+                layout: { top: (Sqwerl.rowHeight / 2) + 15 },
+
+                next: function () {
+                    var view = Sqwerl.mainPage.createAccountDialog.contentView;
+                    view.set('step', view.get('step') + 1);
+                    Sqwerl.mainPage.createAccountDialog.contentView.step1.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step1.descriptionLabel.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step1.emailField.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step1.okButton.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step1.closeButton.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.animate({
+                        left: 0
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.descriptionLabel.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.emailField.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.okButton.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.closeButton.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.emailField.set(
+                        'value',
+                        Sqwerl.mainPage.createAccountDialog.contentView.step1.emailField.get('value')
+                    );
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.okButton.becomeFirstResponder();
                 }
             }),
 
-            emailField: SC.TextFieldView.create({
-                hint: 'example: your.name@email.com',
-                keyUp: function (event) {
-                    'use strict';
-                    var handledEvent = NO;
-                    if (event.keyCode === 13) {
-                        // TODO - Handle this. Send email if valid, show error message otherwise.
-                        handledEvent = YES;
-                    } else if (event.keyCode === 27) {
-                        // TODO - Handle Escape key has been pressed.
+            step2: SC.View.create({
+                childViews: 'descriptionLabel emailField okButton closeButton'.w(),
+                classNames: ['step2'],
+
+                descriptionLabel: SC.View.extend({
+                    layout: { height: Sqwerl.rowHeight, left: 335, top: 0, width: 320 },
+                    render: function (renderContext) {
+                        'use strict';
+                        renderContext.push(
+                                '<p class="create-account-text">You sure this is your email address?</p>');
                     }
-                    return handledEvent;
-                },
-                layout: { left: 15, top: (Sqwerl.rowHeight * 3) + 15, height: Sqwerl.rowHeight, width: 320 },
-                onValueChanged: Sqwerl.observes(function () {
-                    'use strict';
-                    var dialog = Sqwerl.mainPage.createAccountDialog,
-                        email = this.get('value'),
-                        okButton = $('.sc-view.create-account-ok');
-                    if (email && (email.length > 0)) {
-                        if (/^[a-zA-Z0-9_\.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/.test(this.get('value'))) {
-                            okButton.removeClass('disabled');
-                            dialog.set('wasValid', true);
-                            dialog.set('okButtonText', 'Send email address');
-                            dialog.set('allowRegistration', true);
-                        } else {
-                            if (dialog.get('wasValid')) {
-                                // TODO - Use JQuery to change OK button's appearance.
-                                dialog.set('okButtonText', 'Not a valid email address. Please fix.');
-                            }
-                            okButton.addClass('disabled');
-                            dialog.set('allowRegistration', false);
-                            dialog.set('wasValid', false);
+                }),
+
+                emailField: SC.TextFieldView.create({
+                    hint: 'For example: you@somewhere.com',
+                    classNames: ['create-account-email-field'],
+                    keyUp: function (event) {
+                        'use strict';
+                        var handledEvent = NO;
+                        if (event.keyCode === 13) {
+                            // TODO - Handle this. Send email if valid, show error message otherwise.
+                            handledEvent = YES;
+                        } else if (event.keyCode === 27) {
+                            // TODO - Handle Escape key has been pressed.
                         }
-                    } else {
-                        okButton.addClass('disabled');
-                        dialog.set('allowRegistration', false);
-                        dialog.set('okButtonText', 'Please enter your email address');
+                        return handledEvent;
+                    },
+
+                    layout: { left: 335, top: Sqwerl.rowHeight + 6, height: Sqwerl.rowHeight, width: 320 },
+
+                    onValueChanged: function () {
+                        'use strict';
+                        var cancelButton = $('.sc-view.create-account-cancel'),
+                            contentView = Sqwerl.mainPage.createAccountDialog.contentView,
+                            dialog = Sqwerl.mainPage.createAccountDialog,
+                            email = this.get('value'),
+                            emailField = $('.sc-view.step2.create-account-email-field'),
+                            okButton = dialog.contentView.step2.okButton,
+                            step = dialog.contentView.get('step');
+                        if (email && (email.length > 0)) {
+                            if (/^[a-zA-Z0-9_\.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/.test(this.get('value'))) {
+                                okButton.animate({
+                                    opacity: 1, height: Sqwerl.rowHeight, width: 320
+                                }, {
+                                    duration: 0.3, timing: 'ease-in'
+                                });
+                                dialog.contentView.step2.closeButton.animate({
+                                    top: (Sqwerl.rowHeight * 4) + 24
+                                }, {
+                                    duration: 0.3,
+                                    timing: 'ease-in'
+                                });
+                                Sqwerl.mainPage.createAccountDialog.animate({
+                                    height: Sqwerl.rowHeight * 6
+                                }, {
+                                    duration: 0.3,
+                                    timing: 'ease-in'
+                                });
+                                dialog.set('wasValid', true);
+                                dialog.set('okButtonText', (step === 1) ? 'Go to step 2 &#x27A4;' : ((step === 2) ? 'Yes, go to step 3 &#x27a4;' : '&check; OK'));
+                                dialog.set('allowRegistration', true);
+                            } else {
+                                if (dialog.get('wasValid')) {
+                                    // TODO - Use JQuery to change OK button's appearance.
+                                    dialog.set('okButtonText', 'Not a valid email address. Please fix.');
+                                    okButton.animate({
+                                        opacity: 1,
+                                        height: Sqwerl.rowHeight, width: 320
+                                    }, {
+                                        duration: 0.3,
+                                        timing: 'ease-in'
+                                    });
+                                }
+                                dialog.set('allowRegistration', false);
+                                dialog.set('wasValid', false);
+                            }
+                        } else {
+                            okButton.animate({
+                                opacity: 0, height: 0, width: 0
+                            }, {
+                                duration: 0.3, timing: 'ease-out'
+                            });
+                            dialog.set('allowRegistration', false);
+                        }
+                    }.observes('value')
+                }),
+
+                layout: { left: 320, top: (Sqwerl.rowHeight / 2) + 15, visible: false },
+
+                okButton: SC.ButtonView.create({
+                    action: 'next',
+                    classNames: 'create-account-ok'.w(),
+                    enabledBinding: "Sqwerl.mainPage.createAccountDialog.allowRegistration",
+                    layout: { left: 335, top: (Sqwerl.rowHeight * 2) + 18, height: 0, width: 0 },
+                    titleBinding: "Sqwerl.mainPage.createAccountDialog.okButtonText"
+                }),
+
+                closeButton: SC.ButtonView.create({
+                    action: 'hide',
+                    classNames: ['create-account-cancel'],
+                    layout: { left: 335, top: (Sqwerl.rowHeight * 2) + 18, height: Sqwerl.rowHeight, width: 320 },
+                    title: 'I don\'t want to create an account'
+                }),
+
+                next: function () {
+                    var view = Sqwerl.mainPage.createAccountDialog.contentView;
+                    view.set('step', view.get('step') + 1);
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.descriptionLabel.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.emailField.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.okButton.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step2.closeButton.animate({
+                        left: -320
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step3.animate({
+                        left: 0
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step3.descriptionLabel.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step3.okButton.animate({
+                        left: 15
+                    }, {
+                        duration: 0.3,
+                        timing: 'ease-in'
+                    });
+                    Sqwerl.mainPage.createAccountDialog.contentView.step3.okButton.becomeFirstResponder();
+                }
+            }),
+
+            step3: SC.View.create({
+                childViews: 'descriptionLabel okButton'.w(),
+                classNames: ['step3'],
+
+                descriptionLabel: SC.View.extend({
+                    layout: {height: Sqwerl.rowHeight * 2, left: 335, top: 15, width: 320},
+                    render: function (renderContext) {
+                        'use strict';
+                        renderContext.push(
+                                '<p class="create-account-text">Expect an email from us. If you don\'t see it in your inbox, check your junk or spam folders.</p>');
                     }
-                }, 'value')
-            }),
+                }),
 
-            okButton: SC.ButtonView.create({
-                classNames: 'create-account-ok disabled'.w(),
-                enabledBinding: "Sqwerl.mainPage.createAccountDialog.allowRegistration",
-                layout: { left: 15, top: (Sqwerl.rowHeight * 4) + 25, height: Sqwerl.rowHeight, width: 320 },
-                titleBinding: "Sqwerl.mainPage.createAccountDialog.okButtonText"
-            }),
+                layout: { left: 320, visible: false },
 
-            closeButton: SC.ButtonView.create({
-                classNames: ['create-account-cancel'],
-                layout: { left: 15, top: (Sqwerl.rowHeight * 5) + 35, height: Sqwerl.rowHeight, width: 320 },
-                title: 'No thanks'
+                okButton: SC.ButtonView.create({
+                    action: 'next',
+                    classNames: 'create-account-ok'.w(),
+                    enabledBinding: "Sqwerl.mainPage.createAccountDialog.allowRegistration",
+                    layout: {left: 335, top: (Sqwerl.rowHeight * 3) + 12, height: 0, width: 0},
+                    titleBinding: "Sqwerl.mainPage.createAccountDialog.okButtonText"
+                })
             })
         }),
 
@@ -181,28 +527,7 @@ Sqwerl.mainPage = SC.Page.design({
             this.set('createAccountDialogIsVisible', NO);
         },
 
-        isVisibleDidChange: function () {
-            'use strict';
-            if (this.get('createAccountDialogIsVisible')) {
-                this.layout.height = 0;
-                this.append();
-                // Give the email input field the keyboard focus.
-                this.get('contentView').get('childViews')[1].becomeFirstResponder();
-                this.animate(
-                    { opacity: 1, height: 270 },
-                    { duration: 0.3, timing: 'ease-in' }
-                );
-            } else {
-                this.animate(
-                    { opacity: 0, height: 0 },
-                    { duration: 0.3, timing: 'ease-out' },
-                    this,
-                    'remove'
-                );
-            }
-        }.observes('createAccountDialogIsVisible'),
-
-        layout: { centerX: 0, centerY: -50, minHeight: 510 },
+        layout: { centerX: 0, centerY: -50, height: 20, minHeight: 20 },
 
         modalPane: SC.ModalPane.extend({
             classNames: ['sqwerl-modal-pane'],
@@ -212,19 +537,75 @@ Sqwerl.mainPage = SC.Page.design({
             }
         }),
 
-        okButtonText: 'Please enter your email address',
+        okButtonText: 'Enter your email address',
+
+        onIsVisibleDidChange: function () {
+            'use strict';
+            if (this.get('createAccountDialogIsVisible')) {
+                this.layout.height = 30;
+                this.append();
+                this.animate({
+                    opacity: 1, height: Sqwerl.rowHeight * 5
+                }, {
+                    duration: 0.3, timing: 'ease-out'
+                });
+            } else {
+                this.animate({
+                    opacity: 0, height: 30
+                }, {
+                    duration: 0.3, timing: 'ease-out'
+                },
+                    this,
+                    'remove'
+                );
+            }
+        }.observes('createAccountDialogIsVisible'),
 
         show: function () {
             'use strict';
-            var element = $('.create-account-menu'),
+            var contentView = Sqwerl.mainPage.createAccountDialog.contentView,
+                currentStep = Sqwerl.mainPage.createAccountDialog.contentView.get('step'),
+                dialogHeight = Sqwerl.rowHeight * 5,
+                element = $('.create-account-menu'),
                 mainPane = Sqwerl.mainPage.mainPane,
                 mainPaneWidth = mainPane.layout.width,
+                step1 = contentView.step1,
+                step2 = contentView.step2,
+                step3 = contentView.step3,
                 x = element.offset().left + ((element.width() - this.createAccountDialogWidth) / 2),
                 y = mainPane.applicationBar.layout.top + 40;
             if (mainPaneWidth && ((x + this.createAccountDialogWidth) > mainPaneWidth)) {
                 x = mainPaneWidth - this.createAccountDialogWidth;
             }
-            this.set('layout', { height: 270, left: x, top: y, width: this.createAccountDialogWidth });
+            this.set('layout', { height: 30, left: x, top: y, width: this.createAccountDialogWidth });
+            if (currentStep === 1) {
+                step1.emailField.becomeFirstResponder();
+                step1.animate({ left: 0, visible: true }, { duration: 0 });
+                step1.descriptionLabel.animate({ left: 15 }, { duration: 0 });
+                step1.emailField.animate({ left: 15 }, { duration: 0 });
+                step1.okButton.animate({ left: 15 }, { duration: 0 });
+                step1.closeButton.animate({ left: 15 }, { duration: 0 });
+                step2.animate({ left: 320, visible: false }, { duration: 0 });
+                step2.descriptionLabel.animate({ left: 320 }, { duration: 0 });
+                step2.emailField.animate({ left: 320 }, { duration: 0 });
+                step2.okButton.animate({ left: 320 }, { duration: 0 });
+                step2.closeButton.animate({ left: 320 }, { duration: 0 });
+                step3.animate({ left: 320, visible: false }, { duration: 0 });
+                step3.descriptionLabel.animate({ left: 320 }, { duration: 0 });
+                step3.okButton.animate({ left: 320 }, { duration: 0 });
+                if (Sqwerl.mainPage.createAccountDialog.get('wasValid')) {
+                    dialogHeight = Sqwerl.rowHeight * 6.5;
+                }
+                Sqwerl.mainPage.createAccountDialog.animate({ height: dialogHeight }, { duration: 0 });
+            } else if (currentStep === 2) {
+                step1.animate({ visible: false }, { duration: 0 });
+                step2.animate({ left: 0, visible: true }, { duration: 0 });
+                step2.emailField.becomeFirstResponder();
+                step2.descriptionLabel.animate({ left: 15 }, { duration: 0 });
+                step2.emailField.animate({ left: 15 }, { duration: 0 });
+                step2.okButton.animate({ left: 15 }, { duration: 0 });
+                step2.closeButton.animate({ left: 15 }, { duration: 0 });
+            }
             this.set('createAccountDialogIsVisible', YES);
         },
 
@@ -732,9 +1113,11 @@ Sqwerl.mainPage = SC.Page.design({
     /**
      * Sets whether the navigator components should appear disabled because this application is busy.
      *
-     * @param {boolean} [isBusy]  If true then appear busy, otherwise have the navigation controls accept user input.
+     * @param {boolean} [isBusy]        If true then appear busy, otherwise have the navigation controls accept user
+     *                                  input.
+     * @param {Sqwerl.Node} [fetching]  The thing whose information this application is loading.
      */
-    setNavigationBusy: function (isBusy) {
+    setNavigationBusy: function (isBusy, fetching) {
         'use strict';
         var element = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationBusyPanel.$();
         if (isBusy) {
@@ -742,6 +1125,9 @@ Sqwerl.mainPage = SC.Page.design({
                 $('.sc-outline').css('cursor', 'busy');
                 element.addClass('visible');
                 element.focus();
+                if (fetching) {
+                    Sqwerl.get('LoadingController').set('content', fetching);
+                }
                 Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
             }
         } else {

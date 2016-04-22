@@ -115,6 +115,10 @@ body {
     cursor: pointer;
     text-align: center;
     vertical-align: middle;
+
+    &.invisible {
+        visibility: hidden;
+    }
 }
 
 .create-account-dialog .panel-background > .bottom-left {
@@ -175,6 +179,12 @@ body {
     top: 15px !important;
 }
 
+.create-account-dialog .panel-background > .top-right:after {
+    background: rgba(0, 0, 0, 0.3);
+    height: 100%;
+    width: 10px;
+}
+
 .sc-button-view.create-account-cancel {
     background: red;
     border: 1px solid darkred;
@@ -204,16 +214,6 @@ body {
     text-align: center;
     vertical-align: middle;
 
-    &.disabled {
-        background: none;
-        border: 1px solid rgba(80, 80, 80, 0.4);
-        cursor: not-allowed;
-    }
-    &.disabled label {
-        color: #606060;
-        cursor: not-allowed;
-        font-style: italic;
-    }
     & label {
         color: white;
         cursor: pointer;
@@ -392,6 +392,14 @@ body {
     visibility: visible;
 }
 
+.sc-text-field-view.create-account-email-field.invisible {
+    visibility: hidden;
+}
+
+.create-account-email-field.sc-text-field-view > .padding > .hint.ellipsis {
+    text-align: center;
+}
+
 html {
     overflow: hidden;
 }
@@ -470,6 +478,7 @@ html {
 p.create-account-text {
     line-height: 1.3em;
     padding-bottom: 0.4em;
+    text-align: center;
 }
 
 .sc-outline span.has-children {

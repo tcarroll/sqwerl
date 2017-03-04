@@ -1,7 +1,8 @@
-$even-list-item-background: #F4FFF4;
+$even-list-item-background: #fafffa;
 $list-item-bottom-border: 1px solid #f0f0f0;
 $loading-text-color: #606060;
-$odd-list-item-background: #F1FBF1;
+$navigator-item-right-info-color: #6f6f5f;
+$odd-list-item-background: #fafffa;
 $selected-list-item-background: #1E69DE;
 
 @keyframes hover {
@@ -221,8 +222,8 @@ $selected-list-item-background: #1E69DE;
 }
 
 $theme.sc-list-item-view.sc-regular-size {
-     font-size: 11pt;
- }
+    font-size: $base-font-size;
+}
 
 $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     -moz-font-smoothing: antialiased;
@@ -248,7 +249,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
         .sc-outline.loading {
             color: $loading-text-color;
             font-style: italic;
-         }
+        }
     }
 
     &.even.list-item-selected {
@@ -261,6 +262,10 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
 
         .loading {
             cursor: wait;
+        }
+
+        .sc-outline > label > a:hover {
+            text-decoration: none;
         }
 
         .sc-outline.loading {
@@ -279,6 +284,10 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
 
         .loading {
             cursor: wait;
+        }
+
+        .sc-outline > label > a:hover {
+            text-decoration: none;
         }
 
         .sc-outline.loading {
@@ -310,8 +319,12 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
             cursor: default;
         }
 
-        .sc-outline label:hover {
-            text-decoration: underline;
+        .sc-outline label a {
+            -moz-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            -webkit-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            text-decoration: none;
+            text-shadow: .05em 0 rgb(202, 221, 237), -.05em 0 rgb(202, 221, 237), 1.5px 0 rgb(202, 221, 237), -1.5px 0 rgb(202, 221, 237);
         }
     }
 
@@ -333,8 +346,12 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
             cursor: default;
         }
 
-        .sc-outline label:hover {
-            text-decoration: underline;
+        .sc-outline label a {
+            -moz-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            -webkit-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            text-decoration: none;
+            text-shadow: .05em 0 rgb(202, 221, 237), -.05em 0 rgb(202, 221, 237), 1.5px 0 rgb(202, 221, 237), -1.5px 0 rgb(202, 221, 237);
         }
     }
 
@@ -380,7 +397,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
             right: 8px;
 
             .inner {
-                color: #303030;
+                color: $navigator-item-right-info-color;
                 -webkit-border-radius: not;
                 -webkit-font-smoothing: antialiased;
 
@@ -416,25 +433,24 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     label {
-        color: rgb(0, 22, 228);
+        color: $link-text-color;
         cursor: pointer;
         font-smoothing: antialiased;
         height: auto;
         line-height: $row-height;
         margin-left: 4px;
-        margin-right: 0px;
         margin-top: 0px;
-        right: 26px;
+        right: 36px;
         top: 0px;
         -webkit-font-smoothing: antialiased;
     }
 
     .right-font-icon {
-        color: #6f6f5f;
+        color: $navigator-item-right-info-color;
         line-height: 36px;
         margin-right: 3px;
         position: absolute;
-        right: 0;
+        right: 10px;
         vertical-align: middle;
         -webkit-font-smoothing: antialiased;
         -webkit-mask-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000000), to(#FFFFFF));

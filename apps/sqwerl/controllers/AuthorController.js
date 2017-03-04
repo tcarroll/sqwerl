@@ -7,58 +7,63 @@ sc_require('controllers/ViewController');
  */
 Sqwerl.AuthorController = Sqwerl.ViewController.create({
 
-    connectionCount: Sqwerl.property(function () {
-        'use strict';
-        return this.sumConnections(['authorOf', 'instructed', 'linkedInUrl', 'links', 'spokeAt', 'tags']);
-    }),
+  authorOfCount: Sqwerl.property(function () {
+    'use strict';
+    return this.sumConnections(['authorOf']);
+  }),
 
-    hasAuthorOf: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('authorOf');
-    }),
+  connectionCount: Sqwerl.property(function () {
+    'use strict';
+    return this.sumConnections(['authorOf', 'instructed', 'linkedInUrl', 'links', 'spokeAt', 'tags']);
+  }),
 
-    hasInstructed: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('instructed');
-    }),
+  hasAuthorOf: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('authorOf');
+  }),
 
-    hasLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('links');
-    }),
+  hasInstructed: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('instructed');
+  }),
 
-    hasMultipleAuthorOf: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('authorOf');
-    }),
+  hasLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('links');
+  }),
 
-    hasMultipleInstructed: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('instructed');
-    }),
+  hasMultipleAuthorOf: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('authorOf');
+  }),
 
-    hasMultipleLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('links');
-    }),
+  hasMultipleInstructed: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('instructed');
+  }),
 
-    hasMultipleSpokeAt: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('spokeAt');
-    }),
+  hasMultipleLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('links');
+  }),
 
-    hasMultipleTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('tags');
-    }),
+  hasMultipleSpokeAt: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('spokeAt');
+  }),
 
-    hasSpokeAt: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('spokeAt');
-    }),
+  hasMultipleTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('tags');
+  }),
 
-    hasTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('tags');
-    })
+  hasSpokeAt: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('spokeAt');
+  }),
+
+  hasTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('tags');
+  })
 });

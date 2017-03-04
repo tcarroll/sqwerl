@@ -9,7 +9,7 @@ Sqwerl.Thing = SC.Record.extend({
 
     canWrite: SC.Record.toMany('Sqwerl.User', { isMaster: SC.NO }),
 
-    createdOn: SC.Record.attr(SC.DateTime, { format: 'YYYYmmdd HH:MM:SS.sss Z'}),
+    createdOn: SC.Record.attr(SC.DateTime, { format: 'YYYY-mm-ddTHH:MM:SS.sssZ' }),
 
     creator: SC.Record.toOne('Sqwerl.User', { isMaster: SC.NO }),
 

@@ -2,69 +2,69 @@
 
 Sqwerl.SearchItemController = SC.Object.extend({
 
-    model: null,
+  model: null,
 
-    firstFoundInProperty: Sqwerl.property(function () {
-        'use strict';
-        var foundInProperties = this.model.foundInProperties;
-        return (foundInProperties && (foundInProperties.length > 0)) ? foundInProperties[0] : null;
-    }),
+  firstFoundInProperty: Sqwerl.property(function () {
+    'use strict';
+    var foundInProperties = this.model.foundInProperties;
+    return (foundInProperties && (foundInProperties.length > 0)) ? foundInProperties[0] : null;
+  }),
 
-    foundInProperties: Sqwerl.property(function () {
-        'use strict';
-        return this.model.foundInProperties;
-    }),
+  foundInProperties: Sqwerl.property(function () {
+    'use strict';
+    return this.model.foundInProperties;
+  }),
 
-    hasFoundInProperties: Sqwerl.property(function () {
-        'use strict';
-        var foundInProperties = this.model.foundInProperties;
-        return foundInProperties && (foundInProperties.length > 0);
-    }),
+  hasFoundInProperties: Sqwerl.property(function () {
+    'use strict';
+    var foundInProperties = this.model.foundInProperties;
+    return foundInProperties && (foundInProperties.length > 0);
+  }),
 
-    hasMoreThanOneFoundInProperty: Sqwerl.property(function () {
-        'use strict';
-        var foundInProperties = this.model.foundInProperties;
-        return foundInProperties && (foundInProperties.length > 1);
-    }),
+  hasMoreThanOneFoundInProperty: Sqwerl.property(function () {
+    'use strict';
+    var foundInProperties = this.model.foundInProperties;
+    return foundInProperties && (foundInProperties.length > 1);
+  }),
 
-    index: Sqwerl.property(function () {
-        'use strict';
-        return this.model.index;
-    }),
+  links: Sqwerl.property(function () {
+    'use strict';
+    return this.model.links;
+  }),
 
-    links: Sqwerl.property(function () {
-        'use strict';
-        return this.model.links;
-    }),
+  name: Sqwerl.property(function () {
+    'use strict';
+    return this.model.name;
+  }),
 
-    name: Sqwerl.property(function () {
-        'use strict';
-        return this.model.name;
-    }),
+  pathName: Sqwerl.property(function () {
+    'use strict';
+    var path = Handlebars.helpers.thingPath.call(this.model),
+      searchText = Sqwerl.mainPage.get('searchText');
+    if (searchText) {
+      path = Sqwerl.highlightSearchTextInValue(searchText.toLowerCase(), path);
+    }
+    return path;
+  }),
 
-    pathName: Sqwerl.property(function () {
-        'use strict';
-        var path = Handlebars.helpers.thingPath.call(this.model),
-            searchText = Sqwerl.mainPage.get('searchText');
-        if (searchText) {
-            path = Sqwerl.highlightSearchTextInValue(searchText.toLowerCase(), path);
-        }
-        return path;
-    }),
+  relativeUrl: Sqwerl.property(function () {
+    'use strict';
+    return '#' + encodeURI(this.model.id);
+  }),
 
-    relativeUrl: Sqwerl.property(function () {
-        'use strict';
-        return '#' + encodeURI(this.model.id);
-    }),
+  rowId: Sqwerl.property(function () {
+    'use strict';
+    return this.model && this.model.index ? this.model.index.toLocaleString() : '';
+  }),
 
-    typeIcon: Sqwerl.property(function () {
-        'use strict';
-        var typeId = Sqwerl.idToTypeId(this.model.id);
-        return (typeId ? Sqwerl.Node.typeIcons[typeId] : 'ti-folder') + ' search-results-type-icon';
-    }),
+  typeIcon: Sqwerl.property(function () {
+    'use strict';
+    var typeId = Sqwerl.idToTypeId(this.model.id);
+    return (typeId ? Sqwerl.Node.typeIcons[typeId] : 'ti-folder') + ' search-results-type-icon';
+  }),
 
-    typeName: Sqwerl.property(function () {
-        'use strict';
-        return Handlebars.helpers.typeOfThingName.call(this.model);
-    })
+  typeName: Sqwerl.property(function () {
+    'use strict';
+    return Handlebars.helpers.typeOfThingName.call(this.model);
+  })
 });

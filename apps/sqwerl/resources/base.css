@@ -1,8 +1,10 @@
+$base-font-size: 11pt;
 $chevron-bottom-edge-color: darkgray;
 $chevron-top-edge-color: darkgray;
-$navigation-list-background: #E9EFEA;
+$link-text-color: rgb(0, 22, 228);
+$navigation-list-background: #fafffa;
 $row-height: 36px;
-$title-bar-background: #E5EFDF;
+$title-bar-background: #eaf1e7;
 $title-bar-bottom-border: 1px solid lightgray;
 
 .is-hidden {

@@ -3,9 +3,9 @@
     <div class="title-bar-type">is a category</div>
     <span class="title-bar-links">
         {{#if hasChildren}}
-            <span>with</span>
+            <span>that has</span>
             {{#if hasMultipleChildren}}
-                {{childCount}} children
+                {{numberFormat childCount}} children
             {{else}}
                 one child
             {{/if}}

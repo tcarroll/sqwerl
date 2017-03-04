@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>who has</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -39,7 +39,7 @@
         {{#if hasGroups}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleGroups}}Groups ({{groups.totalCount}}){{else}}Group{{/if}}
+                    {{#if hasMultipleGroups}}Groups ({{numberFormat groups.totalCount}}){{else}}Group{{/if}}
                 </div>
                 {{#each groups.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a></span>
@@ -50,7 +50,7 @@
         {{#if hasHasRead}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleHasRead}}Has read {{hasRead.totalCount}} things{{else}}Has read{{/if}}
+                    {{#if hasMultipleHasRead}}Has read {{numberFormat hasRead.totalCount}} things{{else}}Has read{{/if}}
                 </div>
                 {{#each hasRead.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
@@ -62,7 +62,7 @@
         {{#if hasHasAttended}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleHasAttended}}Has attended {{hasAttended.totalCount}} events{{else}}Has attended{{/if}}
+                    {{#if hasMultipleHasAttended}}Has attended {{numberFormat hasAttended.totalCount}} events{{else}}Has attended{{/if}}
                 </div>
                 {{#each hasAttended.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
@@ -74,7 +74,7 @@
         {{#if hasHasListenedTo}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleHasListenedTo}}Has listened to {{hasListenedTo.totalCount}} things{{else}}Has listened to{{/if}}
+                    {{#if hasMultipleHasListenedTo}}Has listened to {{numberFormat hasListenedTo.totalCount}} things{{else}}Has listened to{{/if}}
                 </div>
                 {{#each hasListenedTo.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
@@ -86,7 +86,7 @@
         {{#if hasHasViewed}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleHasViewed}}Has viewed {{hasViewed.totalCount}} things{{else}}Has viewed{{/if}}
+                    {{#if hasMultipleHasViewed}}Has viewed {{numberFormat hasViewed.totalCount}} things{{else}}Has viewed{{/if}}
                 </div>
                 {{#each hasViewed.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) {{numberFormat
@@ -98,7 +98,7 @@
         {{#if hasOwns}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleOwns}}Owns {{owns.totalCount}} things{{else}}Owns{{/if}}
+                    {{#if hasMultipleOwns}}Owns {{numberFormat owns.totalCount}} things{{else}}Owns{{/if}}
                 </div>
                 {{#each owns.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>

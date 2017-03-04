@@ -1,4 +1,4 @@
-/*globals SC, sc_require, Sqwerl*/
+/*globals Handlebars, SC, sc_require, Sqwerl*/
 
 sc_require('controllers/ViewController');
 
@@ -7,69 +7,338 @@ sc_require('controllers/ViewController');
  */
 Sqwerl.HomeController = Sqwerl.ViewController.create({
 
-    catalogDatabase: null,
+  /**
+   * A catalog database of things that defines things that are shared between databases. Things like users,
+   * groups, roles, and types of things.
+   */
+  catalogDatabase: null,
 
-    defaultDatabase: null,
+  /**
+   * The default database of things that guest users can view.
+   */
+  defaultDb: null,
 
-    defaultDatabaseDescription: Sqwerl.property(function () {
-        'use strict';
-        var controller = this,
-            result = '';
-        if (this.defaultDatabase) {
-            result = this.defaultDatabase.get('description');
-        } else {
-            this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
-                controller.set('defaultDatabase', controller.convertToModel(results));
-            });
+  /**
+   * Converts the given plain-old JavaScript object into a corresponding SproutCore data model object.
+   * Recursively traverses the given object's properties and converts their values into corresponding SproutCore
+   * data model objects.
+   *
+   * @param {Object} data    A persistent thing.
+   * @returns {Object}       An object whose properties are stored within a database.
+   */
+  convertToModel: function (model, data) {
+    'use strict';
+    var controller = this,
+        value;
+    Object.keys(data).forEach(function (property) {
+      value = data[property];
+      if (typeof value !== 'object') {
+        model[property] = value;
+        if (property === 'id') {
+          model.link = '#' + value;
         }
-        return result;
-    }),
-
-    numberOfThings: Sqwerl.property(function () {
-        'use strict';
-        var controller = this,
-            thingCount = 0;
-        if (this.defaultDatabase) {
-            thingCount = this.defaultDatabase.get('thingCount');
-        } else {
-            this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
-                controller.set('defaultDatabase', controller.convertToModel(results));
-            });
-        }
-        return thingCount.toLocaleString();
-    }),
-
-    fetchDatabase: function (databaseName, callback) {
-        'use strict';
-        var id = '/types/databases/' + databaseName;
-        return Sqwerl.store.find(SC.Query.create({
-            conditions: 'id = {id}',
-            parameters: {
-                id: id,
-                onError: function (response) {
-                    // TODO
-                    console.log('Error: ' + response);
-                },
-                onSuccess: function (results) {
-                    callback(results);
-                }
-            }
-        }));
-    },
-
-    convertToModel: function (data) {
-        'use strict';
-        var controller = this,
-            model = SC.Object.create(),
-            value;
-        Object.keys(data).forEach(function (property) {
-            value = data[property];
-            if ((value instanceof Array) || (typeof value !== 'object')) {
-                model.set(property, value);
-            } else if (value instanceof Object) {
-                model.set(property, controller.convertToModel(value));
-            }
+      } else if (value instanceof Array) {
+        model[property] = SC.ArrayController.create();
+        var collection = [],
+            index = 1;
+        value.forEach(function (v) {
+          v.index = index;
+          index += 1;
+          controller.convertArray(collection, v);
         });
-        return model;
+        model[property].set('content', collection);
+      } else if (value instanceof Object) {
+        model[property] = controller.convertToModel(new SC.Object(), value);
+      }
+    });
+    return model;
+  },
+
+  convertArray: function (content, value) {
+    var controller = this;
+    if (typeof value !== 'object') {
+      value.index = content.length;
+      content.push(value);
+    } else if (value instanceof Array) {
+      var arrayController = SC.ArrayController.create(),
+          newContent = [];
+      value.forEach(function (newValue) {
+        controller.convertArray(newContent, newValue);
+      });
+      arrayController.set('content', newContent);
+      content.push(arrayController);
+    } else if (value instanceof Object) {
+      content.push(controller.convertToModel(new SC.Object(), value));
     }
+  },
+
+  /**
+   * Returns the default database of things that guest users can access.
+   *
+   * @return {Object} A database of things.
+   */
+  defaultDatabase: Sqwerl.property(function () {
+    var controller = this;
+    if (!this.defaultDb) {
+      this.defaultDb = this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
+        controller.set('defaultDb', controller.convertToModel(Sqwerl.store.createRecord(Sqwerl.Database), results));
+      });
+    }
+    return this.defaultDb;
+  }),
+
+  /**
+   * Returns the number of things in the default database of things that guest (unauthenticated) users are allowed
+   * to view.
+   *
+   * @return {Number} The number of things in the default database of things. This will be a non-negative integer
+   *                  greater than or equal to zero.
+   */
+  defaultDatabaseThingCount: Sqwerl.property(function () {
+    var thingCount = this.defaultDb ? this.defaultDb.get('thingCount') : '0';
+    return thingCount ? thingCount.toLocaleString() : '0';
+  }),
+
+  /**
+   * Shows (expands) or hides (collapses) details that show things that have been changed recently.
+   *
+   * @param element HTML element the user has clicked on to either expand or collapse change details.
+   */
+  expandCollapseChanges(element) {
+    var change,
+        container,
+        expandCollapse,
+        id,
+        rowCount,
+        rows,
+        table;
+    if (element) {
+      container = $(element).closest('.home-view-changes');
+      expandCollapse = container.find('.home-view-expand-collapse');
+      expandCollapse.toggleClass('expanded');
+      if (expandCollapse.hasClass('expanded')) {
+        container.find('.home-view-hide-changes-link').show();
+        container.find('.home-view-show-changes-link').hide();
+      } else {
+        container.find('.home-view-hide-changes-link').hide();
+        container.find('.home-view-show-changes-link').show();
+      }
+      id = $(element).attr('data-id');
+      table = $('table[data-id=' + id + ']');
+      if (table && (table.length > 0)) {
+        if (table.hasClass('expanded')) {
+          rows = table.find('tr');
+          rowCount = rows.length;
+          rows.animate({ 'line-height': '0px', 'opacity': 0 });
+          table.animate({ 'max-height': '0px', 'opacity': 0 });
+          setTimeout(function () {
+            table.removeClass('expanded');
+          }, 250);
+        } else {
+          table.addClass('expanded');
+          rows = table.find('tr');
+          rowCount = rows.length;
+          rows.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
+          table.animate({ 'max-height': (rowCount * Sqwerl.rowHeight).toFixed(0) + 'px', 'opacity': 1 });
+        }
+      } else {
+        change = $('div.home-view-single-change');
+        if (change && (change.length > 0)) {
+          if (change.hasClass('expanded')) {
+            change.animate({ 'line-height': '0px', 'opacity': 0 });
+            setTimeout(function () {
+              change.removeClass('expanded');
+            }, 250);
+          } else {
+            change.addClass('expanded');
+            change.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
+          }
+        }
+      }
+    }
+  },
+
+  /**
+   * Retrieves a database of things.
+   *
+   * @param {String} databaseName   The unique name of the database to fetch.
+   * @param {Function} callback     Called when the database's information is fetched from a remote server.
+   * @returns {*} A database of things.
+   */
+  fetchDatabase: function (databaseName, callback) {
+    'use strict';
+    var id = '/types/databases/' + databaseName;
+    return Sqwerl.store.find(SC.Query.create({
+      conditions: 'id = {id}',
+      parameters: {
+        id: id,
+        onError: function (response) {
+          // TODO
+          console.log('Error: ' + response);
+        },
+        onSuccess: function (results) {
+          callback(results);
+        }
+      }
+    }));
+  },
+
+  /**
+   * Returns the name of guest users: users who are not signed into an account.
+   *
+   * @returns {String} A user name.
+   */
+  guestUserName: Sqwerl.property(function () {
+    'use strict';
+    return Sqwerl.anonymousUserName;
+  }),
+
+  /**
+   * Is the current user signed in to an account?
+   *
+   * @returns {Boolean} true if the user is signed into an account (authenticated), false if the user is a guest user.
+   */
+  isSignedIn: Sqwerl.property(function () {
+    'use strict';
+    return Sqwerl.isSignedIn();
+  }),
+
+  membersToSort: function (recentChangeIndex) {
+    var members = null,
+      recentChanges = this.defaultDb.get('recentChanges');
+    if (recentChanges && (recentChangeIndex < recentChanges.length())) {
+      members = recentChanges.content[recentChangeIndex - 1].get('changes').get('members');
+    }
+    return members;
+  },
+
+  /**
+   * Invoked when this controller's view is shown (made visible).
+   */
+  onViewShown() {
+    console.log('Home controller\'s view has been shown');
+    let changes = this.recentChanges().content;
+    let graph = d3.select('#recent-changes-graph-container');
+    let margin = { bottom: 20, left: 50, right: 20, top: 20 };
+    let height = 250 - margin.bottom - margin.top;
+    let width = 600 - margin.left - margin.right;
+
+    let x = d3.scaleTime().range([width, 0]);
+    let y = d3.scaleLinear().range([height, 0]);
+
+    let data = [];
+
+    let line = d3.line().x(d => x(d.date)).y(d => y(d.changeCount));
+
+    var svg = $('#recent-changes-graph-container > svg');
+    if (svg.length === 0) {
+      svg = graph.append('svg');
+    } else {
+      svg = d3.select('#recent-changes-graph-container > svg');
+    }
+    svg.attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    changes.forEach(change => {
+       var d = {
+         date: new Date(change.date),
+         changeCount: change.changes.totalCount
+       };
+       data.push(d);
+    });
+    x.domain(d3.extent(data, d => d.date));
+    y.domain([0, d3.max(data, d => d.changeCount)]);
+
+    svg.append('path')
+      .data([data])
+      .attr('class', 'line')
+      .attr('d', line)
+      .attr('transform', 'translate(20,' + margin.top + ')');
+    svg.append('g')
+      .attr('transform', 'translate(20,' + (height + margin.top) + ')')
+      .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)));
+    svg.append('g').attr('transform', 'translate(20,' + margin.top + ')').call(d3.axisLeft(y));
+  },
+
+  recentChanges: Sqwerl.property(function () {
+    return this.defaultDb ? this.defaultDb.get('recentChanges') : null;
+  }),
+
+  /**
+   * Sorts a list of changes to things by the things' names.
+   *
+   * @param element The HTML DOM element the user clicked on to request to reorder a list of changes.
+   */
+  sortChangesByNamesOfThings(element) {
+    var changeIndex = Number(element.getAttribute('data-id')),
+        members;
+    if (!isNaN(changeIndex)) {
+      members = this.membersToSort(changeIndex);
+      if (members) {
+        console.log('User has requested to sorting changes by name');
+/* TODO
+        members.set('orderBy',
+          function (a, b) {
+            var order = 0;
+            if (a.name < b.name) {
+              order = -1;
+            } else if (a.name > b.name) {
+              order = 1;
+            }
+            return order;
+          }
+        );
+*/
+      }
+    }
+  },
+
+  /**
+   * Sorts a list of changes to things by the type of change (for example: were the things modified or added?)
+   *
+   * @param element The HTML DOM element the user clicked on to request to reorder a list of changes.
+   */
+  sortChangesByTypesOfChanges(element) {
+    var changeIndex = Number(element.getAttribute('data-id')),
+      members;
+    if (!isNaN(changeIndex)) {
+      members = this.membersToSort(changeIndex);
+      if (members) {
+        console.log('User has requested to sort changes by type of change');
+        /* TODO */
+      }
+    }
+  },
+
+  /**
+   * Sorts a list of changes to things by those things' type (for example: authors, books, categories, ...)
+   *
+   * @param element The HTML DOM element the user clicked on to request to reorder a list of changes.
+   */
+  sortChangesByTypesOfThings(element) {
+    var changeIndex = Number(element.getAttribute('data-id')),
+      members;
+    if (!isNaN(changeIndex)) {
+      members = this.membersToSort(changeIndex);
+      if (members) {
+        console.log('User has requested to sort changes by type of things changed');
+/* TODO
+        members.content.sort(function (a, b) {
+          var order = 0,
+              firstTypeName,
+              secondTypeName;
+          firstTypeName = Handlebars.helpers.typeNameForId.call(a.typeId);
+          secondTypeName = Handlebars.helpers.typeNameForId.call(b.typeId);
+          if (firstTypeName < secondTypeName) {
+            order = -1;
+          } else if (firstTypeName > secondTypeName) {
+            order = 1;
+          }
+          return order;
+        });
+*/
+      }
+    }
+  }
 });

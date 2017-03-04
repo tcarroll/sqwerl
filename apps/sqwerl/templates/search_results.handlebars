@@ -16,7 +16,7 @@
         {{/collection}}
     {{else}}
         {{#if isShowingPartialResults}}
-            <div class="showing-partial-results-description">Showing {{startingAt}} through {{limit}} of {{total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
+            <div class="showing-partial-results-description">Showing {{numberFormat startingAt}} through {{numberFormat limit}} of {{numberFormat total}} matching {{#if hasMoreThanOne}}things{{else}}thing{{/if}}</div>
         {{/if}}
         <table class="search-results-table">
             <thead>
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             {{#collection SC.TemplateCollectionView contentBinding="Sqwerl.SearchResultsTableController" tagName="tbody" itemTagName="tr"}}
-                <td class="search-results-index-cell">{{content.index}}</td>
+                <td class="search-results-index-cell">{{content.rowId}}</td>
                 <td class="search-results-description-cell"><a {{bindAttr href="content.relativeUrl"}}>{{{content.pathName}}}</a><span {{bindAttr class="content.typeIcon"}}></span>
                     {{#if content.hasFoundInProperties}}
                         {{#if content.hasMoreThanOneFoundInProperty}}

@@ -62,7 +62,7 @@ gulp.task('lint:js', function () {
             .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('pack', ['stage'], function () {
+gulp.task('pack', function (done) {
     'use strict';
     var time = moment().format('MM-DD-YYYY');
     return gulp.src(['./tmp/staging/**'])
@@ -70,7 +70,7 @@ gulp.task('pack', ['stage'], function () {
         .pipe(gulp.dest('./tmp/target'));
 });
 
-gulp.task('stage', function () {
+gulp.task('stage', function (done) {
     'use strict';
     return gulp.src('./tmp/build/static/sqwerl/en/*')
         .pipe(plugins.map(function (file) {

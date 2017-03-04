@@ -47,7 +47,7 @@
                 <div class="read-only-field-label">
                     {{#if hasMultipleAuthors}}Authors ({{numberFormat authors.totalCount}}){{else}}Author{{/if}}
                 </div>
-                {{#each authors.members tagName="div" class="read-only-field-value"}}
+                {{#each authors.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
                         {{singularOrPlural authorOfCount thing things}}</span>
                 {{/each}}
@@ -59,7 +59,7 @@
                 <div class="read-only-field-label">
                     {{#if hasMultipleCategories}}Categories ({{numberFormat categories.totalCount}}){{else}}Category{{/if}}
                 </div>
-                {{#each categories.members tagName="div" class="read-only-field-value"}}
+                {{#each categories.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
                         {{singularOrPlural childrenCount child children}}</span>
                 {{/each}}

@@ -2,6 +2,9 @@
     "name": "sqwerl",
     "private": true,
     "version": "0.0.2",
+    "dependencies": {
+        "moment": "2.10.6"
+    },
     "devDependencies": {
         "cover": "~0.2.9",
         "del": "1.2.0",
@@ -14,8 +17,7 @@
         "gulp-zip": "3.0.2",
         "jquery": "1.11.3",
         "jscs-jsdoc": "1.0.1",
-        "jshint-stylish": "1.0.2",
-        "moment": "2.10.6"
+        "jshint-stylish": "1.0.2"
     },
     "engines": {
         "node": ">=0.10.28"

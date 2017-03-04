@@ -1,0 +1,164 @@
+.home-view-expand-collapse {
+    cursor: pointer;
+    display: inline-block;
+    height: 1em !important;
+    line-height: 1em !important;
+    padding-right: 1em;
+    width: 0;
+
+    & .home-view-expand-collapse-icon.ti-angle-right {
+        -moz-transition-duration: 0.3s;
+        -moz-transition-property: transform;
+        -moz-transition-timing-function: cubic-bezier(0.62, 0.23, 0.74, 1.15);
+        -o-transition-duration: 0.3s;
+        -o-transition-property: transform;
+        -o-transition-timing-function: cubic-bezier(0.62, 0.23, 0.74, 1.15);
+        -webkit-transition-duration: 0.3s;
+        -webkit-transition-property: transform;
+        -webkit-transition-timing-function: cubic-bezier(0.62, 0.23, 0.74, 1.15);
+        color: $link-text-color;
+        display: inline-block;
+        margin-top: 0.2em;
+        transition-duration: 0.3s;
+        transition-property: transform;
+        transition-timing-function: cubic-bezier(0.62, 0.23, 0.74, 1.15);
+    }
+
+    &.expanded .home-view-expand-collapse-icon.ti-angle-right {
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+}
+
+.home-view-change {
+    @extend .home-view-text;
+    padding: 0.2em 20px 0.2em 50px;
+}
+
+.home-view-change-index {
+    font-size: smaller;
+    opacity: 0.65;
+    text-align: right;
+}
+
+.home-view-changes {
+    line-height: 1em;
+    padding: 1em 20px 0.35em 30px;
+    white-space: nowrap;
+
+    &.expanded {
+        display: block;
+    }
+}
+
+.home-view-changes-table {
+    display: none;
+    margin-left: 0.5em !important;
+
+    &.expanded {
+        display: block;
+    }
+
+    & th {
+        color: $link-text-color;
+        font-weight: bold;
+    }
+
+    & td, & th {
+        border-width: 1;
+        border-color: #e0e0e0;
+        border-bottom-width: 1;
+        border-left-width: 0;
+        border-right-width: 0;
+        border-top-width: 0;
+        cursor: pointer;
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+
+        a:hover {
+            -moz-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            -webkit-box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            box-shadow: inset 0 -0.12em 0 0 rgba(0,22,228,0.4), inset 0 -0.05em 0 0 rgba(0, 22, 228, 0.6);
+            text-decoration: none;
+            text-shadow: .05em 0 rgb(239, 247, 234), -.05em 0 rgb(239, 247, 234), 1.5px 0 rgb(239, 247, 234), -1.5px 0 rgb(239, 247, 234);
+        }
+    }
+}
+
+.home-view-changes-title {
+    display: inline-block;
+}
+
+.home-view-create-account-link {
+    color: $link-text-color;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.home-view-hide-changes-link {
+    display: none;
+}
+
+.home-view-text {
+    line-height: 1em;
+    padding: 1em 20px 0.35em 20px;
+    white-space: nowrap;
+}
+
+.home-view-changes-link {
+    font-size: smaller;
+}
+
+.home-view-hide-changes-link {
+    color: $link-text-color;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:focus, &:hover {
+        text-decoration: underline;
+    }
+}
+
+.home-view-show-changes-link {
+    color: $link-text-color;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:focus, &:hover {
+        text-decoration: underline;
+    }
+}
+
+.home-view-single-change {
+    display: none;
+    line-height: 1em;
+    padding: 0 20px 0 30px;
+    white-space: nowrap;
+
+    &.expanded {
+        display: block;
+    }
+}
+
+.home-view-type-of-change {
+    font-size: smaller;
+}
+
+.home-view-type-of-thing {
+    font-size: smaller;
+}
+
+.line {
+    fill: none;
+    stroke: #006916;
+    stroke-width: 1px;
+}
+
+#recent-changes-graph-container {
+    margin-left: 20px;
+}

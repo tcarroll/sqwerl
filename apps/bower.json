@@ -17,6 +17,6 @@
     "dependencies": {
         "d3": "3.5.5",
         "flypanels": "0.12.1",
-        "sweetalert": "1.0.1"
+        "sweetalert": "6.4.2"
     }
 }

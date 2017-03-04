@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -69,7 +69,7 @@
         {{#if hasNotes}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleNotes}}Notes ({{notes.totalCount}}){{else}}Notes{{/if}}
+                    {{#if hasMultipleNotes}}Notes ({{numberFormat notes.totalCount}}){{else}}Notes{{/if}}
                 </div>
                 {{#each notes.members tagName="div" class="read-only-field-value"}}
                     <span><a href="#{{id}}">{{name}}</a></span>
@@ -80,7 +80,7 @@
         {{#if hasViewedBy}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleViewedBy}}Viewed by ({{viewedBy.totalCount}}){{else}}Viewed by{{/if}}
+                    {{#if hasMultipleViewedBy}}Viewed by ({{numberFormat viewedBy.totalCount}}){{else}}Viewed by{{/if}}
                 </div>
                 {{#each viewedBy.members tagName="div" class="read-only-field-value"}}
                     <span><a href="#{{id}}">{{name}}</a> has viewed {{numberFormat hasViewedCount}}

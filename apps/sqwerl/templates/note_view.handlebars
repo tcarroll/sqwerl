@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>that have</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -18,7 +18,7 @@
         {{#if hasNotesFor}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleNotesFor}}Notes for {{notesFor.totalCount}} things{{else}}Notes for{{/if}}
+                    {{#if hasMultipleNotesFor}}Notes for {{numberFormat notesFor.totalCount}} things{{else}}Notes for{{/if}}
                 </div>
                 {{#each notesFor.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>

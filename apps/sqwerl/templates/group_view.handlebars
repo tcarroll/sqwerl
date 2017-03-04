@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -33,7 +33,7 @@
         {{#if hasSubgroups}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleSubgroups}}Sub-groups ({{subgroups.totalCount}}){{else}}Sub-group{{/if}}
+                    {{#if hasMultipleSubgroups}}Sub-groups ({{numberFormat subgroups.totalCount}}){{else}}Sub-group{{/if}}
                 </div>
                 {{#each subgroups.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a></span>
@@ -44,7 +44,7 @@
         {{#if hasRoles}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRoles}}Roles ({{roles.totalCount}}){{else}}Role{{/if}}
+                    {{#if hasMultipleRoles}}Roles ({{numberFormat roles.totalCount}}){{else}}Role{{/if}}
                 </div>
                 {{#each roles.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a></span>
@@ -55,7 +55,7 @@
         {{#if hasUsers}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleUsers}}Users ({{users.totalCount}}){{else}}User{{/if}}
+                    {{#if hasMultipleUsers}}Users ({{numberFormat users.totalCount}}){{else}}User{{/if}}
                 </div>
                 {{#each users.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a></span>

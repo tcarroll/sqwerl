@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -25,7 +25,7 @@
         {{#if hasTagged}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleTagged}}Tagged things ({{tagged.totalCount}}){{else}}Tagged thing{{/if}}
+                    {{#if hasMultipleTagged}}Tagged things ({{numberFormat tagged.totalCount}}){{else}}Tagged thing{{/if}}
                 </div>
                 {{#each tagged.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat

@@ -15,7 +15,8 @@
         "tests"
     ],
     "dependencies": {
-        "d3": "3.5.5",
-        "sweetalert2": "0.2.2"
+        "d3": "4.5.0",
+        "moment": "2.10.6",
+        "sweetalert2": "6.4.2"
     }
 }

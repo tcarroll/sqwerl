@@ -1,6 +1,6 @@
 # ==========================================================================
 # Project:   Sqwerl
-# Copyright: @2011-@2016 Sqwerl Technologies, LLC
+# Copyright: @2011-@2017 Sqwerl Technologies, LLC
 # ==========================================================================
 
 config :all, :required => :sproutcore, :theme => 'sproutcore/ace'

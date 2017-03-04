@@ -31,7 +31,8 @@ Sqwerl.ViewController = SC.ObjectController.extend({
     /**
      * Returns the total count of items in the value of the this view's property with the given name.
      *
-     * @param {string} propertyName     Required name of one of this view's properties whose value is a summary of a colletion of things.
+     * @param {string} propertyName     Name of one of this view's properties whose value is a summary of a
+     *                                  collection of things.
      * @returns {number} Non-negative integer.
      */
     count: function (propertyName) {
@@ -41,9 +42,11 @@ Sqwerl.ViewController = SC.ObjectController.extend({
     },
 
     /**
-     * Returns whether the total count of items in the value of this view's property with the given name is greater than zero.
+     * Returns whether the total count of items in the value of this view's property with the given name is greater
+     * than zero.
      *
-     * @param {string} propertyName     Required name of one of this view's properties whose value is a summary of a colletion of things.
+     * @param {string} propertyName     Name of one of this view's properties whose value is a summary of a collection
+     *                                  of things.
      * @returns {boolean}               True if the collection contains at least one member.
      */
     hasAtLeastOne: function (propertyName) {
@@ -63,9 +66,11 @@ Sqwerl.ViewController = SC.ObjectController.extend({
     }),
 
     /**
-     * Returns whether the total count of items in the value of this view's property with the given name is greater than one.
+     * Returns whether the total count of items in the value of this view's property with the given name is greater
+     * than one.
      *
-     * @param {string} propertyName     Required name of one of this view's properties whose value is a summary of a collection of things.
+     * @param {string} propertyName     Name of one of this view's properties whose value is a summary of a collection
+     *                                  of things.
      * @returns {boolean}               True if the collection contains more than one member.
      */
     hasMoreThanOne: function (propertyName) {
@@ -87,7 +92,7 @@ Sqwerl.ViewController = SC.ObjectController.extend({
     /**
      * Returns the sum of items in the collections of things stored in this view's properties with the given names.
      *
-     * @param {array} propertyNames     Required array of names of this view's properties whose values are collections of things.
+     * @param {array} propertyNames     Array of names of this view's properties whose values are collections of things.
      * @returns {number}                Non-negative integer.
      */
     sumConnections : function (propertyNames) {
@@ -102,6 +107,7 @@ Sqwerl.ViewController = SC.ObjectController.extend({
 
     /**
      * Returns the name of a CSS style for an icon that represents the model's type of thing.
+     *
      * @returns {string} A non-null string.
      */
     typeIcon: Sqwerl.property(function () {

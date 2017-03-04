@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -25,8 +25,8 @@
         {{#if hasGroups}}
             <div class="read-only-label-and-value">
                 {{#if hasMultipleGroups}}
-                    <div class="read-only-field-label">Groups ({{groups.totalCount}})</div>
-                    <div class="read-only-field-value">The following {{groups.totalCount}}
+                    <div class="read-only-field-label">Groups ({{numberFormat groups.totalCount}})</div>
+                    <div class="read-only-field-value">The following {{numberFormat groups.totalCount}}
                         groups of users have been granted the {{name}} role's capabilities
                     </div>
                     {{#each groups.members class="read-only-field-value" tagName="div"}}
@@ -43,7 +43,7 @@
         {{#if hasCapabilities}}
             <div class="read-only-label-and-value">
                 {{#if hasMultipleCapabilities}}
-                    <div class="read-only-field-label">Capabilities ({{capabilities.totalCount}})</div>
+                    <div class="read-only-field-label">Capabilities ({{numberFormat capabilities.totalCount}})</div>
                     <div class="read-only-field-value">Users who can perform the {{name}} role are
                         granted the following {{capabilities.totalCount}} capabilities
                     </div>

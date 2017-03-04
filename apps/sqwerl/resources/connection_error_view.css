@@ -1,6 +1,6 @@
-@keyframes fade-in { from { opacity: 0.0; visibility: hidden; } to { opacity: 1.0; visibility: visible; } }
 @-moz-keyframes fade-in { from { opacity: 0.0; visibility: hidden; } to { opacity: 1.0; visibility: visible; } }
 @-webkit-keyframes fade-in { from { opacity: 0.0; visibility: hidden; } to { opacity: 1.0; visibility: visible; } }
+@keyframes fade-in { from { opacity: 0.0; visibility: hidden; } to { opacity: 1.0; visibility: visible; } }
 
 @keyframes bounce-in {
     0%, 20%, 40%, 60%, 80%, 100% {

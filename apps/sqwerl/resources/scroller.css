@@ -1,8 +1,18 @@
+/*
+    CSS styles for the navigation bar's scroll bar controls.
+ */
+
+/* The color for the scroll bar's thumb */
 $scroller-color: black;
+
+/* The width of the track that contains the navigator's vertical scroll bar's thumb */
 $scroller-track-width: 11px;
+
 $scroller-thumb-width: 11px;
+
 $scroller-thumb-left-full: 5px;
-$scroller-thumb-left-partial: 13px;
+
+$scroller-thumb-left-partial: 9px;
 
 @keyframes slide-in {
     0% {

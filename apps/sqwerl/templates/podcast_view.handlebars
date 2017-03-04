@@ -5,7 +5,7 @@
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{connectionCount}} links
+                {{numberFormat connectionCount}} links
             {{else}}
                 one link
             {{/if}}
@@ -25,10 +25,10 @@
         {{#if hasAuthors}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleAuthors}}Authors ({{authors.totalCount}}){{else}}Author{{/if}}
+                    {{#if hasMultipleAuthors}}Authors ({{numberFormat authors.totalCount}}){{else}}Author{{/if}}
                 </div>
                 {{#each authors.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> author of {{numberFormat authorOfCount}}
+                    <span><a href="#{{id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
                     {{singularOrPlural authorOfCount thing things}}</span>
                 {{/each}}
             </div>
@@ -37,7 +37,7 @@
         {{#if hasCategories}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleCategories}}Categories ({{categories.totalCount}}){{else}}Category{{/if}}
+                    {{#if hasMultipleCategories}}Categories ({{numberFormat categories.totalCount}}){{else}}Category{{/if}}
                 </div>
                 {{#each categories.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
@@ -49,7 +49,7 @@
         {{#if hasEpisodes}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleItems}}Episodes ({{items.totalCount}}){{else}}Episode{{/if}}
+                    {{#if hasMultipleItems}}Episodes ({{numberFormat items.totalCount}}){{else}}Episode{{/if}}
                 </div>
                 {{#each items.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
@@ -76,7 +76,7 @@
         {{#if hasRecommendedBy}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRecommendedBy}}Recommended by {{recommendedBy.totalCount}} things{{else}}Recommended by{{/if}}
+                    {{#if hasMultipleRecommendedBy}}Recommended by {{numberFormat recommendedBy.totalCount}} things{{else}}Recommended by{{/if}}
                 </div>
                 {{#each recommendedBy.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
@@ -87,7 +87,7 @@
         {{#if hasRecommendations}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRecommendations}}Recommends {{recommendations.totalCount}} things{{else}}Recommends{{/if}}
+                    {{#if hasMultipleRecommendations}}Recommends {{numberFormat recommendations.totalCount}} things{{else}}Recommends{{/if}}
                 </div>
                 {{#each recommendations.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
@@ -98,7 +98,7 @@
         {{#if hasLinks}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleLinks}}Links to {{links.totalCount}} things{{else}}Linked to{{/if}}
+                    {{#if hasMultipleLinks}}Links to {{numberFormat links.totalCount}} things{{else}}Linked to{{/if}}
                 </div>
                 {{#each links.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) links to
@@ -110,7 +110,7 @@
         {{#if hasTags}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleTags}}Tagged with {{tags.totalCount}} tags{{else}}Tag{{/if}}
+                    {{#if hasMultipleTags}}Tagged with {{numberFormat tags.totalCount}} tags{{else}}Tag{{/if}}
                 </div>
                 {{#each tags.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> {{numberFormat taggedCount}} {{singularOrPlural taggedCount

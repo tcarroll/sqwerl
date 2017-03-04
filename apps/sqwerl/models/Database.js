@@ -7,9 +7,13 @@ sc_require('models/Thing');
  */
 Sqwerl.Database = Sqwerl.Thing.extend({
 
-    description: SC.Record.attr(String),
+  description: SC.Record.attr(String),
 
-    name: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
-    shortDescription: SC.Record.attr(String)
+  recentChanges: SC.Record.attr(Array),
+
+  shortDescription: SC.Record.attr(String),
+
+  thingCount: SC.Record.attr(Number)
 });

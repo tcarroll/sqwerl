@@ -7,7 +7,16 @@ sc_require('models/Thing');
  */
 Sqwerl.Account = Sqwerl.Thing.extend({
 
-    shortDescription: SC.Record.attr(String),
+  description: SC.Record.attr(String),
 
-    user: SC.Record.toOne('Sqwerl.User', { isMaster: SC.NO })
-});
+  isEnabled: SC.Record.attr(Boolean),
+
+  isLocked: SC.Record.attr(Boolean),
+
+  lastSignedInTime: SC.Record.attr(SC.DateTime, { format: 'YYYY-mm-ddTHH:MM:SS.sssZ' }),
+
+  mustChangePassword: SC.Record.attr(Boolean),
+
+  user: SC.Record.toOne('Sqwerl.User', {isMaster: SC.NO})
+})
+;

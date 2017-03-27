@@ -1938,6 +1938,17 @@ Sqwerl.mainPage = SC.Page.design({
   }.observes('Sqwerl.mainPage.searchText'),
 
   /**
+   * Resets the horizontal and vertical scrollbars in the properties pane to zero (start).
+   */
+  scrollPropertiesViewToStart: function () {
+    const detailsView = $('.details-view');
+    if (detailsView) {
+      detailsView.scrollLeft(0);
+      detailsView.scrollTop(0);
+    }
+  },
+
+  /**
    * Requests that the server search for things.
    */
   search: function () {
@@ -2075,6 +2086,7 @@ Sqwerl.mainPage = SC.Page.design({
         if (fetching) {
           Sqwerl.get('LoadingController').set('content', fetching);
         }
+        Sqwerl.mainPage.scrollPropertiesViewToStart();
         Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
       }
     } else {
@@ -2112,6 +2124,7 @@ Sqwerl.mainPage = SC.Page.design({
     if (view) {
       SC.debug('%@: Setting the properties view to \'%@\'', this, viewName);
       Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView.set('nowShowing', view);
+      Sqwerl.mainPage.scrollPropertiesViewToStart();
       if (controller && (typeof controller.onViewShown === 'function')) {
         controller.onViewShown()
       }

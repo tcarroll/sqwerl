@@ -1,50 +1,5 @@
 $properties-value-max-width: 90%;
 
-.properties-title {
-    background: $title-bar-background;
-    border-bottom: $title-bar-bottom-border;
-    height: $row-height;
-    line-height: $row-height;
-    padding-right: 20px;
-    position: absolute;
-    top: 0;
-    white-space: nowrap;
-    width: 100%;
-
-    .title-bar-title {
-        display: inline-table;
-        height: $row-height;
-        font-size: 14pt;
-        padding-left: 20px;
-    }
-
-    .title-bar-type {
-        display: inline-table;
-        height: $row-height;
-        line-height: $row-height;
-/*
-        &:after {
-            color: #404040;
-            content: '\25cf';
-            font-size: 8px;
-            margin: 0 2px;
-            vertical-align: middle;
-        }
-
-        &:before {
-            color: #404040;
-            content: '\25cf';
-            font-size: 8px;
-            margin: 0 0.5em 0 0;
-            vertical-align: middle;
-        }
-*/
-        & span {
-            margin-right: 4px;
-        }
-    }
-}
-
 $theme.properties-view {
     ul li {
         display: inline;
@@ -66,9 +21,58 @@ a:hover {
     bottom: 0;
     left: 0;
     overflow-y: scroll;
+    min-width: 100%;
     position: absolute;
     right: 0;
     top: $row-height + 1;
+}
+
+.properties-title {
+    background: $title-bar-background;
+    border-bottom: $title-bar-bottom-border;
+    height: $row-height;
+    line-height: $row-height;
+    min-width: 100%;
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+}
+
+.title-bar-right {
+    padding-right: 1em;
+}
+
+.title-bar-title {
+    display: inline-table;
+    height: $row-height;
+    font-size: 14pt;
+    padding-left: 20px;
+}
+
+.title-bar-type {
+    display: inline-table;
+    height: $row-height;
+    line-height: $row-height;
+/*
+        &:after {
+            color: #404040;
+            content: '\25cf';
+            font-size: 8px;
+            margin: 0 2px;
+            vertical-align: middle;
+        }
+
+        &:before {
+            color: #404040;
+            content: '\25cf';
+            font-size: 8px;
+            margin: 0 0.5em 0 0;
+            vertical-align: middle;
+        }
+*/
+    & span {
+        margin-right: 4px;
+    }
 }
 
 .read-only-form-section-heading {

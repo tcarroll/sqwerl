@@ -7,83 +7,99 @@ sc_require('controllers/ViewController');
  */
 Sqwerl.CourseController = Sqwerl.ViewController.create({
 
-    connectionCount: Sqwerl.property(function () {
-        'use strict';
-        return this.sumConnections(['attendedBy', 'categories', 'instructors', 'links', 'notes', 'recommendations', 'recommendedBy', 'tags']);
-    }),
+  attendedByCount: Sqwerl.property(function () {
+    return this.sumConnections(['attendedBy']);
+  }),
 
-    hasAttendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('attendedBy');
-    }),
+  categoriesCount: Sqwerl.property(function () {
+    return this.sumConnections(['categories']);
+  }),
 
-    hasCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('categories');
-    }),
+  connectionCount: Sqwerl.property(function () {
+    'use strict';
+    return this.sumConnections(['attendedBy', 'categories', 'instructors', 'links', 'notes', 'recommendations', 'recommendedBy', 'tags']);
+  }),
 
-    hasInstructors: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('instructors');
-    }),
+  hasAttendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('attendedBy');
+  }),
 
-    hasLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('links');
-    }),
+  hasCategories: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('categories');
+  }),
 
-    hasMultipleAttendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('attendedBy');
-    }),
+  hasInstructors: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('instructors');
+  }),
 
-    hasMultipleCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('categories');
-    }),
+  hasLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('links');
+  }),
 
-    hasMultipleInstructors: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('instructors');
-    }),
+  hasMultipleAttendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('attendedBy');
+  }),
 
-    hasMultipleLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('links');
-    }),
+  hasMultipleCategories: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('categories');
+  }),
 
-    hasMultipleNotes: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('notes');
-    }),
+  hasMultipleInstructors: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('instructors');
+  }),
 
-    hasMultipleRecommendations: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('recommendations');
-    }),
+  hasMultipleLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('links');
+  }),
 
-    hasMultipleTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('tags');
-    }),
+  hasMultipleNotes: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('notes');
+  }),
 
-    hasNotes: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('notes');
-    }),
+  hasMultipleRecommendations: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('recommendations');
+  }),
 
-    hasRecommendations: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('recommendations');
-    }),
+  hasMultipleTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('tags');
+  }),
 
-    hasRecommendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('recommendedBy');
-    }),
+  hasNotes: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('notes');
+  }),
 
-    hasTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('tags');
-    })
+  hasRecommendations: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('recommendations');
+  }),
+
+  hasRecommendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('recommendedBy');
+  }),
+
+  hasTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('tags');
+  }),
+
+  instructorsCount: Sqwerl.property(function () {
+    return this.sumConnections(['instructors']);
+  }),
+
+  linksCount: Sqwerl.property(function () {
+    return this.sumConnections(['links']);
+  })
 });

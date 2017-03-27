@@ -78,10 +78,11 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
    * @return {Object} A database of things.
    */
   defaultDatabase: Sqwerl.property(function () {
-    var controller = this;
+    let controller = this;
     if (!this.defaultDb) {
       this.defaultDb = this.fetchDatabase(Sqwerl.defaultDatabaseName, function (results) {
         controller.set('defaultDb', controller.convertToModel(Sqwerl.store.createRecord(Sqwerl.Database), results));
+        controller.onViewShown();
       });
     }
     return this.defaultDb;
@@ -115,43 +116,54 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
     if (element) {
       container = $(element).closest('.home-view-changes');
       expandCollapse = container.find('.home-view-expand-collapse');
-      expandCollapse.toggleClass('expanded');
-      if (expandCollapse.hasClass('expanded')) {
-        container.find('.home-view-hide-changes-link').show();
-        container.find('.home-view-show-changes-link').hide();
-      } else {
-        container.find('.home-view-hide-changes-link').hide();
-        container.find('.home-view-show-changes-link').show();
-      }
-      id = $(element).attr('data-id');
-      table = $('table[data-id=' + id + ']');
-      if (table && (table.length > 0)) {
-        if (table.hasClass('expanded')) {
-          rows = table.find('tr');
-          rowCount = rows.length;
-          rows.animate({ 'line-height': '0px', 'opacity': 0 });
-          table.animate({ 'max-height': '0px', 'opacity': 0 });
-          setTimeout(function () {
-            table.removeClass('expanded');
-          }, 250);
+      if (!expandCollapse.hasClass('animating')) {
+        expandCollapse.toggleClass('expanded');
+        expandCollapse.addClass('animating');
+        if (expandCollapse.hasClass('expanded')) {
+          container.find('.home-view-hide-changes-link').show();
+          container.find('.home-view-show-changes-link').hide();
         } else {
-          table.addClass('expanded');
-          rows = table.find('tr');
-          rowCount = rows.length;
-          rows.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
-          table.animate({ 'max-height': (rowCount * Sqwerl.rowHeight).toFixed(0) + 'px', 'opacity': 1 });
+          container.find('.home-view-hide-changes-link').hide();
+          container.find('.home-view-show-changes-link').show();
         }
-      } else {
-        change = $('div.home-view-single-change');
-        if (change && (change.length > 0)) {
-          if (change.hasClass('expanded')) {
-            change.animate({ 'line-height': '0px', 'opacity': 0 });
+        id = $(element).attr('data-id');
+        table = $('table[data-id=' + id + ']');
+        if (table && (table.length > 0)) {
+          if (table.hasClass('expanded')) {
+            rows = table.find('tr');
+            rowCount = rows.length;
+            rows.animate({ 'line-height': '0px', 'opacity': 0 });
+            table.animate({ 'max-height': '0px', 'opacity': 0 });
             setTimeout(function () {
-              change.removeClass('expanded');
+              table.removeClass('expanded');
+              expandCollapse.removeClass('animating');
             }, 250);
           } else {
-            change.addClass('expanded');
-            change.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
+            table.addClass('expanded');
+            rows = table.find('tr');
+            rowCount = rows.length;
+            rows.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
+            table.animate({ 'max-height': (rowCount * Sqwerl.rowHeight).toFixed(0) + 'px', 'opacity': 1 });
+            setTimeout(function () {
+               expandCollapse.removeClass('animating');
+            });
+          }
+        } else {
+          change = $('div.home-view-single-change');
+          if (change && (change.length > 0)) {
+            if (change.hasClass('expanded')) {
+              change.animate({ 'line-height': '0px', 'opacity': 0 });
+              setTimeout(function () {
+                change.removeClass('expanded');
+                expandCollapse.removeClass('animating');
+              }, 250);
+            } else {
+              change.addClass('expanded');
+              change.animate({ 'line-height': Sqwerl.rowHeight.toFixed(0) + 'px', 'opacity': 1 });
+              setTimeout(function () {
+                expandCollapse.removeClass('animating');
+              });
+            }
           }
         }
       }
@@ -216,49 +228,68 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
    * Invoked when this controller's view is shown (made visible).
    */
   onViewShown() {
-    console.log('Home controller\'s view has been shown');
-    let changes = this.recentChanges().content;
-    let graph = d3.select('#recent-changes-graph-container');
-    let margin = { bottom: 20, left: 50, right: 20, top: 20 };
-    let height = 250 - margin.bottom - margin.top;
-    let width = 600 - margin.left - margin.right;
-
-    let x = d3.scaleTime().range([width, 0]);
-    let y = d3.scaleLinear().range([height, 0]);
-
-    let data = [];
-
-    let line = d3.line().x(d => x(d.date)).y(d => y(d.changeCount));
-
-    var svg = $('#recent-changes-graph-container > svg');
-    if (svg.length === 0) {
-      svg = graph.append('svg');
-    } else {
-      svg = d3.select('#recent-changes-graph-container > svg');
-    }
-    svg.attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
+    let recentChanges = this.recentChanges();
+    if (recentChanges) {
+      let changes = recentChanges.content;
+      let data = [];
+      let graph = d3.select('#recent-changes-graph-container');
+      let margin = { bottom: 50, left: 50, right: 20, top: 20 };
+      let width = 600 - margin.left - margin.right;
+      let height = 250 - margin.bottom - margin.top;
+      let x = d3.scaleTime().range([width, 0]);
+      let y = d3.scaleLinear().range([height, 0]);
+      let line = d3.line().x(d => x(d.date)).y(d => y(d.changeCount));
+      let svg = $('#recent-changes-graph-container > svg');
+      if (svg.length === 0) {
+        svg = graph.append('svg');
+      } else {
+        svg = d3.select('#recent-changes-graph-container > svg');
+      }
+      svg.attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-    changes.forEach(change => {
-       var d = {
-         date: new Date(change.date),
-         changeCount: change.changes.totalCount
-       };
-       data.push(d);
-    });
-    x.domain(d3.extent(data, d => d.date));
-    y.domain([0, d3.max(data, d => d.changeCount)]);
-
-    svg.append('path')
-      .data([data])
-      .attr('class', 'line')
-      .attr('d', line)
-      .attr('transform', 'translate(20,' + margin.top + ')');
-    svg.append('g')
-      .attr('transform', 'translate(20,' + (height + margin.top) + ')')
-      .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)));
-    svg.append('g').attr('transform', 'translate(20,' + margin.top + ')').call(d3.axisLeft(y));
+      changes.forEach(change => {
+        let d = {
+          date: new Date(change.date),
+          changeCount: change.changes.totalCount
+        };
+        data.push(d);
+      });
+      x.domain([d3.min(data, d => d.date), new Date()]);
+      y.domain([0, d3.max(data, d => d.changeCount)]);
+      svg.append('path')
+        .data([data])
+        .attr('class', 'line')
+        .attr('d', line)
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+      svg.selectAll('dot')
+        .data(data)
+        .enter().append('circle')
+          .attr('r', 3)
+          .attr('cx', d => x(d.date))
+          .attr('cy', d => y(d.changeCount))
+          .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+      svg.append('g')
+        .attr('class', 'home-view-graph-axes')
+        .attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')')
+        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)));
+      svg.append('text')
+        .attr('class', 'home-view-graph-axes-titles')
+        .attr('transform', 'translate(' + (width / 2) + ', ' + (height + margin.top + 40) + ')')
+        .text('Time');
+      svg.append('g')
+        .attr('class', 'home-view-graph-axes')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').call(d3.axisLeft(y));
+      svg.append('text')
+        .attr('class', 'home-view-graph-axes-titles')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0)
+        .attr('x', 0 - (height / 2))
+        .attr('dy', '1em')
+        .style('text-anchor', 'middle')
+        .text('Number of changes');
+    }
   },
 
   recentChanges: Sqwerl.property(function () {

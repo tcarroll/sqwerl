@@ -5,12 +5,13 @@
         {{#if hasChildren}}
             <span>that has</span>
             {{#if hasMultipleChildren}}
-                {{numberFormat childCount}} children
+                {{childCountText}} children
             {{else}}
                 one child
             {{/if}}
         {{/if}}
     </span>
+    <span class="title-bar-right"></span>
 </div>
 
 <div class="properties-scrollable-content">

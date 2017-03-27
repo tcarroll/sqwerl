@@ -1,25 +1,27 @@
 {
-    "name": "sqwerl",
-    "private": true,
-    "version": "0.0.2",
-    "dependencies": {
-        "moment": "2.10.6"
-    },
-    "devDependencies": {
-        "cover": "~0.2.9",
-        "del": "1.2.0",
-        "gulp": "^3.9.0",
-        "gulp-jscs": "1.6.0",
-        "gulp-jshint": "1.11.0",
-        "gulp-load-plugins": "1.0.0-rc.1",
-        "gulp-map": "0.0.2",
-        "gulp-util": "3.0.6",
-        "gulp-zip": "3.0.2",
-        "jquery": "1.11.3",
-        "jscs-jsdoc": "1.0.1",
-        "jshint-stylish": "1.0.2"
-    },
-    "engines": {
-        "node": ">=0.10.28"
-    }
+  "name": "sqwerl",
+  "private": true,
+  "version": "0.0.3",
+  "dependencies": {
+    "moment": "2.17.1"
+  },
+  "devDependencies": {
+    "cover": "0.2.9",
+    "del": "2.2.2",
+    "gulp": "3.9.1",
+    "gulp-debug": "3.1.0",
+    "gulp-jscs": "4.0.0",
+    "gulp-jshint": "2.0.4",
+    "gulp-load-plugins": "1.5.0",
+    "gulp-map": "0.0.2",
+    "gulp-tar": "1.9.0",
+    "gulp-util": "3.0.8",
+    "gulp-zip": "4.0.0",
+    "jquery": "1.11.3",
+    "jscs-jsdoc": "2.0.0",
+    "jshint-stylish": "2.2.1"
+  },
+  "engines": {
+    "node": ">=0.10.28"
+  }
 }

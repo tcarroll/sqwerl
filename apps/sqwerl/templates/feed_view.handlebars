@@ -1,16 +1,17 @@
 <div class="properties-title">
-    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-title">{{#if feedUrl}}{{{pageLink}}}{{else}}{{name}}{{/if}}</div>
     <div class="title-bar-type">is a feed</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{numberFormat connectionCount}} links
+                {{connectionCountText}} links
             {{else}}
                 one link
             {{/if}}
         {{/if}}
     </span>
+    <span class="title-bar-right"></span>
 </div>
 
 <div class="properties-scrollable-content">
@@ -49,7 +50,7 @@
         {{#if hasItems}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleItems}}Articles ({{numberFormat items.totalCount}}){{else}}Article{{/if}}
+                    {{#if hasMultipleItems}}Posts ({{itemCountText}}){{else}}Post{{/if}}
                 </div>
                 {{#each items.members class="read-only-field-value" tagName="div"}}
                     <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
@@ -63,13 +64,6 @@
                 <div class="read-only-field-value">
                     <a {{bindAttr href="feedWebPageLink"}}>{{webPage.name}}</a>
                 </div>
-            </div>
-        {{/if}}
-
-        {{#if feedUrl}}
-            <div class="read-only-label-and-value">
-                <div class="read-only-field-label">Subscription link</div>
-                <div class="read-only-field-value"><a {{bindAttr href="feedUrl"}}>{{feedUrl}}</a></div>
             </div>
         {{/if}}
 

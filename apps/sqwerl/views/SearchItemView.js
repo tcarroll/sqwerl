@@ -1,5 +1,10 @@
 /*globals SC, Sqwerl*/
 
+/**
+ * Summarized views of search results. Summarized views of things that matched a search request.
+ *
+ * @type {SC.TemplateView}
+ */
 Sqwerl.SearchItemView = SC.TemplateView.create({
 
   firstFoundInPropertyBinding: 'Sqwerl.SearchItemController.firstFoundInProperty',

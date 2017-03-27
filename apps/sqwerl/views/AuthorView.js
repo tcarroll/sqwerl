@@ -1,9 +1,15 @@
 /*globals  SC, Sqwerl*/
 
+/**
+ * Views of information about people who have authored (created) things.
+ *
+ * @type {SC.TemplateView}
+ */
 Sqwerl.AuthorView = SC.TemplateView.extend({
   authorOfBinding: 'Sqwerl.AuthorController.authorOf',
   authorOfCountBinding: 'Sqwerl.AuthorController.authorOfCount',
   connectionCountBinding: 'Sqwerl.AuthorController.connectionCount',
+  connectionCountTextBinding: 'Sqwerl.AuthorController.connectionCountText',
   firstNameBinding: 'Sqwerl.AuthorController.firstName',
   hasAuthorOfBinding: 'Sqwerl.AuthorController.hasAuthorOf',
   hasConnectionsBinding: 'Sqwerl.AuthorController.hasConnections',

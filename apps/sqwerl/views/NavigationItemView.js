@@ -27,7 +27,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
 
   isReusableInCollections: YES,
 
-  layout: { left: 25 },
+  layout: {left: 25},
 
   /**
    * Handles when the user double-clicks on an item.
@@ -66,21 +66,21 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
   render: function (context) {
     'use strict';
     var childrenCountKey,
-        content = this.get('content'),
-        count,
-        del = this.displayDelegate,
-        hasCount = false,
-        isHovering = this.get('isHovering'),
-        isSelected = this.get('isSelected'),
-        key,
-        value,
-        working,
-        classArray = [],
-        index = this.get('contentIndex'),
-        isLoading,
-        element,
-        focusedIndex = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.contentView.get('focusedIndex'),
-        node;
+      content = this.get('content'),
+      count,
+      del = this.displayDelegate,
+      hasCount = false,
+      isHovering = this.get('isHovering'),
+      isSelected = this.get('isSelected'),
+      key,
+      value,
+      working,
+      classArray = [],
+      index = this.get('contentIndex'),
+      isLoading,
+      element,
+      focusedIndex = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.contentView.get('focusedIndex'),
+      node;
     classArray.push((index % 2 === 0) ? 'even' : 'odd');
     context.setClass('disabled', !this.get('isEnabled'));
     if (isSelected) {
@@ -212,8 +212,8 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
     'use strict';
     context.push(
       '<label class="' +
-        (isLoading ? 'loading' : (isSelected ? '' : 'underline')) +
-        '">',
+      (isLoading ? 'loading' : (isSelected ? '' : 'underline')) +
+      '">',
       ('<a>' + label + '</a>') || '');
     if (isLoading) {
       context.begin('span').addClass('loading-indicator').end();

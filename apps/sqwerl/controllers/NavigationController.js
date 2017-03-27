@@ -3,7 +3,7 @@
 sc_require('models/TreeNode');
 
 /**
- * Controller for user interface view that allows users to navigate through a hierarchy of things.
+ * The controller for user interface view that allows users to navigate through a hierarchy of things.
  */
 Sqwerl.NavigationController = SC.TreeController.extend({
 
@@ -214,18 +214,24 @@ Sqwerl.NavigationController = SC.TreeController.extend({
         this.set('parent', null);
         this.set('parentName', '');
         this.set('goBackUrl', '');
-        this.set('trail', {ids: ['/'], paths: ['/']});
+        this.set('trail', { ids: ['/'], paths: ['/'] });
         this.set('current', null);
         this.set('currentPath', null);
       } else {
         length = trailComponents.length;
-        this.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
-        this.set('parentName', trailComponents[length - 2]);
         pathComponents = path.split('/');
-        this.set('trail', {
-          ids: (pathComponents.length < 2) ? ['/'] : pathComponents.slice(0, pathComponents.length - 1),
-          names: trailComponents.slice(0, length - 1)
-        });
+        if (pathComponents.length < 3) {
+          this.set('parent', '/');
+          this.set('parentName', 'Home');
+          this.set('trail', { ids: ['/', 'types'], names: trailComponents });
+        } else {
+          this.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
+          this.set('parentName', trailComponents[length - 2]);
+          this.set('trail', {
+            ids: pathComponents.slice(0, pathComponents.length - 1),
+            names: trailComponents.slice(0, length - 1)
+          });
+        }
         this.set('goBackUrl', '#' + encodeURI(pathComponents.slice(0, pathComponents.length - 1).join('/')));
         Sqwerl.mainPage.showContent(controller.typeForId(path), results);
         this.set('current', path);
@@ -318,6 +324,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
                 encodeURI(controller.get('parent') + '/' + components.slice(-1)[0]).replace(/%20/g, '-');
 ///                        if (this.oldSelectedNode && (id.split('/').slice(-1)[0] === this.oldSelectedNode.get('id').split('/').slice(-1)[0])) {
             /* TODO - Refactor - Copied from goTo function.*/
+            Sqwerl.mainPage.setNavigationBusy(true);
             Sqwerl.store.find(SC.Query.create({
               conditions: 'id = {id}',
               parameters: {
@@ -351,8 +358,6 @@ Sqwerl.NavigationController = SC.TreeController.extend({
              */
           }
         }
-      } else {
-        Sqwerl.mainPage.showContent('home', null);
       }
     }
   }, 'selection'),

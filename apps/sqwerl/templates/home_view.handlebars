@@ -1,5 +1,6 @@
 <div class="properties-title">
     <div class="title-bar-title">{{defaultDatabase.description}} contains {{defaultDatabaseThingCount}} things</div>
+    <span class="title-bar-right"></span>
 </div>
 
 <div class="properties-scrollable-content">
@@ -7,7 +8,7 @@
     {{else}}
         <div class="home-view-text">You are viewing {{defaultDatabase.description}}.
         <a class="home-view-create-account-link" onclick="Sqwerl.mainPage.createAccountDialog.show()">Create an account</a> to share the things that make <i>you</i> smart.</div>
-        <div class="home-view-text">Changes made in the past 30 days</div>
+        <div class="home-view-text">Changes people have made to {{defaultDatabase.description}} in the past 30 days:</div>
             <div id="recent-changes-graph-container">
             </div>
             {{#each recentChanges}}
@@ -15,7 +16,7 @@
                     <div class="home-view-expand-collapse" {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.expandCollapseChanges(this)">
                         <span class="home-view-expand-collapse-icon ti-angle-right"></span>
                     </div>
-                    <div class="home-view-changes-title">{{#fromNow}}{{/fromNow}}, {{by}} made {{numberFormat changes.totalCount}} {{#thingsChanged}}{{/thingsChanged}}
+                    <div class="home-view-changes-title">{{#fromNow}}{{/fromNow}}, {{by}} changed {{numberFormat changes.totalCount}} {{#thingsChanged}}{{/thingsChanged}}
                         <span class="home-view-changes-link">
                             <a class="home-view-show-changes-link"
                                 {{bindAttr data-id="index"}}

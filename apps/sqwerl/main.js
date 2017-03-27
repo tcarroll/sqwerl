@@ -159,7 +159,7 @@ Sqwerl.registerHandlebarsHelpers = function () {
     return result;
   });
   Handlebars.registerHelper('thingsChanged', function () {
-     return (this.changes.totalCount === 1) ? 'change' : 'changes';
+     return (this.changes.totalCount === 1) ? 'thing' : 'things';
   });
   Handlebars.registerHelper('typeOfThingIcon', function () {
     var typeId = convertToTypeId(this.id);

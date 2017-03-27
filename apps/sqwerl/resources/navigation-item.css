@@ -1,4 +1,5 @@
 $even-list-item-background: #fafffa;
+$focused-list-item-background: #1E69DE;
 $list-item-bottom-border: 1px solid #f0f0f0;
 $loading-text-color: #606060;
 $navigator-item-right-info-color: #6f6f5f;
@@ -385,10 +386,12 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
 
 $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     &.focused-list-item .sc-outline {
-        border: 1px solid blue;
+        border-bottom: 1px solid blue;
+        border-top: 1px solid blue;
     }
 
     .sc-outline {
+        border-top: 1px solid transparent;
         border-bottom: $list-item-bottom-border;
 
         .count {
@@ -422,6 +425,9 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     &.sel {
+        .count .inner {
+            color: white;
+        }
         .right-font-icon {
             color: white;
             -webkit-mask-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000000), to(#FFFFFF));
@@ -429,7 +435,7 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     &.focused-list-item {
-        background: yellow;
+        background: #d4e4fd;
     }
 
     label {

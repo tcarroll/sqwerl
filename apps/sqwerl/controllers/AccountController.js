@@ -4,6 +4,8 @@ sc_require('controllers/ViewController');
 
 /**
  * Controller that manages a read-only view of user accounts.
+ *
+ * @type {Sqwerl.ViewController}
  */
 Sqwerl.AccountController = Sqwerl.ViewController.create({
 

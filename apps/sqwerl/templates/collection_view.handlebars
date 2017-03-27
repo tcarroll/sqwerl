@@ -4,12 +4,13 @@
     <span class="title-bar-links">
         {{#if hasChildren}}
             {{#if hasMultipleChildren}}
-                {{numberFormat childCount}} things
+                {{childCountText}} things
             {{else}}
                  one thing
             {{/if}}
         {{/if}}
     </span>
+    <span class="title-bar-right"></span>
 </div>
 
 <div class="properties-scrollable-content">

@@ -1,16 +1,17 @@
 <div class="properties-title">
-    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-title">{{#if url}}{{{pageLink}}}{{else}}{{name}}{{/if}}</div>
     <div class="title-bar-type">is a video</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
             <span>with</span>
             {{#if hasMultipleConnections}}
-                {{numberFormat connectionCount}} links
+                {{connectionCountText}} links
             {{else}}
                 one link
             {{/if}}
         {{/if}}
     </span>
+    <span class="title-bar-right"></span>
 </div>
 
 <div class="properties-scrollable-content">
@@ -26,13 +27,6 @@
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">Full description</div>
                 <div class="read-only-field-value">{{description}}</div>
-            </div>
-        {{/if}}
-
-        {{#if url}}
-            <div class="read-only-label-and-value">
-                <div class="read-only-field-label">Address</div>
-                <div class="read-only-field-value">{{url}}</div>
             </div>
         {{/if}}
 

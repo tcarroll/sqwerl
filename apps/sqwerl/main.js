@@ -132,6 +132,7 @@ Sqwerl.registerHandlebarsHelpers = function () {
         'groups': 'Group',
         'notes': 'Notes',
         'papers': 'Paper',
+        'pictures': 'Picture',
         'podcasts': 'Podcast',
         'roles': 'Role',
         'tags': 'Tag',

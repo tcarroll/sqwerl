@@ -28,6 +28,10 @@ try {
 
       defaultDatabaseName: configuration.defaultDatabaseName,
 
+      /**
+       * Maps the names of types of things to the root of the names of the user interface views that display those
+       * things' properties.
+       */
       editorMapping: {
         'accounts': 'account',
         'articles': 'article',
@@ -44,6 +48,7 @@ try {
         'home': 'home',
         'notes': 'note',
         'papers': 'paper',
+        'pictures': 'picture',
         'podcasts': 'podcast',
         'projects': 'project',
         'roles': 'role',

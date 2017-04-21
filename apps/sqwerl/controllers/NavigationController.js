@@ -233,7 +233,6 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           });
         }
         this.set('goBackUrl', '#' + encodeURI(pathComponents.slice(0, pathComponents.length - 1).join('/')));
-        Sqwerl.mainPage.showContent(controller.typeForId(path), results);
         this.set('current', path);
         this.set('currentPath', results.path);
       }

@@ -18,6 +18,7 @@ sc_require('views/HomeView');
 sc_require('views/LoadingView');
 sc_require('views/NoteView');
 sc_require('views/PaperView');
+sc_require('views/PictureView');
 sc_require('views/PodcastView');
 sc_require('views/ProjectView');
 sc_require('views/SearchResultsView');
@@ -32,7 +33,7 @@ sc_require('views/WebPageView');
  * The Sqwerl web application's user interface.
  */
 Sqwerl.mainPage = SC.Page.design({
-
+/*
   busyPanel: SC.PanelPane.create({
     classNames: ['busyPanel'],
     contentView: SC.View.create({
@@ -92,7 +93,7 @@ Sqwerl.mainPage = SC.Page.design({
 
     showTimer: null
   }),
-
+*/
   clientViewX: function () {
     'use strict';
     return Sqwerl.mainPage.mainPane.navigationBar.trailBar.get('isNotHome') ? Sqwerl.rowHeight : (Sqwerl.rowHeight * 2) + 1;
@@ -1202,6 +1203,11 @@ Sqwerl.mainPage = SC.Page.design({
   }),
 
   /**
+   * Should the application appear to be busy?
+   */
+  isBusy: true,
+
+  /**
    * User interface.
    */
   mainPane: SC.MainPane.design({
@@ -1539,22 +1545,42 @@ Sqwerl.mainPage = SC.Page.design({
       }),
 
       propertiesView: SC.ContainerView.extend(SC.SplitChild, {
+        childViews: ['detailsBackgroundView', 'detailsView', 'detailsBusyCurtain'],
         classNames: ['details-container-view'],
-        childViews: ['detailsView', 'applicationMenuView'],
         layout: {bottom: 0, left: 0, top: 0},
         minimumSize: 250,
 
-        detailsView: SC.ContainerView.design({
-          classNames: ['details-view'],
-          layout: {bottom: 0, left: 0, right: 0, top: 0}
+        detailsBackgroundView: SC.View.design({
+          childViews: ['detailsTitleBar', 'detailsContentView'],
+          classNames: ['details-background-view'],
+          layout: { bottom: 0, left: 0, right: 0, top: 0 },
+
+          detailsTitleBar: SC.View.design({
+            classNames: ['properties-title'],
+            layout: { height: Sqwerl.rowHeight, left: 0, right: 0, top: 0 }
+          }),
+
+          detailsContentView: SC.View.design({
+            classNames: ['properties-scrollable-content'],
+            layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight }
+          })
         }),
 
-        applicationMenuView: SC.View.extend({
-          classNames: ['application-menu-view'],
-          layout: {bottom: 0, top: 0, right: 0, width: 150}
+        detailsView: SC.ContainerView.design({
+          classNames: ['details-view'],
+          layout: { bottom: 0, left: 0, right: 0, top: 0 }
+        }),
+
+        detailsBusyCurtain: SC.View.extend({
+          classNames: ['details-busy-curtain'],
+          isVisibleBinding: 'Sqwerl.mainPage.isBusy',
+          render: function (context) {
+              context.begin('div').addClass('circle1').end().begin('div').addClass('circle2').end();
+          },
+          layout: { bottom: 0, left: 0, right: 0, top: 0 }
         })
       })
-    }),
+    })
   }),
 
   accountMenu: SC.PanelPane.create({
@@ -2077,20 +2103,30 @@ Sqwerl.mainPage = SC.Page.design({
    */
   setNavigationBusy: function (isBusy, fetching) {
     'use strict';
-    var element = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationBusyPanel.$();
+    var busyPanel = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationBusyPanel.$();
+    var detailsView = Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView;
     if (isBusy) {
       if (!Sqwerl.isNavigationBusy) {
+        Sqwerl.isNavigationBusy = true;
+        Sqwerl.mainPage.set('isBusy', true);
         $('.sc-outline').css('cursor', 'busy');
-        element.addClass('visible');
-        element.focus();
+        busyPanel.addClass('visible');
+        busyPanel.focus();
         if (fetching) {
           Sqwerl.get('LoadingController').set('content', fetching);
         }
         Sqwerl.mainPage.scrollPropertiesViewToStart();
-        Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
+        detailsView.animate('left', -detailsView.$().width(), { duration: 0.5 }, function () {
+          if (Sqwerl.isNavigationBusy) {
+            detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
+          }
+          detailsView.animate('left', 0, { duration: 0.5 });
+        });
       }
     } else {
-      element.removeClass('visible');
+      Sqwerl.isNavigationBusy = false;
+      Sqwerl.mainPage.set('isBusy', false);
+      busyPanel.removeClass('visible');
       $('.sc-outline').css('cursor', 'pointer');
     }
   },
@@ -2104,6 +2140,8 @@ Sqwerl.mainPage = SC.Page.design({
   showContent: function (typeId, data) {
     'use strict';
     var controller,
+        detailsView,
+        loadingView,
         mapping,
         view,
         viewName;
@@ -2122,11 +2160,25 @@ Sqwerl.mainPage = SC.Page.design({
     viewName += 'View';
     view = Sqwerl.get(viewName);
     if (view) {
+      detailsView = Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView;
+      loadingView = Sqwerl.get('LoadingView');
       SC.debug('%@: Setting the properties view to \'%@\'', this, viewName);
-      Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView.set('nowShowing', view);
-      Sqwerl.mainPage.scrollPropertiesViewToStart();
-      if (controller && (typeof controller.onViewShown === 'function')) {
-        controller.onViewShown()
+      if (detailsView.get('nowShowing') === loadingView) {
+        detailsView.animate('opacity', 0.2, { duration: 0.25 }, function () {
+          detailsView.set('nowShowing', view);
+          detailsView.animate('opacity', 1, { duration: 0.25 }, function () {
+            Sqwerl.mainPage.scrollPropertiesViewToStart();
+            if (controller && (typeof controller.onViewShown === 'function')) {
+              controller.onViewShown()
+            }
+          });
+        });
+      } else {
+        detailsView.set('nowShowing', view);
+        Sqwerl.mainPage.scrollPropertiesViewToStart();
+        if (controller && (typeof controller.onViewShown === 'function')) {
+          controller.onViewShown()
+        }
       }
     }
   },

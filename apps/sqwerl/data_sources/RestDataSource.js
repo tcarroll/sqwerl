@@ -49,6 +49,7 @@ Sqwerl.RestDataSource = SC.DataSource.create({
     'groups': Sqwerl.Group,
     'notes': Sqwerl.Note,
     'papers': Sqwerl.Paper,
+    'pictures': Sqwerl.Picture,
     'podcasts': Sqwerl.Podcast,
     'projects': Sqwerl.Project,
     'roles': Sqwerl.Role,

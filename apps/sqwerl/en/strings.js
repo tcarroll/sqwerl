@@ -7,7 +7,7 @@ SC.stringsFor('en', {
     'main.fatalErrorDialog.text': 'It\'s not your fault. We screwed up.<br>Please tell us what happened, so we can fix it.',
     'main.fatalErrorDialog.title': 'Nuts! Sqwerl is road kill.',
 
-    'mainPage.busyPanel.contentView.label.value': 'Hold on...',
+    'mainPage.busyPanel.contentView.label.value0': 'Hold on...',
     'mainPage.busyPanel.contentView.label.value1': 'Hold your horses...',
     'mainPage.busyPanel.contentView.label.value2': 'Please wait...',
     'mainPage.busyPanel.contentView.label.value3': 'Keep your shirt on...',

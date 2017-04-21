@@ -15,6 +15,58 @@ a:hover {
     text-decoration: underline;
 }
 
+.circle1 {
+    -moz-animation: spin-clockwise 0.5s infinite linear;
+    -webkit-animation: spin-clockwise 0.5s infinite linear;
+    animation: spin-clockwise 0.5s infinite linear;
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 100px;
+    border-top: 5px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 0 35px #2187e7;
+    height: 100px;
+    left: calc(50% - 50px);
+    margin-left: 25px;
+    opacity: 0.9;
+    position: absolute;
+    top: calc(50% - 99px);
+    visibility: visible;
+    width: 100px;
+}
+
+.circle2 {
+    -moz-animation: spin-counterclockwise 0.5s infinite linear;
+    -webkit-animation: spin-counterclockwise 0.5s infinite linear;
+    animation: spin-counterclockwise 0.5s infinite linear;
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 50px;
+    border-top: 5px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 0 15px #2187e7;
+    height: 87px;
+    left: calc(50% - 18px);
+    margin: 0 auto;
+    opacity: 0.9;
+    position: absolute;
+    width: 87px;
+    top: calc(50% - 92px);
+    visibility: visible;
+}
+
+.details-busy-curtain {
+    cursor: wait;
+}
+
+.loading-content-label {
+    opacity: 0.6;
+}
+
+.loading-content-value {
+    opacity: 0.4;
+}
+
 .properties-scrollable-content {
     background: #FAFFFA;
     border-top: 1px solid $navigation-list-background;

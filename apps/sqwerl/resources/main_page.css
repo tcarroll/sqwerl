@@ -1109,6 +1109,18 @@ p.create-account-text {
     vertical-align: middle;
 }
 
+.swal2-modal.swal2-show {
+    box-shadow: 8px 8px 2px rgba(64, 64, 64, 0.1)
+}
+
+.swal2-textarea {
+    max-width: 30em;
+    min-width: 20em;
+    min-height: 4em;
+    max-height: 10em;
+    resize: vertical;
+}
+
 $theme.details-container-view {
      border-left: 1px solid darkgray;
 }
@@ -1134,6 +1146,14 @@ $theme.sc-list-view.navigation-list {
 
 $theme.sc-modal {
      cursor: wait;
+}
+
+.ti-check.bold {
+    font-weight: bold;
+}
+
+.ti-close.bold {
+    font-weight: bold;
 }
 
 .trail-bar li {

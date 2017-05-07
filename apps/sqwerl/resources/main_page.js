@@ -1203,9 +1203,14 @@ Sqwerl.mainPage = SC.Page.design({
   }),
 
   /**
-   * Should the application appear to be busy?
+   * Should this application appear to be busy?
    */
-  isBusy: true,
+  isBusy: false,
+
+  /**
+   * Is this application sending user feedback to its server?
+   */
+  isSendingFeedback: false,
 
   /**
    * User interface.
@@ -1545,7 +1550,7 @@ Sqwerl.mainPage = SC.Page.design({
       }),
 
       propertiesView: SC.ContainerView.extend(SC.SplitChild, {
-        childViews: ['detailsBackgroundView', 'detailsView', 'detailsBusyCurtain'],
+        childViews: ['detailsBackgroundView', 'detailsView', 'detailsBusyCurtain', 'sendingFeedbackCurtain'],
         classNames: ['details-container-view'],
         layout: {bottom: 0, left: 0, top: 0},
         minimumSize: 250,
@@ -1576,6 +1581,15 @@ Sqwerl.mainPage = SC.Page.design({
           isVisibleBinding: 'Sqwerl.mainPage.isBusy',
           render: function (context) {
               context.begin('div').addClass('circle1').end().begin('div').addClass('circle2').end();
+          },
+          layout: { bottom: 0, left: 0, right: 0, top: 0 }
+        }),
+
+        sendingFeedbackCurtain: SC.View.extend({
+          classNames: ['sending-feedback-curtain'],
+          isVisibleBinding: 'Sqwerl.mainPage.isSendingFeedback',
+          render: function (context) {
+            context.begin('div').addClass('circle1').end().begin('div').addClass('circle2').end();
           },
           layout: { bottom: 0, left: 0, right: 0, top: 0 }
         })
@@ -1787,38 +1801,65 @@ Sqwerl.mainPage = SC.Page.design({
         subLabel: SC.LabelView.create({
           classNames: ['menu-item-sub-label'],
           layout: { left: 1, right: 5, top: Sqwerl.rowHeight * 0.65 },
-          value: 'What you think about Sqwerl?'
+          value: 'What do you think about Sqwerl?'
         }),
 
         requestFeedback: function () {
            sweetAlert({
              allowEscapeKey: true,
+             cancelButtonColor: "#d33",
+             cancelButtonText: '<i class="ti-close bold"></i> Cancel',
              confirmButtonColor: '#004f00',
-             confirmButtonText: 'Send',
+             confirmButtonText: '<i class="ti-check bold"></i> Send',
              input: 'textarea',
+             inputValidator: function (value) {
+               return new Promise(function (resolve, reject) {
+                 if ((!value) || (value.toString().trim().length < 1)) {
+                   reject('Please enter your comments in the text box.');
+                 } else {
+                   resolve();
+                 }
+               });
+             },
              showCancelButton: true,
+             showCloseButton: true,
              text: 'Tell us what you think about Sqwerl',
              title: 'Give us a piece of your mind',
              type: 'question'
            }).then((text) => {
              let url = window.location.protocol + '//' + window.location.host + '/feedback';
-             if (text) {
-               if (text.length > 2048) {
-                 text.slice(0, 2048);
-               };
+             if (text && (text.trim().length > 0)) {
+               if (text.length > 3000) {
+                 text.slice(0, 3000);
+               }
+               Sqwerl.mainPage.set('isSendingFeedback', true);
                $.post(
                  url,
-                 { feedbackText: text },
+                 { feedbackText: encodeURIComponent(text) },
                  function onSuccess(result) {
-                   // TODO - Notify user that feedback was received.
-                   console.log('Feedback successfully set to "' + url + '"');
+                   Sqwerl.mainPage.set('isSendingFeedback', false);
+                   console.info('User feedback successfully sent: ' + result && JSON.stringify(result));
+                   sweetAlert({
+                     allowEscapeKey: true,
+                     confirmButtonColor: '#004f00',
+                     confirmButtonText: 'OK',
+                     showCloseButton: true,
+                     title: 'Thanks for the feedback',
+                     type: 'success'
+                   });
                  }
                ).fail((error) => {
-                 // TODO - Handle failure.
                  console.log('Failed to send feedback to "' + url + '"');
-                 if (error) {
-                   console.log('Error: ' + JSON.stringify(error));
-                 }
+                 console.error(error && JSON.stringify(error));
+                 Sqwerl.mainPage.set('isSendingFeedback', false);
+                 sweetAlert({
+                   allowEscapeKey: true,
+                   showCloseButton: true,
+                   showConfirmButton: false,
+                   text: 'Something went wrong, and your feedback didn\'t make it.',
+                   title: 'Communication Breakdown',
+                   type: 'error'
+                 })
                });
              }
            });

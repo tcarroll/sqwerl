@@ -8,7 +8,7 @@
     {{else}}
         <div class="home-view-text">You are viewing {{defaultDatabase.description}}.
         <a class="home-view-create-account-link" onclick="Sqwerl.mainPage.createAccountDialog.show()">Create an account</a> to share the things that make <i>you</i> smart.</div>
-        <div class="home-view-text">Changes people have made to {{defaultDatabase.description}} in the past 30 days:</div>
+        <div class="home-view-text">Changes people have made to {{defaultDatabase.description}} in the last 30 days:</div>
             <div id="recent-changes-graph-container">
             </div>
             {{#each recentChanges}}

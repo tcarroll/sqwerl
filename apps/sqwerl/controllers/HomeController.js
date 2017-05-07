@@ -233,12 +233,11 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
       let changes = recentChanges.content;
       let data = [];
       let graph = d3.select('#recent-changes-graph-container');
-      let margin = { bottom: 50, left: 50, right: 20, top: 20 };
+      let margin = { bottom: 50, left: 60, right: 20, top: 20 };
       let width = 600 - margin.left - margin.right;
       let height = 250 - margin.bottom - margin.top;
-      let x = d3.scaleTime().range([width, 0]);
+      let x = d3.scaleTime().rangeRound([width, 0]);
       let y = d3.scaleLinear().range([height, 0]);
-      let line = d3.line().x(d => x(d.date)).y(d => y(d.changeCount));
       let svg = $('#recent-changes-graph-container > svg');
       if (svg.length === 0) {
         svg = graph.append('svg');
@@ -249,46 +248,78 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-      changes.forEach(change => {
+      changes.forEach(function (change) {
         let d = {
           date: new Date(change.date),
           changeCount: change.changes.totalCount
         };
         data.push(d);
       });
-      x.domain([d3.min(data, d => d.date), new Date()]);
-      y.domain([0, d3.max(data, d => d.changeCount)]);
-      svg.append('path')
-        .data([data])
-        .attr('class', 'line')
-        .attr('d', line)
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-      svg.selectAll('dot')
-        .data(data)
-        .enter().append('circle')
-          .attr('r', 3)
-          .attr('cx', d => x(d.date))
-          .attr('cy', d => y(d.changeCount))
-          .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+      x.domain([new Date(), d3.timeDay.offset(new Date(), -30)].reverse());
+      let histogram = d3.histogram()
+        .value(function (d) { return d.date; })
+        .domain(x.domain())
+        .thresholds(x.ticks(d3.timeDay));
+      let bins = histogram(data);
+      bins.forEach(function (bin) {
+        bin.changeCount = (bin[0] && bin[0].changeCount) ? bin[0].changeCount : 0;
+      });
+      let barWidth = x(bins[0].x0) - x(bins[0].x1);
+      y.domain([0, d3.max(bins, function (d) { return d.changeCount; })]);
+      svg.selectAll('line.y')
+        .data(y.ticks())
+        .enter().append('line')
+        .attr('class', 'y-grid-line')
+        .attr('x1', 0)
+        .attr('x2', width)
+        .attr('y1', y)
+        .attr('y2', y)
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      svg.selectAll('rect')
+        .data(bins)
+        .enter().append('rect')
+        .attr('class', 'bar')
+        .attr('x', margin.left)
+        .attr('transform', function (d) {
+          return 'translate(' + x(d.x0) + ',' + (y(d.changeCount) + margin.top) + ')';
+        })
+        .attr('width', function (d) { return x(d.x0) - x(d.x1); })
+        .attr('height', function (d) { return height - y(d.changeCount); })
+        .on('mouseover', function () { console.log('over'); })
+        .on('mouseout', function () { console.log('out'); });
       svg.append('g')
-        .attr('class', 'home-view-graph-axes')
-        .attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')')
-        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)));
+        .attr('class', 'x-axis home-view-graph-axes')
+        .attr('transform', 'translate(' + (margin.left + barWidth) + ',' + (height + margin.top) + ')')
+        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)).tickFormat(d3.timeFormat('%B %d')))
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '2em')
+        .attr('dy', '1em');
       svg.append('text')
-        .attr('class', 'home-view-graph-axes-titles')
-        .attr('transform', 'translate(' + (width / 2) + ', ' + (height + margin.top + 40) + ')')
+        .attr('class', 'x-axis-title home-view-graph-axes-titles')
+        .attr('transform', 'translate(' + ((width / 2) + margin.left) + ', ' + (height + margin.top + 40) + ')')
         .text('Time');
       svg.append('g')
         .attr('class', 'home-view-graph-axes')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').call(d3.axisLeft(y));
+        .attr('transform', 'translate(' + (margin.left + barWidth) + ',' + margin.top + ')')
+        .call(d3.axisLeft(y));
       svg.append('text')
         .attr('class', 'home-view-graph-axes-titles')
         .attr('transform', 'rotate(-90)')
         .attr('y', 0)
-        .attr('x', 0 - (height / 2))
+        .attr('x', 0 - ((height + margin.bottom) / 2))
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Number of changes');
+      svg.selectAll('line.x')
+        .data(x.ticks(bins.length))
+        .enter().append('line')
+        .attr('class', 'x-grid-line')
+        .attr('x1', x)
+        .attr('x2', x)
+        .attr('y1', 0)
+        .attr('y2', height)
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
     }
   },
 

@@ -175,3 +175,15 @@
 #recent-changes-graph-container {
     margin-left: 20px;
 }
+
+rect.bar {
+    fill: rgb(9, 42, 18);
+}
+
+.x-grid-line {
+    stroke: #e5e5e5;
+}
+
+.y-grid-line {
+    stroke: #e5e5e5;
+}

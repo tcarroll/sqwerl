@@ -69,7 +69,7 @@ gulp.task('pack', ['stage'], function () {
   var dateString = moment().format('MM-DD-YYYY');
   return gulp.src('tmp/staging/**/*')
     .pipe(debug())
-    .pipe(gzip('sqwerl-' + dateString + '.gz'))
+    .pipe(gzip('sqwerl-client-' + dateString + '.gz'))
     .pipe(gulp.dest('tmp/target'));
 });
 

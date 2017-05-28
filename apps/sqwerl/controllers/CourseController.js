@@ -70,6 +70,11 @@ Sqwerl.CourseController = Sqwerl.ViewController.create({
     return this.hasMoreThanOne('recommendations');
   }),
 
+  hasMultipleRecommendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('recommendedBy');
+  }),
+
   hasMultipleTags: Sqwerl.property(function () {
     'use strict';
     return this.hasMoreThanOne('tags');

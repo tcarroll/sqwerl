@@ -5,51 +5,52 @@
 
 <div class="properties-scrollable-content">
     {{#if isSignedIn}}
+        <div class="home-view-text">Welcome back {{userName}}.</div>
     {{else}}
         <div class="home-view-text">You are viewing {{defaultDatabase.description}}.
         <a class="home-view-create-account-link" onclick="Sqwerl.mainPage.createAccountDialog.show()">Create an account</a> to share the things that make <i>you</i> smart.</div>
-        <div class="home-view-text">Changes people have made to {{defaultDatabase.description}} in the last 30 days:</div>
-            <div id="recent-changes-graph-container">
-            </div>
-            {{#each recentChanges}}
-                <div class="home-view-changes">
-                    <div class="home-view-expand-collapse" {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.expandCollapseChanges(this)">
-                        <span class="home-view-expand-collapse-icon ti-angle-right"></span>
-                    </div>
-                    <div class="home-view-changes-title">{{#fromNow}}{{/fromNow}}, {{by}} changed {{numberFormat changes.totalCount}} {{#thingsChanged}}{{/thingsChanged}}
-                        <span class="home-view-changes-link">
-                            <a class="home-view-show-changes-link"
-                                {{bindAttr data-id="index"}}
-                                onclick="Sqwerl.HomeController.expandCollapseChanges(this)">show</a>
-                            <a class="home-view-hide-changes-link"
-                                {{bindAttr data-id="index"}}
-                                onclick="Sqwerl.HomeController.expandCollapseChanges(this)">hide</a>
-                        </span>
-                    </div>
-                    {{#if hasMoreThanOne}}
-                        <table class="home-view-changes-table" {{bindAttr data-id="index"}}>
-                            <thead>
-                                <tr class="home-view-changes-table-heading">
-                                    <th></th>
-                                    <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByNamesOfThings(this);">Name</a></th>
-                                    <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByTypesOfThings(this);">Type</a></th>
-                                    <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByTypesOfChanges(this);">Change</a></th>
-                                </tr>
-                            </thead>
-                            {{#collection SC.TemplateCollectionView content=changes.members tagName="tbody" itemTagName="tr"}}
-                                <td class="home-view-change-index">{{numberFormat content.index}}</td>
-                                <td><a {{bindAttr href="content.link"}}>{{content.name}}</a></td>
-                                <td class="home-view-type-of-thing">{{typeNameForId content.typeId}}</td>
-                                <td class="home-view-type-of-change">{{changeName content.typeOfChange}}</td>
-                            {{/collection}}
-                        </table>
-                    {{else}}
-                        {{#collection SC.TemplateCollectionView content=changes.members tagName="div"}}
-                            <div class="home-view-single-change">{{changeName content.typeOfChange}} <a {{bindAttr href="content.link"}}>{{content.name}}</a> (<span class="home-view-type-of-change">{{typeNameForId content.typeId}}</span>)
-                        {{/collection}}
-                    {{/if}}
-                </div>
-            {{/each}}
-        </div>
     {{/if}}
+    <div class="home-view-text">Changes people have made to {{defaultDatabase.description}} in the past 30 days:</div>
+        <div id="recent-changes-graph-container">
+        </div>
+        {{#each recentChanges}}
+            <div class="home-view-changes">
+                <div class="home-view-expand-collapse" {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.expandCollapseChanges(this)">
+                    <span class="home-view-expand-collapse-icon ti-angle-right"></span>
+                </div>
+                <div class="home-view-changes-title">{{#fromNow}}{{/fromNow}}, {{by}} changed {{numberFormat changes.totalCount}} {{#thingsChanged}}{{/thingsChanged}}
+                    <span class="home-view-changes-link">
+                        <a class="home-view-show-changes-link"
+                            {{bindAttr data-id="index"}}
+                            onclick="Sqwerl.HomeController.expandCollapseChanges(this)">show</a>
+                        <a class="home-view-hide-changes-link"
+                            {{bindAttr data-id="index"}}
+                            onclick="Sqwerl.HomeController.expandCollapseChanges(this)">hide</a>
+                    </span>
+                </div>
+                {{#if hasMoreThanOne}}
+                    <table class="home-view-changes-table" {{bindAttr data-id="index"}}>
+                        <thead>
+                            <tr class="home-view-changes-table-heading">
+                                <th></th>
+                                <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByNamesOfThings(this);">Name</a></th>
+                                <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByTypesOfThings(this);">Type</a></th>
+                                <th><a {{bindAttr data-id="index"}} onclick="Sqwerl.HomeController.sortChangesByTypesOfChanges(this);">Change</a></th>
+                            </tr>
+                        </thead>
+                        {{#collection SC.TemplateCollectionView content=changes.members tagName="tbody" itemTagName="tr"}}
+                            <td class="home-view-change-index">{{numberFormat content.index}}</td>
+                            <td><a {{bindAttr href="content.link"}}>{{content.name}}</a></td>
+                            <td class="home-view-type-of-thing">{{typeNameForId content.typeId}}</td>
+                            <td class="home-view-type-of-change">{{changeName content.typeOfChange}}</td>
+                        {{/collection}}
+                    </table>
+                {{else}}
+                    {{#collection SC.TemplateCollectionView content=changes.members tagName="div"}}
+                        <div class="home-view-single-change">{{changeName content.typeOfChange}} <a {{bindAttr href="content.link"}}>{{content.name}}</a> (<span class="home-view-type-of-change">{{typeNameForId content.typeId}}</span>)
+                    {{/collection}}
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
 </div>

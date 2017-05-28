@@ -272,7 +272,7 @@ $theme.sc-scroller-view {
     .thumb-center {
         animation: fade-out .3s, slide-in .15s;
         left: $scroller-thumb-left-partial;
-        opacity: 0.25;
+        opacity: 0.06;
         transform: translateY(-14px);
         -moz-animation: fade-out .3s, slide-in .15s;
         -o-animation: fade-out .3s, slide-in .15s;

@@ -192,12 +192,16 @@ try {
         var token = document.cookie.match(/^(.*;)?sqwerl-session=[^;]+(.*)?$/);
         var userId = '/types/users/guest';
         var userName = 'guest';
+        var wasSignedIn = Sqwerl.get('isSignedIn');
         if (token && (token.length > 0)) {
           // TODO - Check that token hasn't expired.
           session = JSON.parse(token[0].slice('sqwerl-session='.length));
           isSignedIn = session.userId && (session.userId !== '/types/users/guest');
           userId = session.userId || userId;
           userName = session.userName || userName;
+        }
+        if (this.store.dataSource && (typeof this.store.dataSource.clearCache == 'function')) {
+          this.store.dataSource.clearCache();
         }
         Sqwerl.set('isSignedIn', isSignedIn);
         Sqwerl.set('userId', userId);

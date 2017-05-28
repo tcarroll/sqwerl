@@ -9,7 +9,18 @@ Sqwerl.PodcastController = Sqwerl.ViewController.create({
 
     connectionCount: Sqwerl.property(function () {
         'use strict';
-        return this.sumConnections(['authors', 'categories', 'episodes', 'links', 'listeners', 'recommendations', 'recommendedBy', 'tags']) + ((this.get('webPage') ? 1 : 0) + (this.get('feedUrl') ? 1 : 0));
+        return this.sumConnections([
+          'authors',
+          'categories',
+          'episodes',
+          'links',
+          'listeners',
+          'recommendations',
+          'recommendedBy',
+          'tags'
+          ]) +
+            ((this.get('webPage') ? 1 : 0) + (this.get('feedUrl') ? 1 : 0)
+        );
     }),
 
     /**
@@ -96,5 +107,14 @@ Sqwerl.PodcastController = Sqwerl.ViewController.create({
     hasTags: Sqwerl.property(function () {
         'use strict';
         return this.hasAtLeastOne('tags');
-    })
+    }),
+
+  /**
+   * Returns an HTML anchor link to the value of this podcast's subscription URL.
+   *
+   * @return {string} HTML markup for an <a> (anchor or hyperlink) tag.
+   */
+  pageLink: Sqwerl.property(function () {
+    return '<a href="' + encodeURI(this.get('feedUrl')) + '" target="_blank">' + this.get('name') + '</a>';
+  })
 });

@@ -33,6 +33,7 @@ Sqwerl.PodcastView = SC.TemplateView.create({
   feedUrlBinding: 'Sqwerl.PodcastController.feedUrl',
   linksBinding: 'Sqwerl.PodcastController.links',
   nameBinding: 'Sqwerl.PodcastController.name',
+  pageLinkBinding: 'Sqwerl.PodcastController.pageLink',
   recommendationsBinding: 'Sqwerl.PodcastController.recommendations',
   recommendedByBinding: 'Sqwerl.PodcastController.recommendedBy',
   tagsBinding: 'Sqwerl.PodcastController.tags',

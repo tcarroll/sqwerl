@@ -10,6 +10,8 @@ Sqwerl.AuthorView = SC.TemplateView.extend({
   authorOfCountBinding: 'Sqwerl.AuthorController.authorOfCount',
   connectionCountBinding: 'Sqwerl.AuthorController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.AuthorController.connectionCountText',
+  createdOnBinding: 'Sqwerl.AuthorController.createdOn',
+  creatorBinding: 'Sqwerl.AuthorController.creator',
   firstNameBinding: 'Sqwerl.AuthorController.firstName',
   hasAuthorOfBinding: 'Sqwerl.AuthorController.hasAuthorOf',
   hasConnectionsBinding: 'Sqwerl.AuthorController.hasConnections',

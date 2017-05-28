@@ -7,9 +7,11 @@
  */
 Sqwerl.BookView = SC.TemplateView.create({
   authorsBinding: 'Sqwerl.BookController.authors',
+  categoriesBinding: 'Sqwerl.BookController.categories',
   connectionCountBinding: 'Sqwerl.BookController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.BookController.connectionCountText',
-  categoriesBinding: 'Sqwerl.BookController.categories',
+  createdOnBinding: 'Sqwerl.BookController.createdOn',
+  creatorBinding: 'Sqwerl.BookController.creator',
   displayLinksBinding: 'Sqwerl.BookController.displayLinks',
   displayPropertiesBinding: 'Sqwerl.BookController.displayProperties',
   graphUrlBinding: 'Sqwerl.BookController.graphUrl',
@@ -25,6 +27,7 @@ Sqwerl.BookView = SC.TemplateView.create({
   hasMultipleLinksBinding: 'Sqwerl.BookController.hasMultipleLinks',
   hasMultipleNotesBinding: 'Sqwerl.BookController.hasMultipleNotes',
   hasMultipleReadByBinding: 'Sqwerl.BookController.hasMultipleReadBy',
+  hasMultipleRecommendedByBinding: 'Sqwerl.BookController.hasMultipleRecommendedBy',
   hasMultipleRecommendationsBinding: 'Sqwerl.BookController.hasMultipleRecommendations',
   hasMultipleTagsBinding: 'Sqwerl.BookController.hasMultipleTags',
   hasNotesBinding: 'Sqwerl.BookController.hasNotes',

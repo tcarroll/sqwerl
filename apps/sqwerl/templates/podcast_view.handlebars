@@ -1,5 +1,5 @@
 <div class="properties-title">
-    <div class="title-bar-title">{{name}}</div>
+    <div class="title-bar-title">{{#if feedUrl}}{{{pageLink}}}{{else}}{{name}}{{/if}}</div>
     <div class="title-bar-type">is a podcast</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
@@ -64,13 +64,6 @@
                 <div class="read-only-field-value">
                     <a {{bindAttr href="feedWebPageLink"}}>{{webPage.name}}</a>
                 </div>
-            </div>
-        {{/if}}
-
-        {{#if feedUrl}}
-            <div class="read-only-label-and-value">
-                <div class="read-only-field-label">Subscription link</div>
-                <div class="read-only-field-value"><a {{bindAttr href="feedUrl"}}>{{feedUrl}}</a></div>
             </div>
         {{/if}}
 

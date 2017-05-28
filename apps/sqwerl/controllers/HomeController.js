@@ -195,6 +195,17 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
     }));
   },
 
+  fromNow: function (date) {
+    let result = '';
+    if (date) {
+      result = moment(date).fromNow();
+      if (result.length > 0) {
+        result = result.slice(0, 1).toUpperCase() + result.slice(1);
+      }
+    }
+    return result;
+  },
+
   /**
    * Returns the name of guest users: users who are not signed into an account.
    *
@@ -211,7 +222,6 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
    * @returns {Boolean} true if the user is signed into an account (authenticated), false if the user is a guest user.
    */
   isSignedIn: Sqwerl.property(function () {
-    'use strict';
     return Sqwerl.isSignedIn();
   }),
 
@@ -228,12 +238,14 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
    * Invoked when this controller's view is shown (made visible).
    */
   onViewShown() {
+    let controller = this;
     let recentChanges = this.recentChanges();
     if (recentChanges) {
       let changes = recentChanges.content;
       let data = [];
+      let formatTime = d3.timeFormat('%B %e, %Y');
       let graph = d3.select('#recent-changes-graph-container');
-      let margin = { bottom: 50, left: 60, right: 20, top: 20 };
+      let margin = { bottom: 50, left: 60, right: 30, top: 20 };
       let width = 600 - margin.left - margin.right;
       let height = 250 - margin.bottom - margin.top;
       let x = d3.scaleTime().rangeRound([width, 0]);
@@ -255,6 +267,10 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         };
         data.push(d);
       });
+      let tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'recent-changes-tooltip')
+        .style('opacity', 0);
       x.domain([new Date(), d3.timeDay.offset(new Date(), -30)].reverse());
       let histogram = d3.histogram()
         .value(function (d) { return d.date; })
@@ -266,7 +282,7 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
       });
       let barWidth = x(bins[0].x0) - x(bins[0].x1);
       y.domain([0, d3.max(bins, function (d) { return d.changeCount; })]);
-      svg.selectAll('line.y')
+      svg.selectAll('line.y-grid-line')
         .data(y.ticks())
         .enter().append('line')
         .attr('class', 'y-grid-line')
@@ -285,19 +301,38 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         })
         .attr('width', function (d) { return x(d.x0) - x(d.x1); })
         .attr('height', function (d) { return height - y(d.changeCount); })
-        .on('mouseover', function () { console.log('over'); })
-        .on('mouseout', function () { console.log('out'); });
+        .on('mouseover', function (d) {
+          let changeCount = d.changeCount;
+          let position = $('#recent-changes-graph-container > svg').position();
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0.9);
+          tooltip.html(
+              '<span class="recent-changes-tooltip-date">' + formatTime(d.x0) + '</span>' +
+              '<br/>' +
+              '<span class="recent-changes-tooltip-from-now">(' + controller.fromNow(d.x0) + ')</span>' +
+              '<br/>' +
+              changeCount +
+              ' ' +
+              ((changeCount == 1) ? 'change' : 'changes'))
+            .style('left', position.left + x(d.x0) + (x(d.x0) - x(d.x1)) - 1 + 'px')
+            .style('top', Math.max(0, y(changeCount) + position.top - 50) + 'px');
+        })
+        .on('mouseout', function (d) {
+          tooltip.transition().duration(500).style('opacity', 0);
+        });
       svg.append('g')
         .attr('class', 'x-axis home-view-graph-axes')
         .attr('transform', 'translate(' + (margin.left + barWidth) + ',' + (height + margin.top) + ')')
-        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)).tickFormat(d3.timeFormat('%B %d')))
+        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)).tickFormat(d3.timeFormat('%B %e')))
         .selectAll('text')
         .style('text-anchor', 'end')
         .attr('dx', '2em')
         .attr('dy', '1em');
       svg.append('text')
         .attr('class', 'x-axis-title home-view-graph-axes-titles')
-        .attr('transform', 'translate(' + ((width / 2) + margin.left) + ', ' + (height + margin.top + 40) + ')')
+        .attr('transform', 'translate(' + ((width / 2) + margin.left) + ', ' + (height + margin.top) + ')')
+        .attr('dy', '3em')
         .text('Time');
       svg.append('g')
         .attr('class', 'home-view-graph-axes')
@@ -308,10 +343,10 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         .attr('transform', 'rotate(-90)')
         .attr('y', 0)
         .attr('x', 0 - ((height + margin.bottom) / 2))
-        .attr('dy', '1em')
+        .attr('dy', '1.5em')
         .style('text-anchor', 'middle')
         .text('Number of changes');
-      svg.selectAll('line.x')
+      svg.selectAll('line.x-grid-line')
         .data(x.ticks(bins.length))
         .enter().append('line')
         .attr('class', 'x-grid-line')
@@ -402,5 +437,14 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
 */
       }
     }
-  }
+  },
+
+  /**
+   * Returns the first name of the currently signed in user.
+   *
+   * @returns {string} A user's first name.
+   */
+  userName: Sqwerl.property(function () {
+    return Sqwerl.get('userName');
+  }),
 });

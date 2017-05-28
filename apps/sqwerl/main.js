@@ -148,6 +148,18 @@ Sqwerl.registerHandlebarsHelpers = function () {
     var value = retrievePropertyValue(this, propertyName);
     return (value === 'modified') ? 'Modified' : 'Added';
   });
+  Handlebars.registerHelper('formatDate', function (propertyName) {
+    var date;
+    var result = '';
+    var timestamp = retrievePropertyValue(this, propertyName);
+    if (timestamp) {
+      date = moment(timestamp);
+      if (date.isValid()) {
+        result = date.format('LL');
+      }
+    }
+    return result;
+  });
   Handlebars.registerHelper('fromNow', function () {
     var date = this.date;
     var result = '';

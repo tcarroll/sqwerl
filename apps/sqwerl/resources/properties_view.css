@@ -67,6 +67,12 @@ a:hover {
     opacity: 0.4;
 }
 
+.ordinal {
+    color: #707070;
+    font-size: 10pt;
+    text-align: right;
+}
+
 .properties-scrollable-content {
     background: #FAFFFA;
     border-top: 1px solid $navigation-list-background;
@@ -80,14 +86,51 @@ a:hover {
 }
 
 .properties-title {
-    background: $title-bar-background;
-    border-bottom: $title-bar-bottom-border;
     height: $row-height;
     line-height: $row-height;
     min-width: 100%;
     position: absolute;
     top: 0;
     white-space: nowrap;
+}
+
+.read-only-field-label {
+    font-weight: bold;
+    line-height: 1em;
+    padding: 0.6em 20px 0 20px;
+    white-space: nowrap;
+}
+
+.read-only-field-label-count {
+    background: #dadada;
+    border-radius: 10rem;
+    color: #000000;
+    display: inline-block;
+    font-size: 75%;
+    font-weight: normal;
+    padding: 0.25em 0.4em;
+    padding-left: .6em;
+    padding-right: .6em;
+    text-align: center;
+    vertical-align: baseline;
+}
+
+.read-only-field-value {
+    max-width: $properties-value-max-width;
+    padding: 0 20px 0 20px;
+
+    div {
+        margin-bottom: 0.25em;
+    }
+}
+
+.read-only-field-value-inline {
+}
+
+.read-only-form-section-heading {
+    font-weight: bold;
+    height: $row-height;
+    max-width: $properties-value-max-width;
 }
 
 .title-bar-right {
@@ -105,49 +148,8 @@ a:hover {
     display: inline-table;
     height: $row-height;
     line-height: $row-height;
-/*
-        &:after {
-            color: #404040;
-            content: '\25cf';
-            font-size: 8px;
-            margin: 0 2px;
-            vertical-align: middle;
-        }
 
-        &:before {
-            color: #404040;
-            content: '\25cf';
-            font-size: 8px;
-            margin: 0 0.5em 0 0;
-            vertical-align: middle;
-        }
-*/
     & span {
-        margin-right: 4px;
+      margin-right: 4px;
     }
-}
-
-.read-only-form-section-heading {
-    font-weight: bold;
-    height: $row-height;
-    max-width: $properties-value-max-width;
-}
-
-.read-only-field-label {
-    font-weight: bold;
-    line-height: 1em;
-    padding: 1em 20px 0.35em 20px;
-    white-space: nowrap;
-}
-
-.read-only-field-value {
-    max-width: $properties-value-max-width;
-    padding: 0 20px 0 20px;
-
-    div {
-        margin-bottom: 0.25em;
-    }
-}
-
-.read-only-field-value-inline {
 }

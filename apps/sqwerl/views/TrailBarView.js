@@ -42,7 +42,7 @@ Sqwerl.TrailBarView = SC.View.extend({
       ids,
       names;
     if (this.get('isNotHome')) {
-      context.push('<a class="trail-bar-item home-item" href="#/">Home</a>');
+      context.push('<a class="trail-bar-item home-item" href="#/"><span class="ti-home trail-bar-home-icon"></span>Home</a>');
       if (this.content && this.content.ids && this.content.names) {
         ids = this.content.ids;
         names = this.content.names;

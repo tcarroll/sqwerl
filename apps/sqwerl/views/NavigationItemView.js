@@ -79,7 +79,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
       index = this.get('contentIndex'),
       isLoading,
       element,
-      focusedIndex = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.contentView.get('focusedIndex'),
+      focusedIndex = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationPanel.navigationScrollView.contentView.get('focusedIndex'),
       node;
     classArray.push((index % 2 === 0) ? 'even' : 'odd');
     context.setClass('disabled', !this.get('isEnabled'));

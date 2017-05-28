@@ -64,6 +64,13 @@ Sqwerl.RestDataSource = SC.DataSource.create({
   },
 
   /**
+   * Clears this data store's cache of retrieved data.
+   */
+  clearCache() {
+    this.storedKeys = {};
+  },
+
+  /**
    *
    * @param store
    * @param createStoreKeys

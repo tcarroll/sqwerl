@@ -176,6 +176,35 @@
     margin-left: 20px;
 }
 
+.recent-changes-tooltip {
+    background: #e8e815;
+    border: 0;
+    border-radius: 5px;
+    font: 12px sans-serif;
+    height: 3.5em;
+    padding: 0.5em;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    width: 8em;
+}
+
+.recent-changes-tooltip::after {
+    border-color: #e8e815 transparent;
+    border-style: solid;
+    border-width: 5px 5px 0;
+    bottom: -5px;
+    content: "";
+    display: block;
+    left: 4em;
+    position: absolute;
+    width: 0;
+}
+
+.recent-changes-tooltip-from-now {
+    font-size: 7pt;
+}
+
 rect.bar {
     fill: rgb(9, 42, 18);
 }

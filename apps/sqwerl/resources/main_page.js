@@ -1203,6 +1203,11 @@ Sqwerl.mainPage = SC.Page.design({
   }),
 
   /**
+   * Text users entered into the feedback dialog to tell us what they think about this application.
+   */
+  feedbackText: '',
+
+  /**
    * Should this application appear to be busy?
    */
   isBusy: false,
@@ -1444,107 +1449,120 @@ Sqwerl.mainPage = SC.Page.design({
       }.observes('Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome'),
 
       navigationView: SC.View.design(SC.SplitChild, {
-        childViews: 'navigationToolbar navigationScrollView navigationBusyPanel'.w(),
+        classNames: 'navigation-view',
+        childViews: 'navigationPanel'.w(),
         minimumSize: 0,
         width: 250,
 
-        navigationBusyPanel: SC.View.extend({
-          classNames: ['navigation-busy-panel'],
-          layout: {bottom: 0, left: 0}
-        }),
+        navigationPanel: SC.View.design({
+          childViews: 'navigationToolbar navigationScrollView navigationBusyPanel'.w(),
+          classNames: ['navigation-panel'],
+          layout: { left: 0, top: 0 },
 
-        navigationToolbar: SC.View.extend({
-          childViews: ['navigationBackButton'],
-          classNames: ['navigation-toolbar'],
-          height: Sqwerl.rowHeight,
-          isVisibleBinding: 'Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome',
-          layout: {bottom: 0, left: 0, right: 0, top: 0},
-
-          navigationBackButton: SC.View.extend({
-            classNames: ['navigation-back-button'],
-            displayProperties: ['title'],
+          navigationToolbar: SC.View.extend({
+            childViews: ['navigationBackButton'],
+            classNames: ['navigation-toolbar'],
+            height: Sqwerl.rowHeight,
+            isVisibleBinding: 'Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome',
             layout: {bottom: 0, left: 0, right: 0, top: 0},
-            mouseDown: function () {
-              'use strict';
-              Sqwerl.navigationController.goUp();
-              $('#navigation-back-button').addClass('pressed');
-            },
-            mouseUp: function () {
-              'use strict';
-              $('#navigation-back-button').removeClass('pressed');
-            },
-            title: '',
-            titleBinding: 'Sqwerl.navigationController.parentName',
-            urlBinding: 'Sqwerl.navigationController.goBackUrl',
 
-            render: function (renderContext) {
-              'use strict';
-              var context = renderContext.begin('div class="navigation-back-link-container"');
-              context.push('<a class="navigation-back-button-link"' + ' href="' + this.get('url') + '">' + this.get('title') + '</a>');
-              renderContext = context.end();
-            }
-          })
-        }),
+            navigationBackButton: SC.View.extend({
+              classNames: ['navigation-back-button'],
+              displayProperties: ['title'],
+              layout: {bottom: 0, left: 0, right: 0, top: 0},
+              mouseDown: function () {
+                'use strict';
+                Sqwerl.navigationController.goUp();
+                $('#navigation-back-button').addClass('pressed');
+              },
+              mouseUp: function () {
+                'use strict';
+                $('#navigation-back-button').removeClass('pressed');
+              },
+              title: '',
+              titleBinding: 'Sqwerl.navigationController.parentName',
+              urlBinding: 'Sqwerl.navigationController.goBackUrl',
 
-        navigationScrollView: SC.ScrollView.design({
-          classNames: ['navigation-list-scroll-view'],
-          contentView: Sqwerl.ListView.extend({
-            childrenCountKey: 'childrenCount',
-            classNames: ['navigation-list'],
-            contentBinding: 'Sqwerl.navigationController.arrangedObjects',
-            contentAnimateKey: 'animate',
-            contentValueKey: 'displayName',
-            didBecomeFirstResponder: function () {
-              'use strict';
-              var item = this.$('.sel');
-              if (item) {
-                item.removeClass('unfocused');
+              render: function (renderContext) {
+                'use strict';
+                var context = renderContext.begin('div class="navigation-back-link-container"');
+                context.push('<a class="navigation-back-button-link"' + ' href="' + this.get('url') + '">' + this.get('title') + '</a>');
+                renderContext = context.end();
               }
-            },
-            exampleView: Sqwerl.NavigationItemView,
-            focusedIndexBinding: 'Sqwerl.navigationController.focusedIndex',
-            hasContentRightIcon: YES,
-            keyDown: function (event) {
-              'use strict';
-              var cursorDown = 40,
+            })
+          }),
+
+          navigationScrollView: SC.ScrollView.design({
+            classNames: ['navigation-list-scroll-view'],
+            contentView: Sqwerl.ListView.extend({
+              childrenCountKey: 'childrenCount',
+              classNames: ['navigation-list'],
+              contentBinding: 'Sqwerl.navigationController.arrangedObjects',
+              contentAnimateKey: 'animate',
+              contentValueKey: 'displayName',
+              didBecomeFirstResponder: function () {
+                'use strict';
+                var item = this.$('.sel');
+                if (item) {
+                  item.removeClass('unfocused');
+                }
+              },
+              exampleView: Sqwerl.NavigationItemView,
+              focusedIndexBinding: 'Sqwerl.navigationController.focusedIndex',
+              hasContentRightIcon: YES,
+              keyDown: function (event) {
+                'use strict';
+                var cursorDown = 40,
                   cursorLeft = 37,
                   cursorRight = 39,
                   cursorUp = 38,
                   navigationController = Sqwerl.navigationController,
-                  navigationList = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.contentView;
-              switch (event.keyCode) {
-                case cursorDown:
-                  navigationList.focusNextItem();
-                  break;
-                case cursorUp:
-                  navigationList.focusPreviousItem();
-                  break;
-                case cursorLeft:
-                  navigationController.goUp();
-                  break;
-                case cursorRight:
-                  navigationList.selectFocusedItem();
-                  break;
-              }
-            },
-            rowHeight: Sqwerl.rowHeight,
-            selectionBinding: 'Sqwerl.navigationController.selection'
-          }),
-          layout: { left: 0, top: (Sqwerl.rowHeight * 3) + 1 },
-          minimumVerticalScrollOffset: 0,
-          onIsNotHomeChanged: function () {
-            'use strict';
-            var isHome = !Sqwerl.mainPage.mainPane.navigationBar.trailBar.get('isNotHome'),
+                  navigationList = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationPanel.navigationScrollView.contentView;
+                switch (event.keyCode) {
+                  case cursorDown:
+                    navigationList.focusNextItem();
+                    break;
+                  case cursorUp:
+                    navigationList.focusPreviousItem();
+                    break;
+                  case cursorLeft:
+                    navigationController.goUp();
+                    break;
+                  case cursorRight:
+                    navigationList.selectFocusedItem();
+                    break;
+                }
+              },
+              rowHeight: Sqwerl.rowHeight,
+              selectionBinding: 'Sqwerl.navigationController.selection'
+            }),
+            layout: { left: 0, top: (Sqwerl.rowHeight * 3) + 1 },
+            minimumVerticalScrollOffset: 0,
+            onIsNotHomeChanged: function () {
+              'use strict';
+              var isHome = !Sqwerl.mainPage.mainPane.navigationBar.trailBar.get('isNotHome'),
                 rowHeight = Sqwerl.rowHeight;
-            this.$().css('top', (isHome ? 1 : (rowHeight + 1)) + 'px');
-          }.observes('Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome'),
-          verticalOverlay: YES,
-          verticalScrollerView: SC.ScrollerView.extend({
-            /* buttonLength: -1 * (Sqwerl.rowHeight / 2) + 3), */
-            buttonLength: -1 * ((Sqwerl.rowHeight * 1.5) + 3),
-            buttonOverlap: 0,
-            hasButtons: NO,
-            minimumThumbLength: Sqwerl.rowHeight
+              this.$().css('top', (isHome ? 1 : (rowHeight + 1)) + 'px');
+            }.observes('Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome'),
+            verticalOverlay: YES,
+            verticalScrollerView: SC.ScrollerView.extend({
+              /* buttonLength: -1 * (Sqwerl.rowHeight / 2) + 3), */
+              buttonLength: -1 * ((Sqwerl.rowHeight * 1.5) + 3),
+              buttonOverlap: 0,
+              hasButtons: NO,
+              minimumThumbLength: Sqwerl.rowHeight
+            })
+          }),
+
+          navigationBusyPanel: SC.View.design({
+            classNames: ['navigation-busy-panel'],
+            layout: { left: 0, top: (Sqwerl.rowHeight * 3) + 1 },
+            onIsNotHomeChanged: function () {
+              'use strict';
+              var isHome = !Sqwerl.mainPage.mainPane.navigationBar.trailBar.get('isNotHome'),
+                rowHeight = Sqwerl.rowHeight;
+              this.$().css('top', (isHome ? 1 : (rowHeight + 1)) + 'px');
+            }.observes('Sqwerl.mainPage.mainPane.navigationBar.trailBar.isNotHome')
           })
         })
       }),
@@ -1749,6 +1767,9 @@ Sqwerl.mainPage = SC.Page.design({
         function onSuccessfulSignOut(result) {
           console.log('Successfully signed out');
           Sqwerl.updateUserSignInStatus();
+          Sqwerl.navigationController.goTo('/', function (response) {
+            console.error('Unable to show home view after successful sign out. Response: ' + response);
+          });
         }
       ).fail(function (error) {
         // TODO - Handle sign out failure.
@@ -1821,12 +1842,14 @@ Sqwerl.mainPage = SC.Page.design({
                  }
                });
              },
+             inputValue: Sqwerl.mainPage.get('feedbackText'),
              showCancelButton: true,
              showCloseButton: true,
              text: 'Tell us what you think about Sqwerl',
              title: 'Give us a piece of your mind',
              type: 'question'
            }).then((text) => {
+             Sqwerl.mainPage.set('feedbackText', text);
              let url = window.location.protocol + '//' + window.location.host + '/feedback';
              if (text && (text.trim().length > 0)) {
                if (text.length > 3000) {
@@ -1837,6 +1860,7 @@ Sqwerl.mainPage = SC.Page.design({
                  url,
                  { feedbackText: encodeURIComponent(text) },
                  function onSuccess(result) {
+                   Sqwerl.mainPage.set('feedbackText', '');
                    Sqwerl.mainPage.set('isSendingFeedback', false);
                    console.info('User feedback successfully sent: ' + result && JSON.stringify(result));
                    sweetAlert({
@@ -2144,15 +2168,20 @@ Sqwerl.mainPage = SC.Page.design({
    */
   setNavigationBusy: function (isBusy, fetching) {
     'use strict';
-    var busyPanel = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationBusyPanel.$();
+    var busyPanel = Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationPanel.navigationBusyPanel.$();
     var detailsView = Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsView;
     if (isBusy) {
       if (!Sqwerl.isNavigationBusy) {
         Sqwerl.isNavigationBusy = true;
         Sqwerl.mainPage.set('isBusy', true);
-        $('.sc-outline').css('cursor', 'busy');
+        busyPanel.animate({ opacity: 0 });
         busyPanel.addClass('visible');
         busyPanel.focus();
+        busyPanel.animate({
+          opacity: 0.08
+        }, {
+          duration: 0.25, timing: 'ease-in'
+        });
         if (fetching) {
           Sqwerl.get('LoadingController').set('content', fetching);
         }
@@ -2168,7 +2197,6 @@ Sqwerl.mainPage = SC.Page.design({
       Sqwerl.isNavigationBusy = false;
       Sqwerl.mainPage.set('isBusy', false);
       busyPanel.removeClass('visible');
-      $('.sc-outline').css('cursor', 'pointer');
     }
   },
 
@@ -2707,8 +2735,12 @@ Sqwerl.mainPage = SC.Page.design({
           Sqwerl.mainPage.set('userName', result.userName);
           Sqwerl.set('isSignedIn', true);
           Sqwerl.token = result;
+          Sqwerl.updateUserSignInStatus();
           Sqwerl.mainPage.signInDialog.contentView.signInButton.$().removeClass('busy');
           Sqwerl.mainPage.signInDialog.hide();
+          Sqwerl.navigationController.goTo('/', function (response) {
+             console.error('Unable to show home view after successful sign in. Response: ' + response);
+          });
         }
       ).fail(function (error) {
         // TODO - Handle sign in failure.

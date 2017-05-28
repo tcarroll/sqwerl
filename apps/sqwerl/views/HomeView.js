@@ -13,5 +13,6 @@ Sqwerl.HomeView = SC.TemplateView.create({
   isSignedInBinding: 'Sqwerl.HomeController.isSignedIn',
   linkBinding: 'Sqwerl.HomeController.link',
   recentChangesBinding: 'Sqwerl.HomeController.recentChanges',
-  templateName: 'home_view'
+  templateName: 'home_view',
+  userNameBinding: 'Sqwerl.HomeController.userName'
 });

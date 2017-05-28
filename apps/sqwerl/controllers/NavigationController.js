@@ -69,7 +69,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   createLoadChildrenFunction: function (offset, id, childCount, childIndex) {
     'use strict';
     var controller = this,
-        loadFunction = this.itemLoadFunctions[id + offset];
+      loadFunction = this.itemLoadFunctions[id + offset];
     if (!loadFunction) {
       loadFunction = function () {
         controller.loadChildren(offset, id, childCount, childIndex);
@@ -96,7 +96,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   goTo: function (path, errorCallback) {
     'use strict';
     var controller = this,
-        id;
+      id;
     SC.info('%@: Go to: %@', this, path);
     Sqwerl.mainPage.setNavigationBusy(true, this.oldSelectedNode);
     if (this.oldSelectedNode) {
@@ -143,9 +143,9 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   goUp: function () {
     'use strict';
     var current = this.get('current'),
-        parent = this.get('parent'),
-        parentId,
-        target;
+      parent = this.get('parent'),
+      parentId,
+      target;
     parentId = (current ? (parent || current) : parent);
     if (parentId) {
       target = parentId.split('/').slice(0, parentId.length - 1).join('/');
@@ -163,7 +163,8 @@ Sqwerl.NavigationController = SC.TreeController.extend({
    */
   loadChildren: function (offset, id, childCount, childIndex) {
     'use strict';
-    var controller = this;
+    var child,
+      controller = this;
     if (!this.loadingOffsets.hasOwnProperty(offset)) {
       this.loadingOffsets[offset] = '';
       Sqwerl.store.find(SC.Query.create({
@@ -174,9 +175,9 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           offset: offset,
           onSuccess: function (results) {
             var children,
-                content = controller.get('content'),
-                i,
-                node;
+              content = controller.get('content'),
+              i,
+              node;
             children = content.get('children');
             if (!children) {
               children = new Array(childCount);
@@ -186,8 +187,11 @@ Sqwerl.NavigationController = SC.TreeController.extend({
               node = new Sqwerl.Node();
               node.initialize(results.children.members[i]);
               node.set('pathId', (id + '/' + node.get('id').split('/').pop()).replace(/ /g, '-'));
-              children[childIndex + i].load = null;
-              children[childIndex + i].set('node', node);
+              child = children[childIndex + i];
+              if (child) {
+                child.load = null;
+                child.set('node', node);
+              }
             }
             delete controller.itemLoadFunctions[id + offset];
             delete controller.loadingOffsets[offset];
@@ -203,18 +207,19 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   nodeFound: function (path, results, errorCallback) {
     'use strict';
     var controller = this,
-        current = this.get('current'),
-        length,
-        parent,
-        pathComponents,
-        trailComponents;
+      current = this.get('current'),
+      length,
+      parent,
+      pathComponents,
+      targetId,
+      trailComponents;
     if (results.hasOwnProperty('children') && (results.children.totalCount > 0)) {
       trailComponents = results.path.split('/');
       if (path === '/') {
         this.set('parent', null);
         this.set('parentName', '');
         this.set('goBackUrl', '');
-        this.set('trail', { ids: ['/'], paths: ['/'] });
+        this.set('trail', {ids: ['/'], paths: ['/']});
         this.set('current', null);
         this.set('currentPath', null);
       } else {
@@ -222,11 +227,11 @@ Sqwerl.NavigationController = SC.TreeController.extend({
         pathComponents = path.split('/');
         if (pathComponents.length < 3) {
           this.set('parent', '/');
-          this.set('parentName', 'Home');
-          this.set('trail', { ids: ['/', 'types'], names: trailComponents });
+          this.set('parentName', 'Back to Home');
+          this.set('trail', {ids: ['/', 'types'], names: trailComponents});
         } else {
           this.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
-          this.set('parentName', trailComponents[length - 2]);
+          this.set('parentName', 'Back to ' + trailComponents[length - 2]);
           this.set('trail', {
             ids: pathComponents.slice(0, pathComponents.length - 1),
             names: trailComponents.slice(0, length - 1)
@@ -275,7 +280,8 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           errorCallback(response);
         },
         onSuccess: function (results) {
-          Sqwerl.mainPage.showContent((path === '/') ? 'home' : controller.typeForId(path), results);
+          targetId = (path === '/') ? 'home' : controller.typeForId(path);
+          Sqwerl.mainPage.showContent(targetId ? targetId.toLowerCase() :  'home', results);
           Sqwerl.mainPage.setNavigationBusy(false);
         }
       }
@@ -288,13 +294,13 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   onSelectionChanged: Sqwerl.observes(function () {
     'use strict';
     var components,
-        controller = this,
-        id,
-        node,
-        path,
-        pathComponents,
-        selectedTreeNode,
-        url;
+      controller = this,
+      id,
+      node,
+      path,
+      pathComponents,
+      selectedTreeNode,
+      url;
     if (this.didChangeFor('selectionDidChange', 'selection')) {
       selectedTreeNode = this.getPath('selection.firstObject');
       if (selectedTreeNode) {
@@ -313,15 +319,14 @@ Sqwerl.NavigationController = SC.TreeController.extend({
             }
             pathComponents = this.get('currentPath').split('/');
             this.set('goBackUrl', this.get('parent'));
-            this.set('parentName', pathComponents[pathComponents.length - 1]);
+            this.set('parentName', 'Back to ' + pathComponents[pathComponents.length - 1]);
             id = node.get('id');
             components = id.split('/');
             this.set('trail', {ids: this.get('parent').split('/'), names: this.get('currentPath').split('/')});
             url = window.location.protocol + '//' +
-                window.location.host +
-                window.location.pathname + '#' +
-                encodeURI(controller.get('parent') + '/' + components.slice(-1)[0]).replace(/%20/g, '-');
-///                        if (this.oldSelectedNode && (id.split('/').slice(-1)[0] === this.oldSelectedNode.get('id').split('/').slice(-1)[0])) {
+              window.location.host +
+              window.location.pathname + '#' +
+              encodeURI(controller.get('parent') + '/' + components.slice(-1)[0]).replace(/%20/g, '-');
             /* TODO - Refactor - Copied from goTo function.*/
             Sqwerl.mainPage.setNavigationBusy(true);
             Sqwerl.store.find(SC.Query.create({
@@ -342,19 +347,16 @@ Sqwerl.NavigationController = SC.TreeController.extend({
               }
             }));
             /* TODO - End Refactor */
-///                        }
             this.oldSelectedNode = node;
-            /*
-             window.location.assign(url);
-             window.location.assign(
-             window.location.protocol +
-             '//' +
-             window.location.host +
-             window.location.pathname +
-             '#' +
-             id.replace(/%20/g, '-')
-             );
-             */
+            window.location.assign(url);
+            window.location.assign(
+              window.location.protocol +
+              '//' +
+              window.location.host +
+              window.location.pathname +
+              '#' +
+              id.replace(/%20/g, '-')
+            );
           }
         }
       }
@@ -369,8 +371,8 @@ Sqwerl.NavigationController = SC.TreeController.extend({
   populate: function (data) {
     'use strict';
     var controller = this,
-        oldRootNode = this.get('content'),
-        rootNode;
+      oldRootNode = this.get('content'),
+      rootNode;
     if (oldRootNode) {
       oldRootNode.children.forEach(function (childTreeNode) {
         childTreeNode.set('node', null);
@@ -385,11 +387,11 @@ Sqwerl.NavigationController = SC.TreeController.extend({
       path: data.path,
       treeItemChildren: Sqwerl.property(function () {
         var children = [],
-            selectedTreeNode = controller.get('content'),
-            i,
-            j = 0,
-            totalChildCount = data.children.totalCount,
-            treeNode;
+          selectedTreeNode = controller.get('content'),
+          i,
+          j = 0,
+          totalChildCount = data.children.totalCount,
+          treeNode;
         if (!this.children) {
           data.children.members.forEach(function (view) {
             var node = new Sqwerl.Node();
@@ -414,14 +416,14 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           }
           selectedTreeNode.children = children;
         } else {
-          Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.set('verticalScrollOffset', 0);
+          Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationPanel.navigationScrollView.set('verticalScrollOffset', 0);
         }
         return this.children;
       }, 'guid').cacheable(),
       treeItemIsExpanded: YES
     });
     this.set('content', rootNode);
-    Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationScrollView.set('verticalScrollOffset', 0);
+    Sqwerl.mainPage.mainPane.horizontalSplitView.navigationView.navigationPanel.navigationScrollView.set('verticalScrollOffset', 0);
   },
 
   /**

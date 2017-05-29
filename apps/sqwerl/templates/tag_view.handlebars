@@ -26,12 +26,35 @@
         {{#if hasTagged}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleTagged}}Tagged things ({{numberFormat tagged.totalCount}}){{else}}Tagged thing{{/if}}
+                    {{#if hasMultipleTagged}}
+                        Tagged things <span class="read-only-field-label-count">{{tagged.totalCount}}</span>
+                    {{else}}
+                        Tagged thing
+                    {{/if}}
                 </div>
-                {{#each tagged.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
-                    tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
-                {{/each}}
+                {{#if hasMultipleTagged}}
+                    {{#each tagged.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
+                                    tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each tagged.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
+                                tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
+                    {{/each}}
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if createdOn}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">History</div>
+                <div class="read-only-field-value">
+                    {{creator.name}} added this tag on {{formatDate createdOn}}
+                </div>
             </div>
         {{/if}}
     </div>

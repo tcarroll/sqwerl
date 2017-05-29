@@ -8,6 +8,8 @@
 Sqwerl.NoteView = SC.TemplateView.create({
   connectionCountBinding: 'Sqwerl.NoteController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.NoteController.connectionCountText',
+  createdOnBinding: 'Sqwerl.NoteController.createdOn',
+  creatorBinding: 'Sqwerl.NoteController.creator',
   doneBinding: 'Sqwerl.NoteController.done',
   hasConnectionsBinding: 'Sqwerl.NoteController.hasConnections',
   hasMultipleConnectionsBinding: 'Sqwerl.NoteController.hasMultipleConnections',

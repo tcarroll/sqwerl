@@ -8,6 +8,8 @@
 Sqwerl.GroupView = SC.TemplateView.create({
   connectionCountBinding: 'Sqwerl.GroupController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.GroupController.connectionCountText',
+  createdOnBinding: 'Sqwerl.GroupController.createdOn',
+  creatorBinding: 'Sqwerl.GroupController.creator',
   descriptionBinding: 'Sqwerl.GroupController.description',
   hasConnectionsBinding: 'Sqwerl.GroupController.hasConnections',
   hasMultipleConnectionsBinding: 'Sqwerl.GroupController.hasMultipleConnections',

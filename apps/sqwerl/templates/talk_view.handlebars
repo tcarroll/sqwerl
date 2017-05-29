@@ -38,103 +38,235 @@
         {{#if hasSpeakers}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleSpeakers}}Speakers ({{numberFormat speakers.totalCount}}){{else}}Speaker{{/if}}
+                    {{#if hasMultipleSpeakers}}
+                        Speakers <span class="read-only-field-label-count">{{speakers.totalCount}}</span>
+                    {{else}}
+                        Speaker
+                    {{/if}}
                 </div>
-                {{#each speakers.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a></span>
-                {{/each}}
+                {{#if hasMultipleSpeakers}}
+                    {{#each speakers.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a></span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each speakers.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a></span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasCategories}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleCategories}}Categories ({{numberFormat categories.totalCount}}){{else}}Category{{/if}}
+                    {{#if hasMultipleCategories}}
+                        Categories <span class="read-only-field-label-count">{{categories.totalCount}}</span>
+                    {{else}}
+                        Category
+                    {{/if}}
                 </div>
-                {{#each categories.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
-                    {{singularOrPlural childrenCount child children}}</span>
-                {{/each}}
+                {{#if hasMultipleCategories}}
+                    {{#each categories.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
+                                {{singularOrPlural childrenCount child children}}</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each categories.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
+                            {{singularOrPlural childrenCount child children}}</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasNotes}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleNotes}}Notes ({{numberFormat notes.totalCount}}){{else}}Notes{{/if}}
+                    {{#if hasMultipleNotes}}
+                        Notes <span class="read-only-field-label-count">{{notes.totalCount}}</span>
+                    {{else}}
+                        Notes
+                    {{/if}}
                 </div>
-                {{#each notes.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a></span>
-                {{/each}}
+                {{#if hasMultipleNotes}}
+                    {{#each notes.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a></span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each notes.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a></span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasAttendedBy}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleAttendedBy}}Attended by {{numberFormat attendedBy.totalCount}} people{{else}}Attendee{{/if}}
+                    {{#if hasMultipleAttendedBy}}
+                        Attended by <span class="read-only-field-label-count">{{attendedBy.totalCount}}</span> people
+                    {{else}}
+                        Attendee
+                    {{/if}}
                 </div>
-                {{#each attendedBy.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="{{id}}">{{name}}</a> has attended {{numberFormat hasAttendedCount}}
-                    {{singularOrPlural hasAttendedCount thing things}}</span>
-                {{/each}}
+                {{#if hasMultipleAttendedBy}}
+                    {{#each attendedBy.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="{{id}}">{{name}}</a> has attended {{numberFormat hasAttendedCount}}
+                                {{singularOrPlural hasAttendedCount thing things}}</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each attendedBy.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="{{id}}">{{name}}</a> has attended {{numberFormat hasAttendedCount}}
+                            {{singularOrPlural hasAttendedCount thing things}}</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasListeners}}
             <div class="read-only-field-label">
-                {{#if hasMultipleListeners}}Listeners ({{numberFormat listeners.totalCount}}){{else}}Listener{{/if}}
+                {{#if hasMultipleListeners}}
+                    Listeners <span class="read-only-field-label-count">{{listeners.totalCount}}</span>
+                {{else}}
+                    Listener
+                {{/if}}
             </div>
-            {{#each listeners.members class="read-only-field-value" tagName="div"}}
-                <span><a href="{{id}}">{{name}}</a> has listened to {{numberFormat hasListenedToCount}}
-                {{singularOrPlural hasListenedToCount thing things}}</span>
-            {{/each}}
+            {{#if hasMultipleListeners}}
+                {{#each listeners.members}}
+                    <div class="read-only-field-value">
+                        <span class="ordinal">{{position}}.</span>
+                        <span><a href="{{id}}">{{name}}</a> has listened to {{numberFormat hasListenedToCount}}
+                            {{singularOrPlural hasListenedToCount thing things}}</span>
+                    </div>
+                {{/each}}
+            {{else}}
+                {{#each listeners.members class="read-only-field-value" tagName="div"}}
+                    <span><a href="{{id}}">{{name}}</a> has listened to {{numberFormat hasListenedToCount}}
+                        {{singularOrPlural hasListenedToCount thing things}}</span>
+                {{/each}}
+            {{/if}}
         {{/if}}
 
         {{#if hasRecommendedBy}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRecommendedBy}}Recommended by {{numberFormat recommendedBy.totalCount}} things{{else}}Recommended by{{/if}}
+                    {{#if hasMultipleRecommendedBy}}
+                        Recommended by <span class="read-only-field-label-count">{{recommendedBy.totalCount}}</span> things
+                    {{else}}
+                        Recommended by
+                    {{/if}}
                 </div>
-                {{#each recommendedBy.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) recommends
-                    {{numberFormat recommendationsCount}} {{singularOrPlural recommendationsCount thing things}}</span>
-                {{/each}}
+                {{#if hasMultipleRecommendedBy}}
+                    {{#each recommendedBy.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) recommends
+                                {{numberFormat recommendationsCount}} {{singularOrPlural recommendationsCount thing things}}</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each recommendedBy.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) recommends
+                            {{numberFormat recommendationsCount}} {{singularOrPlural recommendationsCount thing things}}</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasRecommendations}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRecommendations}}Recommends {{numberFormat recommendations.totalCount}} things{{else}}Recommends{{/if}}
+                    {{#if hasMultipleRecommendations}}
+                        Recommends <span class="read-only-field-label-count">{{recommendations.totalCount}}</span> things
+                    {{else}}
+                        Recommends
+                    {{/if}}
                 </div>
-                {{#each recommendations.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
-                {{/each}}
+                {{#if hasMultipleRecommendations}}
+                    {{#each recommendations.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each recommendations.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasLinks}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleLinks}}Links to {{numberFormat links.totalCount}} things{{else}}Linked to{{/if}}
+                    {{#if hasMultipleLinks}}
+                        Links to <span class="read-only-field-label-count">{{links.totalCount}}</span> things
+                    {{else}}
+                        Linked to
+                    {{/if}}
                 </div>
-                {{#each links.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) links to
-                    {{numberFormat linksCount}} {{singularOfPlural linksCount thing things}}</span>
-                {{/each}}
+                {{#if hasMultipleLinks}}
+                    {{#each links.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) links to
+                                {{numberFormat linksCount}} {{singularOfPlural linksCount thing things}}</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each links.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) links to
+                            {{numberFormat linksCount}} {{singularOfPlural linksCount thing things}}</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasTags}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleTags}}Tags ({{numberFormat tags.totalCount}}){{else}}Tag{{/if}}
+                    {{#if hasMultipleTags}}
+                        Tags <span class="read-only-field-label">{{tags.totalCount}}</span>
+                    {{else}}
+                        Tag
+                    {{/if}}
                 </div>
-                {{#each tags.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> {{numberFormat taggedCount}} {{singularOrPlural taggedCount
-                    "thing has" "things have"}} the same tag</span>
-                {{/each}}
+                {{#if hasMultipleTags}}
+                    {{#each tags.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a>, {{numberFormat taggedCount}} {{singularOrPlural taggedCount
+                                                                                                                 "thing has" "things have"}} the same tag</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each tags.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a>, {{numberFormat taggedCount}} {{singularOrPlural taggedCount
+                                                                                                             "thing has" "things have"}} the same tag</span>
+                    {{/each}}
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if createdOn}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">History</div>
+                <div class="read-only-field-value">
+                    {{creator.name}} added this talk on {{formatDate createdOn}}
+                </div>
             </div>
         {{/if}}
     </div>

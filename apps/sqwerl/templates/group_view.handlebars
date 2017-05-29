@@ -34,33 +34,81 @@
         {{#if hasSubgroups}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleSubgroups}}Sub-groups ({{numberFormat subgroups.totalCount}}){{else}}Sub-group{{/if}}
+                    {{#if hasMultipleSubgroups}}
+                        Sub-groups <span class="read-only-field-label-count">{{subgroups.totalCount}}</span>
+                    {{else}}
+                        Sub-group
+                    {{/if}}
                 </div>
-                {{#each subgroups.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a></span>
-                {{/each}}
+                {{#if hasMultipleSubgroups}}
+                    {{#each subgroups.members class="read-only-field-value"}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a></span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each subgroups.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a></span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasRoles}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleRoles}}Roles ({{numberFormat roles.totalCount}}){{else}}Role{{/if}}
+                    {{#if hasMultipleRoles}}
+                        Roles <span class="read-only-field-label-count">{{roles.totalCount}}</span>
+                    {{else}}
+                        Role
+                    {{/if}}
                 </div>
-                {{#each roles.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a></span>
-                {{/each}}
+                {{#if hasMultipleRoles}}
+                    <div class="read-only-field-value">
+                        {{#each roles.members}}
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a></span>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    {{#each roles.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a></span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
         {{#if hasUsers}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleUsers}}Users ({{numberFormat users.totalCount}}){{else}}User{{/if}}
+                    {{#if hasMultipleUsers}}
+                        Users <span class="read-only-field-label-count">{{users.totalCount}}</span>
+                    {{else}}
+                        User
+                    {{/if}}
                 </div>
-                {{#each users.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a></span>
-                {{/each}}
+                {{#if hasMultipleUsers}}
+                    {{#each users.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a></span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each users.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a></span>
+                    {{/each}}
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if createdOn}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">History</div>
+                <div class="read-only-field-value">
+                    {{creator.name}} added this group on {{formatDate createdOn}}
+                </div>
             </div>
         {{/if}}
     </div>

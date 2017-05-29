@@ -191,12 +191,12 @@
                 {{#if hasMultipleTags}}
                     {{#each tags.members class="read-only-field-value" tagName="div"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a> {{numberFormat taggedCount}}
+                        <span><a href="#{{id}}">{{name}}</a>, {{numberFormat taggedCount}}
                             {{singularOrPlural taggedCount "thing has" "things have"}} the same tag</span>
                     {{/each}}
                 {{else}}
                     {{#each tags.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a> {{numberFormat taggedCount}}
+                        <span><a href="#{{id}}">{{name}}</a>, {{numberFormat taggedCount}}
                             {{singularOrPlural taggedCount "thing has" "things have"}} the same tag</span>
                     {{/each}}
                 {{/if}}

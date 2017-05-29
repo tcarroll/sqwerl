@@ -8,6 +8,8 @@
 Sqwerl.UserView = SC.TemplateView.create({
   connectionCountBinding: 'Sqwerl.UserController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.UserController.connectionCountText',
+  createdOnBinding: 'Sqwerl.UserController.createdOn',
+  creatorBinding: 'Sqwerl.UserController.creator',
   firstNameBinding: 'Sqwerl.UserController.firstName',
   groupsBinding: 'Sqwerl.UserController.groups',
   hasAttendedBinding: 'Sqwerl.UserController.hasAttended',

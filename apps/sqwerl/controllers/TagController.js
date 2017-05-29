@@ -12,24 +12,9 @@ Sqwerl.TagController = Sqwerl.ViewController.create({
         return this.sumConnections(['categories', 'notes', 'tagged']);
     }),
 
-    hasCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('categories');
-    }),
-
-    hasMultipleCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('categories');
-    }),
-
     hasMultipleTagged: Sqwerl.property(function () {
         'use strict';
         return this.hasMoreThanOne('tagged');
-    }),
-
-    hasNotes: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('notes');
     }),
 
     hasTagged: Sqwerl.property(function () {

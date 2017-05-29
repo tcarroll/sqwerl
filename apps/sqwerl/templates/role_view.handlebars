@@ -26,11 +26,12 @@
         {{#if hasGroups}}
             <div class="read-only-label-and-value">
                 {{#if hasMultipleGroups}}
-                    <div class="read-only-field-label">Groups ({{numberFormat groups.totalCount}})</div>
-                    <div class="read-only-field-value">The following {{numberFormat groups.totalCount}}
+                    <div class="read-only-field-label">Groups <span class="read-only-field-label-count">{{groups.totalCount}}</span></div>
+                    <div class="read-only-field-value">The following {{groups.totalCount}}
                         groups of users have been granted the {{name}} role's capabilities
                     </div>
                     {{#each groups.members class="read-only-field-value" tagName="div"}}
+                        <span class="ordinal">{{position}}.</span>
                         <span><a href="#{{id}}">{{name}}</a></span>
                     {{/each}}
                 {{else}}
@@ -44,12 +45,13 @@
         {{#if hasCapabilities}}
             <div class="read-only-label-and-value">
                 {{#if hasMultipleCapabilities}}
-                    <div class="read-only-field-label">Capabilities ({{numberFormat capabilities.totalCount}})</div>
+                    <div class="read-only-field-label">Capabilities <span class="read-only-field-label-count">{{capabilities.totalCount}}</span></div>
                     <div class="read-only-field-value">Users who can perform the {{name}} role are
                         granted the following {{capabilities.totalCount}} capabilities
                     </div>
                     <div>
                         {{#each capabilities.members class="read-only-field-value" tagName="div"}}
+                            <span class="ordinal">{{position}}.</span>
                             <span><a href="#{{id}}">{{name}}</a></span>
                         {{/each}}
                     </div>
@@ -59,6 +61,15 @@
                         granted the {{singleCapabilityName}} capability
                     </div>
                 {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if createdOn}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">History</div>
+                <div class="read-only-field-value">
+                    {{creator.name}} added this role on {{formatDate createdOn}}
+                </div>
             </div>
         {{/if}}
     </div>

@@ -19,11 +19,24 @@
         {{#if hasNotesFor}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">
-                    {{#if hasMultipleNotesFor}}Notes for {{numberFormat notesFor.totalCount}} things{{else}}Notes for{{/if}}
+                    {{#if hasMultipleNotesFor}}
+                        Notes for <span class="read-only-field-label-count">{{notesFor.totalCount}}</span> things
+                    {{else}}
+                        Notes for
+                    {{/if}}
                 </div>
-                {{#each notesFor.members class="read-only-field-value" tagName="div"}}
-                    <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
-                {{/each}}
+                {{#if hasMultipleNotesFor}}
+                    {{#each notesFor.members}}
+                        <div class="read-only-field-value">
+                            <span class="ordinal">{{position}}.</span>
+                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#each notesFor.members class="read-only-field-value" tagName="div"}}
+                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                    {{/each}}
+                {{/if}}
             </div>
         {{/if}}
 
@@ -31,5 +44,14 @@
             <div class="read-only-field-label">Finished</div>
             <div class="read-only-field-value">{{#if done}}Yes{{else}}No (still working on them){{/if}}</div>
         </div>
+
+        {{#if createdOn}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">History</div>
+                <div class="read-only-field-value">
+                    {{creator.name}} added these notes on {{formatDate createdOn}}
+                </div>
+            </div>
+        {{/if}}
     </div>
 </div>

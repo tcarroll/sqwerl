@@ -7,6 +7,8 @@
  */
 Sqwerl.RoleView = SC.TemplateView.create({
   capabilitiesBinding: 'Sqwerl.RoleController.capabilities',
+  createdOnBinding: 'Sqwerl.RoleController.createdOn',
+  creatorBinding: 'Sqwerl.RoleController.creator',
   descriptionBinding: 'Sqwerl.RoleController.description',
   groupsBinding: 'Sqwerl.RoleController.groups',
   hasCapabilitiesBinding: 'Sqwerl.RoleController.hasCapabilities',

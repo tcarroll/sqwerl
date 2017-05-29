@@ -7,94 +7,99 @@ sc_require('controllers/ViewController');
  */
 Sqwerl.TalkController = Sqwerl.ViewController.create({
 
-    connectionCount: Sqwerl.property(function () {
-        'use strict';
-        return this.sumConnections(['attendedBy', 'categories', 'links', 'listeners', 'notes', 'recommendations', 'recommendedBy', 'speakers', 'tags']);
-    }),
+  connectionCount: Sqwerl.property(function () {
+    'use strict';
+    return this.sumConnections(['attendedBy', 'categories', 'links', 'listeners', 'notes', 'recommendations', 'recommendedBy', 'speakers', 'tags']);
+  }),
 
-    hasAttendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('attendedBy');
-    }),
+  hasAttendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('attendedBy');
+  }),
 
-    hasCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('categories');
-    }),
+  hasCategories: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('categories');
+  }),
 
-    hasLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('links');
-    }),
+  hasLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('links');
+  }),
 
-    hasListeners: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('listeners');
-    }),
+  hasListeners: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('listeners');
+  }),
 
-    hasMultipleAttendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('attendedBy');
-    }),
+  hasMultipleAttendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('attendedBy');
+  }),
 
-    hasMultipleCategories: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('categories');
-    }),
+  hasMultipleCategories: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('categories');
+  }),
 
-    hasMultipleLinks: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('links');
-    }),
+  hasMultipleLinks: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('links');
+  }),
 
-    hasMultipleListeners: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('listeners');
-    }),
+  hasMultipleListeners: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('listeners');
+  }),
 
-    hasMultipleNotes: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('notes');
-    }),
+  hasMultipleNotes: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('notes');
+  }),
 
-    hasMultipleRecommendations: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('recommendations');
-    }),
+  hasMultipleRecommendations: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('recommendations');
+  }),
 
-    hasMultipleSpeakers: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('speakers');
-    }),
+  hasMultipleRecommendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('recommendedBy');
+  }),
 
-    hasMultipleTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('tags');
-    }),
+  hasMultipleSpeakers: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('speakers');
+  }),
 
-    hasNotes: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('notes');
-    }),
+  hasMultipleTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('tags');
+  }),
 
-    hasRecommendations: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('recommendations');
-    }),
+  hasNotes: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('notes');
+  }),
 
-    hasRecommendedBy: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('recommendedBy');
-    }),
+  hasRecommendations: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('recommendations');
+  }),
 
-    hasSpeakers: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('speakers');
-    }),
+  hasRecommendedBy: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('recommendedBy');
+  }),
 
-    hasTags: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('tags');
-    })
+  hasSpeakers: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('speakers');
+  }),
+
+  hasTags: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('tags');
+  })
 });
 

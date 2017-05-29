@@ -9,6 +9,8 @@ Sqwerl.PictureView = SC.TemplateView.create({
   categoriesBinding: 'Sqwerl.PictureController.categories',
   connectionCountBinding: 'Sqwerl.PictureController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.PictureController.connectionCountText',
+  createdOnBinding: 'Sqwerl.PictureController.createdOn',
+  creatorBinding: 'Sqwerl.PictureController.creator',
   descriptionBinding: 'Sqwerl.PictureController.description',
   hasAuthorsBinding: 'Sqwerl.PictureController.hasAuthors',
   hasCategoriesBinding: 'Sqwerl.PictureController.hasCategories',

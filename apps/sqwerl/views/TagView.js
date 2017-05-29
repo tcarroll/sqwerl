@@ -8,6 +8,8 @@
 Sqwerl.TagView = SC.TemplateView.create({
   connectionCountBinding: 'Sqwerl.TagController.connectionCount',
   connectionCountTextBinding: 'Sqwerl.TagController.connectionCountText',
+  createdOnBinding: 'Sqwerl.TagController.createdOn',
+  creatorBinding: 'Sqwerl.TagController.creator',
   descriptionBinding: 'Sqwerl.TagController.description',
   hasConnectionsBinding: 'Sqwerl.TagController.hasConnections',
   hasMultipleConnectionsBinding: 'Sqwerl.TagController.hasMultipleConnections',

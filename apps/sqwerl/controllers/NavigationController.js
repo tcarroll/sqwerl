@@ -230,7 +230,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           this.set('parentName', 'Back to Home');
           this.set('trail', {ids: ['/', 'types'], names: trailComponents});
         } else {
-          this.set('parent', '/' + trailComponents.slice(1, length - 1).join('/'));
+          this.set('parent', '/' + pathComponents.slice(1, length - 1).join('/'));
           this.set('parentName', 'Back to ' + trailComponents[length - 2]);
           this.set('trail', {
             ids: pathComponents.slice(0, pathComponents.length - 1),

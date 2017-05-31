@@ -85,6 +85,7 @@ gulp.task('stage', function () {
         './apps/sqwerl/resources/favicon.ico'])
       .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'))
       .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'))
+      .pipe(debug())
   }));
 });
 

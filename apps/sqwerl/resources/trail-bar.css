@@ -1,3 +1,57 @@
+@keyframes trailbar-hover {
+    0% {
+        background: rgb(239, 247, 236);
+    }
+    25% {
+        background: rgb(228, 240, 236);
+    }
+    50% {
+        background: rgb(217, 233, 236);
+    }
+    75% {
+        background: rgb(206, 226, 236);
+    }
+    100% {
+        background: rgb(208, 228, 238);
+    }
+}
+
+@-moz-keyframes trailbar-hover {
+    0% {
+        background: rgb(239, 247, 236);
+    }
+    25% {
+        background: rgb(228, 240, 236);
+    }
+    50% {
+        background: rgb(217, 233, 236);
+    }
+    75% {
+        background: rgb(206, 226, 236);
+    }
+    100% {
+        background: rgb(208, 228, 238);
+    }
+}
+
+@-webkit-keyframes trailbar-hover {
+    0% {
+        background: rgb(239, 247, 236);
+    }
+    25% {
+        background: rgb(228, 240, 236);
+    }
+    50% {
+        background: rgb(217, 233, 236);
+    }
+    75% {
+        background: rgb(206, 226, 236);
+    }
+    100% {
+        background: rgb(208, 228, 238);
+    }
+}
+
 .trail-bar {
     background: #D0DACF;
     display: block;
@@ -32,6 +86,26 @@
 a.trail-bar-item {
     background: $title-bar-background;
     padding-right: 18px;
+
+    &:hover {
+        -moz-animation-name: trailbar-hover;
+        -moz-animation-duration: 0.5s;
+        -webkit-animation-name: trailbar-hover;
+        -webkit-animation-duration: 0.5s;
+        animation-duration: 0.5s;
+        animation-name: trailbar-hover;
+        background: rgb(206, 226, 236);
+
+        &:after {
+            -moz-animation-name: trailbar-hover;
+            -moz-animation-duration: 0.5s;
+            -webkit-animation-name: trailbar-hover;
+            -webkit-animation-duration: 0.5s;
+            animation-duration: 0.5s;
+            animation-name: trailbar-hover;
+            background: rgb(206, 226, 236);
+        }
+    }
 }
 
 .trail-bar a:after {

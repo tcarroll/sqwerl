@@ -187,7 +187,7 @@ a.navigation-back-button-link {
 }
 
 .ace.sqwerl.sign-in-field-label {
-    line-height: 52px;
+    line-height: calc($row-height / 2);
 
     &.disabled {
         color: $disabled-text-color;
@@ -237,8 +237,73 @@ body {
     height: 5px;
 }
 
+
+.drop-down-menu.ace.sqwerl.panel:before {
+    background: $drop-down-menu-background-color;
+    border: 1px solid $drop-down-menu-background-color;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px #999999;
+    color: white;
+    content: " ";
+    cursor: pointer;
+    font-size: 20px;
+    height: 20px;
+    overflow: visible;
+    padding: 0;
+    position: absolute;
+    right: -38px;
+    top: 2px;
+    width: 20px;
+}
+
+.drop-down-menu.main-menu.ace.sqwerl.panel:before {
+    background: $drop-down-menu-background-color;
+    border: 1px solid $drop-down-menu-background-color;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px #999999;
+    color: white;
+    content: " ";
+    cursor: pointer;
+    font-size: 20px;
+    height: 20px;
+    left: -35px;
+    overflow: visible;
+    padding: 0;
+    position: absolute;
+    top: 2px;
+    width: 20px;
+}
+
 .drop-down-menu.main-menu .panel-background > .top {
     left: 70% !important;
+}
+
+.drop-down-menu .panel-background:before {
+    color: #333;
+    content: "\00d7";
+    cursor: pointer;
+    font-size: 20pt;
+    height: 20px;
+    overflow: visible;
+    padding: 0;
+    position: absolute;
+    right: -28px;
+    top: 7px;
+    width: 24px;
+}
+
+.drop-down-menu.main-menu .panel-background:before {
+    color: #333;
+    content: "\00d7";
+    cursor: pointer;
+    font-size: 20pt;
+    height: 20px;
+    left: -17px;
+    overflow: visible;
+    padding: 0;
+    position: absolute;
+    top: 7px;
+    width: 24px;
 }
 
 .drop-down-menu .panel-background > .bottom-left {
@@ -615,7 +680,8 @@ p.create-account-text {
         }
 
         > label.sc-button-label {
-            color: $invalid-text-color;
+            /* color: $invalid-text-color; */
+            color: #606060;
             cursor: default;
         }
     }
@@ -768,11 +834,13 @@ p.create-account-text {
     background: #202020;
     cursor: wait;
     display: none;
-    opacity: 0.05;
+    opacity: 0;
+    visibility: hidden;
     z-index: 1;
 
     &.visible {
-        display:block;
+        display: block;
+        visibility: visible;
     }
 }
 
@@ -888,6 +956,57 @@ p.create-account-text {
     }
 }
 
+.sc-view.parent-navigation-item-indicator {
+    -moz-transform: scale(0.707) rotate(45deg);
+    -webkit-transform: scale(0.707) rotate(45deg);
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: 1px solid #d4d4d4;
+    border-top: 1px solid #d4d4d4;
+    content: "";
+    height: 36px;
+    position: absolute;
+    right: 0px;
+    top: -1px;
+    transform: scale(0.707) rotate(45deg);
+    width: 36px;
+    z-index: 1;
+}
+
+.sc-view.parent-navigation-item-indicator-strip {
+    background: paleyellow;
+}
+
+.sc-view.sc-label-view.sign-in-email-hint.ace.sqwerl.label {
+    color: #7d7d7d;
+    font-style: italic;
+    font-size: 10pt;
+
+    & > .input-warning-icon {
+        margin-left: 5px;
+        margin-right: 4px;
+    }
+
+    &.label.invalid {
+        color: $invalid-text-color;
+    }
+}
+
+.sc-view.sc-label-view.sign-in-password-hint.ace.sqwerl.label {
+    color: #7d7d7d;
+    font-style: italic;
+    font-size: 10pt;
+
+    & > .input-warning-icon {
+        margin-left: 5px;
+        margin-right: 4px;
+    }
+
+    &.label.invalid {
+        color: $invalid-text-color;
+    }
+}
+
 .sc-view.sc-scroll-view.navigation-list-scroll-view {
     background: $navigation-scroll-view-background;
 }
@@ -947,6 +1066,22 @@ p.create-account-text {
 
     input {
         color: black;
+    }
+}
+
+.sc-view.sign-in-field-focus {
+    padding: 1px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+
+    &.focus {
+        background: rgba(98, 180, 255, 0.13);
+        border: 1px solid #ddddf1;
+
+        &.invalid {
+            background: rgba(255, 91, 104, 0.13);
+            border: 1px solid #f1b0bd;
+        }
     }
 }
 
@@ -1034,24 +1169,18 @@ p.create-account-text {
     z-index: 1;
 }
 
-.sign-in-email-field.sc-text-field-view {
-    background: #eee;
-    border: 1px #cacaca solid;
+.sign-in-create-account {
+    color: $link-text-color;
+    cursor: pointer;
 
-    &.disabled {
-        & .padding input {
-            color: $disabled-text-color;
-        }
-    }
-
-    &.focus {
-        background: white;
+    &:hover {
+        text-decoration: underline;
     }
 }
 
-.sign-in-password-field.sc-text-field-view {
-    background: #eee;
-    border: 1px #cacaca solid;
+.sign-in-email-field.sc-text-field-view {
+    background: $drop-down-menu-background-color;
+    border: 1px #dfdfdf solid;
 
     &.disabled {
         & .padding input {
@@ -1061,6 +1190,52 @@ p.create-account-text {
 
     &.focus {
         background: white;
+        border: 1px #cacaca solid;
+    }
+}
+
+.sign-in-failed-icon {
+    color: $invalid-text-color;
+    display: flex;
+    flex-direction: column;
+    font-size: 32pt;
+    height: 100%;
+    justify-content: center;
+}
+
+.sign-in-failed-instructions {
+    display: flex;
+    flex-direction: row;
+}
+
+.sign-in-failed-message {
+    color: $invalid-text-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 125%;
+    margin-left: 0.7em;
+    margin-right: 10px;
+}
+
+.sign-in-instructions {
+    line-height: 1.2;
+    padding-bottom: 0.5em;
+}
+
+.sign-in-password-field.sc-text-field-view {
+    background: $drop-down-menu-background-color;
+    border: 1px #dfdfdf solid;
+
+    &.disabled {
+        & .padding input {
+            color: $disabled-text-color;
+        }
+    }
+
+    &.focus {
+        background: white;
+        border: 1px #cacaca solid;
     }
 }
 
@@ -1111,6 +1286,9 @@ p.create-account-text {
 }
 
 .swal2-modal.swal2-show {
+    border-bottom: 1px solid #6a6a6a;
+    border-radius: 5px 6px 6px 6px;
+    border-right: 1px solid #707070;
     box-shadow: 8px 8px 2px rgba(64, 64, 64, 0.1)
 }
 

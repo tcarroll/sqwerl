@@ -26,7 +26,7 @@
         {{#if parent}}
             <div class="read-only-label-and-value">
                 <div class="read-only-field-label">Parent group</div>
-                <div class="read-only-field-value"><a href="#{{id}}">{{parent}}</a> has {{numberFormat
+                <div class="read-only-field-value"><a href="#{{ref id}}">{{parent}}</a> has {{numberFormat
                 childrenCount}} sub-groups</div>
             </div>
         {{/if}}
@@ -44,12 +44,12 @@
                     {{#each subgroups.members class="read-only-field-value"}}
                         <div class="read-only-field-value">
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a></span>
+                            <span><a href="#{{ref id}}">{{name}}</a></span>
                         </div>
                     {{/each}}
                 {{else}}
                     {{#each subgroups.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -68,12 +68,12 @@
                     <div class="read-only-field-value">
                         {{#each roles.members}}
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a></span>
+                            <span><a href="#{{ref id}}">{{name}}</a></span>
                         {{/each}}
                     </div>
                 {{else}}
                     {{#each roles.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -92,12 +92,12 @@
                     {{#each users.members}}
                         <div class="read-only-field-value">
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a></span>
+                            <span><a href="#{{ref id}}">{{name}}</a></span>
                         </div>
                     {{/each}}
                 {{else}}
                     {{#each users.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{/if}}
             </div>

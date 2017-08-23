@@ -1,6 +1,6 @@
 /*globals Handlebars, SC, Sqwerl*/
 
-Sqwerl.SearchItemController = SC.Object.extend({
+Sqwerl.SearchItemController = SC.ObjectController.extend({
 
   model: null,
 

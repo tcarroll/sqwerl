@@ -278,7 +278,12 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         .thresholds(x.ticks(d3.timeDay));
       let bins = histogram(data);
       bins.forEach(function (bin) {
-        bin.changeCount = (bin[0] && bin[0].changeCount) ? bin[0].changeCount : 0;
+        if (bin && (bin.length > 0)) {
+          bin.changeCount = 0;
+          bin.forEach(function (commit) {
+            bin.changeCount += commit.changeCount || 0;
+          })
+        }
       });
       let barWidth = x(bins[0].x0) - x(bins[0].x1);
       y.domain([0, d3.max(bins, function (d) { return d.changeCount; })]);
@@ -297,10 +302,10 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         .attr('class', 'bar')
         .attr('x', margin.left)
         .attr('transform', function (d) {
-          return 'translate(' + x(d.x0) + ',' + (y(d.changeCount) + margin.top) + ')';
+          return 'translate(' + x(d.x0) + ',' + (y(d.changeCount || 0) + margin.top) + ')';
         })
         .attr('width', function (d) { return x(d.x0) - x(d.x1); })
-        .attr('height', function (d) { return height - y(d.changeCount); })
+        .attr('height', function (d) { return height - y(d.changeCount || 0); })
         .on('mouseover', function (d) {
           let changeCount = d.changeCount;
           let position = $('#recent-changes-graph-container > svg').position();
@@ -310,7 +315,7 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
           tooltip.html(
               '<span class="recent-changes-tooltip-date">' + formatTime(d.x0) + '</span>' +
               '<br/>' +
-              '<span class="recent-changes-tooltip-from-now">(' + controller.fromNow(d.x0) + ')</span>' +
+              '<span class="recent-changes-tooltip-from-now">(' + controller.fromNow(d[0].date) + ')</span>' +
               '<br/>' +
               changeCount +
               ' ' +

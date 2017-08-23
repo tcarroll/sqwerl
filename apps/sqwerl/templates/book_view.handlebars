@@ -51,12 +51,12 @@
                 {{#if hasMultipleAuthors}}
                     {{#each authors.members class="read-only-field-value" tagName="div"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
+                        <span><a href="#{{ref id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
                             {{singularOrPlural authorOfCount thing things}}</span>
                     {{/each}}
                 {{else}}
                     {{#each authors.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
+                        <span><a href="#{{ref id}}">{{name}}</a>, author of {{numberFormat authorOfCount}}
                             {{singularOrPlural authorOfCount thing things}}</span>
                     {{/each}}
                 {{/if}}
@@ -75,12 +75,12 @@
                 {{#if hasMultipleCategories}}
                     {{#each categories.members class="read-only-field-value" tagName="div"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
+                        <span><a href="#{{ref id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
                             {{singularOrPlural childrenCount child children}}</span>
                     {{/each}}
                 {{else}}
                     {{#each categories.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
+                        <span><a href="#{{ref id}}">{{#thingPath}}{{/thingPath}}</a> has {{numberFormat childrenCount}}
                             {{singularOrPlural childrenCount child children}}</span>
                     {{/each}}
                 {{/if}}
@@ -99,11 +99,11 @@
                 {{#if hasMultipleNotes}}
                     {{#each notes.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{else}}
                     {{#each notes.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -121,13 +121,37 @@
                 {{#if hasMultipleReadBy}}
                     {{#each readBy.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a> has read {{numberFormat hasReadCount}}
+                        <span><a href="#{{ref id}}">{{name}}</a> has read {{numberFormat hasReadCount}}
                             {{singularOrPlural hasReadCount thing things}}</span>
                     {{/each}}
                 {{else}}
                     {{#each readBy.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a> has read {{numberFormat hasReadCount}}
+                        <span><a href="#{{ref id}}">{{name}}</a> has read {{numberFormat hasReadCount}}
                             {{singularOrPlural hasReadCount thing things}}</span>
+                    {{/each}}
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if hasReading}}
+            <div class="read-only-label-and-value">
+                <div class="read-only-field-label">
+                    {{#if hasMultipleReading}}
+                        Readers <span class="read-only-field-label-count">{{reading.totalCount}}</span>
+                    {{else}}
+                        Reader
+                    {{/if}}
+                </div>
+                {{#if hasMultipleReading}}
+                    {{#each reading.members tagName="div" class="read-only-field-value"}}
+                        <span class="ordinal">{{position}}.</span>
+                        <span><a href="#{{ref id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> is currently reading
+                            {{numberFormat isReadingCount}} {{singularOrPlural isReadingCount thing things}}</span>
+                    {{/each}}
+                {{else}}
+                    {{#each reading.members tagName="div" class="read-only-field-value"}}
+                        <span><a href="#{{ref id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> is currently reading
+                            {{numberFormat isReadingCount}} {{singularOrPlural isReadingCount thing things}}</span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -145,12 +169,12 @@
                 {{#if hasMultipleRecommendedBy}}
                     {{#each recommendedBy.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> has recommended
+                        <span><a href="#{{ref id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> has recommended
                             {{numberFormat recommendationsCount}} {{singularOrPlural recommendationsCount thing things}}</span>
                     {{/each}}
                 {{else}}
                     {{#each recommendedBy.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> has recommended
+                        <span><a href="#{{ref id}}">{{name}} ({{#typeOfThingName}}{{/typeOfThingName}})</a> has recommended
                             {{numberFormat recommendationsCount}} {{singularOrPlural recommendationsCount thing things}}</span>
                     {{/each}}
                 {{/if}}
@@ -169,11 +193,11 @@
                 {{#if hasMultipleRecommendations}}
                     {{#each recommendations.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                     {{/each}}
                 {{else}}
                     {{#each recommendations.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -191,12 +215,12 @@
                 {{#if hasMultipleTags}}
                     {{#each tags.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a>, {{numberFormat
+                        <span><a href="#{{ref id}}">{{name}}</a>, {{numberFormat
                                 taggedCount}} {{singularOrPlural taggedCount "thing has" "things have"}} the same tag</span>
                     {{/each}}
                 {{else}}
                     {{#each tags.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a>, {{numberFormat
+                        <span><a href="#{{ref id}}">{{name}}</a>, {{numberFormat
                                 taggedCount}} {{singularOrPlural taggedCount "thing has" "things have"}} the same tag</span>
                     {{/each}}
                 {{/if}}
@@ -215,11 +239,11 @@
                 {{#if hasMultipleLinks}}
                     {{#each links.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                     {{/each}}
                 {{else}}
                     {{#each links.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                     {{/each}}
                 {{/if}}
             </div>
@@ -237,11 +261,11 @@
                 {{#if hasMultipleComments}}
                     {{#each comments.members tagName="div" class="read-only-field-value"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{else}}
                     {{#each comments.members tagName="div" class="read-only-field-value"}}
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{/if}}
             </div>

@@ -29,12 +29,12 @@
                     {{#each notesFor.members}}
                         <div class="read-only-field-value">
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                            <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                         </div>
                     {{/each}}
                 {{else}}
                     {{#each notesFor.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}})</span>
                     {{/each}}
                 {{/if}}
             </div>

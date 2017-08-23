@@ -90,6 +90,7 @@ Sqwerl.NavigationItemView = SC.ListItemView.extend(SC.ContentDisplay, {
         classArray.push('unfocused');
       }
       context.removeClass('list-item-hover');
+      Sqwerl.mainPage.mainPane.horizontalSplitView.propertiesView.detailsBackgroundView.parentNavigatorItemIndicatorStrip.parentNavigationItemIndicator.$().css({ top: Sqwerl.rowHeight * index });
     } else {
       context.removeClass('list-item-selected');
       if (isHovering) {

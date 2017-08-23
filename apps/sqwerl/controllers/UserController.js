@@ -7,68 +7,78 @@ sc_require('controllers/ViewController');
  */
 Sqwerl.UserController = Sqwerl.ViewController.create({
 
-    connectionCount: Sqwerl.property(function () {
-        'use strict';
-        return this.sumConnections(['groups', 'hasAttended', 'hasListenedTo', 'hasRead', 'hasViewed', 'owns']);
-    }),
+  connectionCount: Sqwerl.property(function () {
+    'use strict';
+    return this.sumConnections(['groups', 'hasAttended', 'hasListenedTo', 'hasRead', 'hasViewed', 'owns']);
+  }),
 
-    hasGroups: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('groups');
-    }),
+  hasGroups: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('groups');
+  }),
 
-    hasHasAttended: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('hasAttended');
-    }),
+  hasHasAttended: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('hasAttended');
+  }),
 
-    hasHasListenedTo: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('hasListenedTo');
-    }),
+  hasHasListenedTo: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('hasListenedTo');
+  }),
 
-    hasHasRead: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('hasRead');
-    }),
+  hasHasRead: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('hasRead');
+  }),
 
-    hasHasViewed: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('hasViewed');
-    }),
+  hasHasViewed: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('hasViewed');
+  }),
 
-    hasMultipleGroups: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('groups');
-    }),
+  hasIsReading: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('isReading');
+  }),
 
-    hasMultipleHasAttended: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('hasAttended');
-    }),
+  hasMultipleGroups: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('groups');
+  }),
 
-    hasMultipleHasListenedTo: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('hasListenedTo');
-    }),
+  hasMultipleHasAttended: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('hasAttended');
+  }),
 
-    hasMultipleHasRead: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('hasRead');
-    }),
+  hasMultipleHasListenedTo: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('hasListenedTo');
+  }),
 
-    hasMultipleHasViewed: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('hasViewed');
-    }),
+  hasMultipleHasRead: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('hasRead');
+  }),
 
-    hasMultipleOwns: Sqwerl.property(function () {
-        'use strict';
-        return this.hasMoreThanOne('owns');
-    }),
+  hasMultipleHasViewed: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('hasViewed');
+  }),
 
-    hasOwns: Sqwerl.property(function () {
-        'use strict';
-        return this.hasAtLeastOne('owns');
-    })
+  hasMultipleIsReading: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('isReading');
+  }),
+
+  hasMultipleOwns: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('owns');
+  }),
+
+  hasOwns: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('owns');
+  })
 });

@@ -60,10 +60,16 @@ try {
         'webPages': 'webPage'
       },
 
-      isNavigationBusy: false,
+      /**
+       * Is the application busy loading information to navigate to a different thing? By default, this application
+       * is busy loading the initial things.
+       * {boolean}
+       */
+      isNavigationBusy: true,
 
       /**
        * Height (in pixels) of navigation view rows.
+       * {Number}
        */
       rowHeight: 36,
 

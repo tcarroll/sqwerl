@@ -227,11 +227,11 @@ Sqwerl.NavigationController = SC.TreeController.extend({
         pathComponents = path.split('/');
         if (pathComponents.length < 3) {
           this.set('parent', '/');
-          this.set('parentName', 'Back to Home');
+          this.set('parentName', 'Go to Home');
           this.set('trail', {ids: ['/', 'types'], names: trailComponents});
         } else {
           this.set('parent', '/' + pathComponents.slice(1, length - 1).join('/'));
-          this.set('parentName', 'Back to ' + trailComponents[length - 2]);
+          this.set('parentName', 'Go to ' + trailComponents[length - 2]);
           this.set('trail', {
             ids: pathComponents.slice(0, pathComponents.length - 1),
             names: trailComponents.slice(0, length - 1)
@@ -281,7 +281,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
         },
         onSuccess: function (results) {
           targetId = (path === '/') ? 'home' : controller.typeForId(path);
-          Sqwerl.mainPage.showContent(targetId ? targetId.toLowerCase() :  'home', results);
+          Sqwerl.mainPage.showContent(targetId || 'home', results);
           Sqwerl.mainPage.setNavigationBusy(false);
         }
       }
@@ -319,7 +319,7 @@ Sqwerl.NavigationController = SC.TreeController.extend({
             }
             pathComponents = this.get('currentPath').split('/');
             this.set('goBackUrl', this.get('parent'));
-            this.set('parentName', 'Back to ' + pathComponents[pathComponents.length - 1]);
+            this.set('parentName', 'Go to ' + pathComponents[pathComponents.length - 1]);
             id = node.get('id');
             components = id.split('/');
             this.set('trail', {ids: this.get('parent').split('/'), names: this.get('currentPath').split('/')});
@@ -349,14 +349,6 @@ Sqwerl.NavigationController = SC.TreeController.extend({
             /* TODO - End Refactor */
             this.oldSelectedNode = node;
             window.location.assign(url);
-            window.location.assign(
-              window.location.protocol +
-              '//' +
-              window.location.host +
-              window.location.pathname +
-              '#' +
-              id.replace(/%20/g, '-')
-            );
           }
         }
       }

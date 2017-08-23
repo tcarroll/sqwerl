@@ -14,7 +14,18 @@ Sqwerl.BookController = Sqwerl.ViewController.create({
 
   connectionCount: Sqwerl.property(function () {
     'use strict';
-    return this.sumConnections(['authors', 'categories', 'comments', 'links', 'notes', 'readBy', 'recommendations', 'recommendedBy', 'tags']);
+    return this.sumConnections([
+      'authors',
+      'categories',
+      'comments',
+      'links',
+      'notes',
+      'reading',
+      'readBy',
+      'recommendations',
+      'recommendedBy',
+      'tags']
+    );
   }),
 
   displayLinks: Sqwerl.property(function () {
@@ -87,6 +98,11 @@ Sqwerl.BookController = Sqwerl.ViewController.create({
     return this.hasMoreThanOne('readBy');
   }),
 
+  hasMultipleReading: Sqwerl.property(function () {
+    'use strict';
+    return this.hasMoreThanOne('reading');
+  }),
+
   hasMultipleRecommendedBy: Sqwerl.property(function () {
     'use strict';
     return this.hasMoreThanOne('recommendedBy');
@@ -116,6 +132,11 @@ Sqwerl.BookController = Sqwerl.ViewController.create({
   hasReadBy: Sqwerl.property(function () {
     'use strict';
     return this.hasAtLeastOne('readBy');
+  }),
+
+  hasReading: Sqwerl.property(function () {
+    'use strict';
+    return this.hasAtLeastOne('reading');
   }),
 
   hasRecommendations: Sqwerl.property(function () {

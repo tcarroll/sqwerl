@@ -32,7 +32,7 @@
                     </div>
                     {{#each groups.members class="read-only-field-value" tagName="div"}}
                         <span class="ordinal">{{position}}.</span>
-                        <span><a href="#{{id}}">{{name}}</a></span>
+                        <span><a href="#{{ref id}}">{{name}}</a></span>
                     {{/each}}
                 {{else}}
                     <div class="read-only-field-label">Group</div>
@@ -52,7 +52,7 @@
                     <div>
                         {{#each capabilities.members class="read-only-field-value" tagName="div"}}
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a></span>
+                            <span><a href="#{{ref id}}">{{name}}</a></span>
                         {{/each}}
                     </div>
                 {{else}}

@@ -1,7 +1,5 @@
 /*globals Handlebars, moment, navigator, SC, Sqwerl, sweetAlert, window*/
 
-require('sweetalert2');
-
 /**
  * The initial execution point for the Sqwerl SproutCore-based client application. SproutCore creates an initial
  * HTML document for this application that invokes this method to start the application.
@@ -170,6 +168,9 @@ Sqwerl.registerHandlebarsHelpers = function () {
       }
     }
     return result;
+  });
+  Handlebars.registerHelper('ref', function (propertyName) {
+    return encodeURI(this.id).replace(/%20/g, '-');
   });
   Handlebars.registerHelper('thingsChanged', function () {
      return (this.changes.totalCount === 1) ? 'thing' : 'things';

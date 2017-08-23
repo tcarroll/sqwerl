@@ -795,6 +795,14 @@ Sqwerl.mainPage = SC.Page.design({
       }
     }),
 
+    mouseDown: function (event) {
+      var layout = this.layout;
+      var dialogRightEdge = layout.left + layout.width;
+      if (event && (event.pageX > dialogRightEdge)) {
+        Sqwerl.mainPage.createAccountDialog.hide();
+      }
+    },
+
     okButtonText: 'Enter your email address',
 
     onFinishedSigningUp: function () {
@@ -842,7 +850,7 @@ Sqwerl.mainPage = SC.Page.design({
           step2 = contentView.step2,
           step3 = contentView.step3,
           x = element.offset().left + ((element.width() - this.createAccountDialogWidth) / 2),
-          y = Sqwerl.mainPage.mainPane.applicationBar.layout.top + 40;
+          y = Sqwerl.mainPage.mainPane.applicationBar.layout.top + Sqwerl.mainPage.dialogTop;
       if ((x + this.createAccountDialogWidth) > window.innerWidth) {
         x = window.innerWidth - this.createAccountDialogWidth;
       }
@@ -1203,9 +1211,16 @@ Sqwerl.mainPage = SC.Page.design({
   }),
 
   /**
+   * The top (y-axis) coordinate for the top edges of this application's menus.
+   */
+  dialogTop: 50,
+
+  /**
    * Text users entered into the feedback dialog to tell us what they think about this application.
    */
   feedbackText: '',
+
+  isAnimating: false,
 
   /**
    * Should this application appear to be busy?
@@ -1216,6 +1231,8 @@ Sqwerl.mainPage = SC.Page.design({
    * Is this application sending user feedback to its server?
    */
   isSendingFeedback: false,
+
+  isWaitingForAnimationToFinish: false,
 
   /**
    * User interface.
@@ -1574,7 +1591,7 @@ Sqwerl.mainPage = SC.Page.design({
         minimumSize: 250,
 
         detailsBackgroundView: SC.View.design({
-          childViews: ['detailsTitleBar', 'detailsContentView'],
+          childViews: ['detailsTitleBar', 'detailsContentView', 'parentNavigatorItemIndicatorStrip'],
           classNames: ['details-background-view'],
           layout: { bottom: 0, left: 0, right: 0, top: 0 },
 
@@ -1585,7 +1602,18 @@ Sqwerl.mainPage = SC.Page.design({
 
           detailsContentView: SC.View.design({
             classNames: ['properties-scrollable-content'],
-            layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight }
+            layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight },
+          }),
+
+          parentNavigatorItemIndicatorStrip: SC.View.design({
+            childViews: ['parentNavigationItemIndicator'],
+            classNames: ['parent-navigation-item-indicator-strip'],
+            layout: { bottom: 0, left: -18, top: Sqwerl.rowHeight, width: 36 },
+
+            parentNavigationItemIndicator: SC.View.design({
+              classNames: ['parent-navigation-item-indicator'],
+              layout: { left: 0, right: 0, top: 0, width: 36 }
+            })
           })
         }),
 
@@ -1703,11 +1731,19 @@ Sqwerl.mainPage = SC.Page.design({
       },
     }),
 
+    mouseDown: function (event) {
+      var layout = this.layout;
+      var dialogRightEdge = layout.left + layout.width;
+      if (event && (event.pageX > dialogRightEdge)) {
+        this.hide();
+      }
+    },
+
     show: function () {
       var element = $('.account-menu'),
         mainPane = Sqwerl.mainPage.mainPane,
         x = element.offset().left + ((element.width() - this.accountMenuWidth) / 2),
-        y = mainPane.applicationBar.layout.top + 40;
+        y = mainPane.applicationBar.layout.top + Sqwerl.mainPage.dialogTop;
       if ((x + this.accountMenuWidth) > window.innerWidth) {
         x = window.innerWidth - this.accountMenuWidth - 15;
       }
@@ -1929,11 +1965,18 @@ Sqwerl.mainPage = SC.Page.design({
       }
     }),
 
+    mouseDown: function (event) {
+      var layout = this.layout;
+      if (event && (event.pageX < layout.left)) {
+        Sqwerl.mainPage.mainMenu.hide();
+      }
+    },
+
     show: function () {
       var element = $('.application-menu'),
         mainPane = Sqwerl.mainPage.mainPane,
         x = element.offset().left + ((element.width() - this.mainMenuWidth) / 2),
-        y = mainPane.applicationBar.layout.top + 40;
+        y = mainPane.applicationBar.layout.top + Sqwerl.mainPage.dialogTop;
       if ((x + this.mainMenuWidth) > window.innerWidth) {
         x = window.innerWidth - this.mainMenuWidth - 15;
       }
@@ -2174,29 +2217,43 @@ Sqwerl.mainPage = SC.Page.design({
       if (!Sqwerl.isNavigationBusy) {
         Sqwerl.isNavigationBusy = true;
         Sqwerl.mainPage.set('isBusy', true);
-        busyPanel.animate({ opacity: 0 });
         busyPanel.addClass('visible');
         busyPanel.focus();
-        busyPanel.animate({
-          opacity: 0.08
-        }, {
-          duration: 0.25, timing: 'ease-in'
+        Sqwerl.mainPage.isAnimating = true;
+        busyPanel.animate({ 'opacity': 0.05 }, {
+          duration: 0.25,
+          timing: 'ease-in'
+        });
+        detailsView.animate('left', -detailsView.$().width(), { duration: 0.5 }, function () {
+          if (!Sqwerl.mainPage.isWaitingForAnimationToFinish) {
+            detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
+          }
+          detailsView.animate('left', 0, { duration: 0.5 }, function () {
+            Sqwerl.mainPage.isAnimating = false;
+            if (Sqwerl.mainPage.isWaitingForAnimationToFinish) {
+              Sqwerl.mainPage.setNavigationBusy(false);
+            }
+            Sqwerl.mainPage.isWaitingForAnimationToFinish = false;
+          });
         });
         if (fetching) {
           Sqwerl.get('LoadingController').set('content', fetching);
         }
         Sqwerl.mainPage.scrollPropertiesViewToStart();
-        detailsView.animate('left', -detailsView.$().width(), { duration: 0.5 }, function () {
-          if (Sqwerl.isNavigationBusy) {
-            detailsView.set('nowShowing', Sqwerl.get('LoadingView'));
-          }
-          detailsView.animate('left', 0, { duration: 0.5 });
-        });
       }
     } else {
-      Sqwerl.isNavigationBusy = false;
-      Sqwerl.mainPage.set('isBusy', false);
-      busyPanel.removeClass('visible');
+      if (Sqwerl.mainPage.isAnimating) {
+        Sqwerl.mainPage.isWaitingForAnimationToFinish = true;
+      } else {
+        busyPanel.animate('opacity', 0, {
+          duration: 0.25,
+          timing: 'ease-in'
+        }, function () {
+          busyPanel.removeClass('visible');
+          Sqwerl.isNavigationBusy = false;
+          Sqwerl.mainPage.set('isBusy', false);
+        });
+      }
     }
   },
 
@@ -2256,224 +2313,378 @@ Sqwerl.mainPage = SC.Page.design({
     classNames: ['drop-down-menu'],
 
     contentView: SC.View.create({
-      childViews: 'emailLabel emailField passwordLabel passwordField forgotPasswordLink signInButton cancelButton'.w(),
+      childViews: 'instructionsPanel email password signInButton'.w(),
       classNames: ['drop-down-menu-content'],
 
       email: null,
 
-      emailLabel: SC.LabelView.design({
-        classNames: ['sign-in-email-label', 'sign-in-field-label'],
-        fieldDidBlur: function () {
-          'use strict';
-          var message = ' ',
-              signInDialog = Sqwerl.mainPage.signInDialog,
-              warning = NO;
-          if (signInDialog.email) {
-            if (!signInDialog.hasUserId) {
-              // TODO - Internationalize.
-              message = 'Hey something\'s wrong with the e-mail address! Please check it.';
-              warning = YES;
-              // TOOD - Invalidate the field.
-            }
+      instructionsPanel: SC.LabelView.create({
+        acceptsFirstResponder: NO,
+        displayProperties: ['Sqwerl.mainPage.signInDialog.isSignInFailedMessageVisible'],
+        render: function (context) {
+          if (Sqwerl.mainPage.signInDialog.get('isSignInFailedMessageVisible')) {
+            context.addClass('sign-in-failed-instructions');
+            context.begin('span').addClass('sign-in-failed-icon').addClass('ti-alert').end();
+            context.begin('p').addClass('sign-in-failed-message')
+              .push('Sign in failed! Check your email and password, then try again.').end();
           } else {
-            message = 'Enter your email.';
-            warning = YES;
-            // TODO - Invalidate the field.
+            context.removeClass('sign-in-failed-instructions');
+            context.begin('p')
+            .addClass('sign-in-instructions')
+            .push('Sign in to your Sqwerl account to view <i>your</i> things.')
+            .end()
+            .begin('p')
+            .addClass('sign-in-instructions')
+            .push('Don\'t have an account? <a class="sign-in-create-account hyperlink" onclick="Sqwerl.mainPage.signInDialog.hide();Sqwerl.mainPage.createAccountDialog.show()">Create an account</a>')
+            .end();
           }
-          if (signInDialog.isSignInFailedMessageVisible) {
-            signInDialog.isSignInFailedMessageVisible = NO;
-          } else {
-            if (warning) {
-              signInDialog.showWarningMessage(message);
-            } else if (signInDialog.isNotSigningIn) {
-              signInDialog.hideMessageArea();
-            }
-          }
+          return context;
         },
-        layout: { height: Sqwerl.rowHeight, left: 11, top: 8 },
-        value: 'Email'
-      }),
-
-      emailField: SC.TextFieldView.create({
-        acceptsFirstResponder: YES,
-        classNames: ['sign-in-email-field'],
-        keyUp: function (event) {
-          var dialog = Sqwerl.mainPage.signInDialog,
-            contentView = dialog.contentView,
-            handledEvent = NO,
-            value = this.get('value');
-          if (this.get('isEnabled')) {
-            if (event.keyCode === 13) {
-              if (dialog.isValidEmailAddress(value)) {
-                handledEvent = YES;
-                if (dialog.hasPassword()) {
-                  dialog.signIn();
-                } else {
-                  contentView.passwordField.becomeFirstResponder();
-                  contentView.passwordField.invokeNext(function () {
-                    this.$().addClass('focus');
-                  });
-                  dialog.set('signInButtonText', 'Enter your password');
-                }
-              } else {
-                handledEvent = YES;
-                contentView.signInButton.$().addClass('invalid');
-                dialog.set('signInButtonText', 'Enter your email address');
-              }
-            } else if (event.keyCode === 27) {
-              handledEvent = YES;
-              dialog.hide();
-            }
-          } else {
-            handledEvent = YES;
-          }
-          return handledEvent;
-        },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: Sqwerl.rowHeight + 10, width: 330 },
-        leftAccessoryView: SC.View.extend({
-          layout: { height: 16, left: 4, top: 10, width: 18 },
+/*
+        childViews: ['initialInstructions', 'defaultInstructions', 'signInFailedInstructions'],
+*/
+        layout: { height: Sqwerl.rowHeight * 1.5, left: 11, right: 0, top: 15, width: 350 },
+        valueBinding: 'Sqwerl.mainPage.signInDialog.isSignInFailedMessageVisible',
+/*
+        initialInstructions: SC.View.create({
           render: function (context) {
-            context.begin('span').addClass(['ti-email email-field-icon']).end();
+            context.begin('p')
+              .push('To view all of <b>your</b> things, enter your Sqwerl account\'s')
+              .push(' email address and password.')
+              .end()
+              .begin('p')
+              .push('Don\'t have an account? <a onclick="">Create an account</a>')
+              .end();
+            return context;
           }
         }),
-        onValueChanged: function () {
-          var dialog = Sqwerl.mainPage.signInDialog,
-            email = this.get('value'),
-            signInButton = dialog.contentView.signInButton,
-            validEmailAddress = false;
-          if (email && (email.length > 0)) {
-            if (dialog.isValidEmailAddress(email)) {
-              validEmailAddress = true;
-              signInButton.$().removeClass('invalid');
-              if (dialog.get('hasPassword')) {
-                signInButton.$().removeClass('instructions');
-                dialog.set('signInButtonText', 'Sign in');
-                dialog.set('allowSignIn', true);
-                dialog.set('wasValid', true);
-              } else {
-                dialog.set('allowSignIn', false);
-                signInButton.$().addClass('instructions');
-                dialog.set('signInButtonText', 'Enter your password');
+
+        defaultInstructions: SC.PanelPane.create({
+
+        }),
+
+        signInFailedInstructions: SC.PanelPane.create({
+          
+        })
+*/
+      }),
+
+      email: SC.View.design({
+        acceptsFirstResponder: YES,
+        childViews: 'emailLabel emailField emailHint'.w(),
+        classNames: ['sign-in-field-focus'],
+        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 2), width: 351 },
+
+        emailLabel: SC.LabelView.design({
+          classNames: ['sign-in-email-label', 'sign-in-field-label'],
+          layout: { height: Sqwerl.rowHeight / 2, left: 7, top: 6 },
+          value: 'Email'
+        }),
+
+        emailField: SC.TextFieldView.create({
+          acceptsFirstResponder: YES,
+          classNames: ['sign-in-email-field'],
+          /*
+          didBecomeKeyResponderFrom: function (resonder) {
+            Sqwerl.mainPage.signInDialog.contentView.email.invokeNext(function () { this.$().addClass('focus'); });
+          },
+          didLoseKeyResponderTo: function (responder) {
+            Sqwerl.mainPage.signInDialog.contentView.email.invokeNext(function () { this.$().removeClass('focus'); });
+          },
+          */
+          fieldDidBlur: function () {
+            var dialog = Sqwerl.mainPage.signInDialog;
+            var errorMessage = 'Invalid email address. Please fix.';
+            dialog.contentView.email.$().removeClass('focus');
+            dialog.contentView.email.emailField.$().removeClass('focus');
+            let email = dialog.contentView.email.emailField.get('value');
+            if ((!email) || (email.length === 0)) {
+              dialog.set('emailHintText', 'You must enter your email address');
+              dialog.contentView.email.emailHint.$().addClass('invalid');
+              dialog.contentView.email.$().addClass('invalid');
+            } else if (!dialog.isValidEmailAddress(email)) {
+              dialog.set('emailHintText', dialog.calculateEmailHintText(email, 'Bad email address. Please fix.'));
+              dialog.contentView.email.emailHint.$().addClass('invalid');
+              dialog.contentView.email.$().addClass('invalid');
+            }
+          },
+          fieldDidFocus: function () {
+            let email = Sqwerl.mainPage.signInDialog.contentView.email;
+            email.$().addClass('focus');
+            email.emailField.$().addClass('focus');
+            email.emailField.becomeFirstResponder();
+          },
+          keyUp: function (event) {
+            console.log('Email field keyUp: ' + event.keyCode);
+            var dialog = Sqwerl.mainPage.signInDialog,
+              contentView = dialog.contentView,
+              handledEvent = NO,
+              value = this.get('value');
+            if (this.get('isEnabled')) {
+              if (event.keyCode === 13) {
+                if (dialog.isValidEmailAddress(value)) {
+                  handledEvent = YES;
+                  if (dialog.hasPassword()) {
+                    dialog.signIn();
+                  } else {
+                    contentView.password.passwordField.becomeFirstResponder();
+                    contentView.password.passwordField.invokeNext(function () {
+                      this.$().addClass('focus');
+                    });
+                    contentView.password.invokeNext(function () {
+                      this.$().addClass('focus');
+                    });
+                    dialog.set('signInButtonText', 'Enter your password');
+                  }
+                } else {
+                  handledEvent = YES;
+                  contentView.email.emailHint.$().addClass('invalid');
+                  contentView.email.$().addClass('invalid');
+                  dialog.set('emailHintText', 'You must enter your email address');
+                }
+              } else if (event.keyCode === 27) {
+                handledEvent = YES;
+                dialog.hide();
               }
             } else {
+              handledEvent = YES;
+            }
+            return handledEvent;
+          },
+          layout: { height: Sqwerl.rowHeight, left: 6, top: (Sqwerl.rowHeight / 2) + 12, width: 340 },
+          leftAccessoryView: SC.View.extend({
+            layout: { height: 16, left: 4, top: 10, width: 18 },
+            render: function (context) {
+              context.begin('span').addClass(['ti-email email-field-icon']).end();
+            }
+          }),
+          onValueChanged: function () {
+            var dialog = Sqwerl.mainPage.signInDialog,
+              email = this.get('value'),
+              signInButton = dialog.contentView.signInButton,
+              validEmailAddress = false;
+            if (email && (email.length > 0)) {
+              let emailHint = dialog.contentView.email.emailHint;
+              if (dialog.isValidEmailAddress(email)) {
+                validEmailAddress = true;
+                emailHint.$().removeClass('invalid');
+                dialog.contentView.email.$().removeClass('invalid');
+                emailHint.$().hide();
+                if (dialog.get('hasPassword')) {
+                  signInButton.$().removeClass('instructions');
+                  dialog.set('signInButtonText', 'Sign in');
+                  dialog.set('allowSignIn', true);
+                  dialog.set('wasValid', true);
+                } else {
+                  dialog.set('allowSignIn', false);
+                  signInButton.$().addClass('instructions');
+                  //dialog.set('signInButtonText', 'Enter your password');
+                }
+              } else {
                 if (dialog.get('wasValidEmailAddress')) {
                   signInButton.$().removeClass('instructions');
                   signInButton.$().addClass('invalid');
-                  dialog.set('signInButtonText', 'Invalid email address. Please fix.');
+                  dialog.contentView.email.$().addClass('invalid');
+                  ///dialog.set('emailHintText', dialog.calculateEmailHintText(email, 'Bad email address. Please fix.'));
+                  emailHint.$().addClass('invalid');
+                  emailHint.$().show();
+                }
+                if (emailHint.$().hasClass('invalid')) {
+                  dialog.set('emailHintText', dialog.calculateEmailHintText(email, 'Bad email address. Please fix.'));
                 }
                 dialog.set('allowSignIn', false);
+              }
+            } else {
+              dialog.handleInvalidEmailAddress(email);
             }
-          } else {
-            dialog.handleInvalidEmailAddress(email);
-          }
-          dialog.set('wasValidEmailAddress', validEmailAddress)
-        }.observes('value')
+            dialog.set('wasValidEmailAddress', validEmailAddress)
+          }.observes('value')
+        }),
+
+        emailHint: SC.LabelView.create({
+          classNames: ['sign-in-email-hint'],
+          displayProperties: 'Sqwerl.mainPage.signInDialog.emailHintText'.w(),
+          layout: { height: Sqwerl.rowHeight / 2, left: 6, top: (Sqwerl.rowHeight * 2) + 1 },
+          render: function (context) {
+            if (this.$().hasClass('invalid')) {
+              context.begin('span').addClass('ti-alert input-warning-icon').end();
+            }
+            context.begin('span')
+              .addClass('sign-in-email-hint input-warning-text')
+              .push(SC.RenderContext.escapeHTML(Sqwerl.mainPage.signInDialog.get('emailHintText')))
+              .end();
+          },
+          valueBinding: 'Sqwerl.mainPage.signInDialog.emailHintText'
+        })
       }),
 
-      passwordLabel: SC.LabelView.create({
-        classNames: ['sign-in-password-label', 'sign-in-field-label'],
-        layout: { height: Sqwerl.rowHeight, left: 11, top: (Sqwerl.rowHeight * 2) + 8, width: 330 },
-        value: 'Password'
-      }),
+      password: SC.View.design({
+        acceptsFirstResponder: NO,
+        childViews: ['passwordLabel', 'passwordField', 'passwordHint'],
+        classNames: 'sign-in-field-focus',
+        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 5), width: 351 },
 
-      passwordField: SC.TextFieldView.create({
-        acceptsFirstResponder: YES,
-        classNames: ['sign-in-password-field'],
-        keyUp: function (event) {
-          var dialog = Sqwerl.mainPage.signInDialog,
-            contentView = dialog.contentView,
-            email = contentView.emailField.get('value'),
-            handledEvent = NO,
-            signInButton = contentView.signInButton;
-          if (this.get('isEnabled')) {
-            if (event.keyCode === 13) {
-              if (dialog.isValidEmailAddress(email)) {
-                if (dialog.contentView.passwordField.get('value').length > 0) {
-                  if (dialog.get('allowSignIn')) {
+        passwordLabel: SC.LabelView.create({
+          classNames: ['sign-in-password-label', 'sign-in-field-label'],
+          layout: { height: Sqwerl.rowHeight / 2, left: 7, top: 6 },
+          value: 'Password'
+        }),
+
+        passwordField: SC.TextFieldView.create({
+          acceptsFirstResponder: YES,
+          classNames: ['sign-in-password-field'],
+          /*
+          didBecomeKeyResponderFrom: function (resonder) {
+            Sqwerl.mainPage.signInDialog.contentView.password.invokeNext(function () { this.$().addClass('focus'); });
+          },
+          didLoseKeyResponderTo: function (responder) {
+            Sqwerl.mainPage.signInDialog.contentView.password.invokeNext(function () { this.$().removeClass('focus'); });
+          },
+          */
+          fieldDidBlur: function () {
+            var dialog = Sqwerl.mainPage.signInDialog,
+              password = dialog.contentView.password.passwordField.get('value');
+            Sqwerl.mainPage.signInDialog.contentView.password.$().removeClass('focus');
+            Sqwerl.mainPage.signInDialog.contentView.password.passwordField.$().removeClass('focus');
+            if ((!password) || (password.length === 0)) {
+              dialog.set('passwordHintText', 'You must enter your password');
+              dialog.contentView.password.passwordHint.$().addClass('invalid');
+              dialog.contentView.password.$().addClass('invalid');
+            }
+            dialog.set('passwordHasLostFocus', true);
+          },
+          fieldDidFocus: function () {
+            Sqwerl.mainPage.signInDialog.contentView.password.$().addClass('focus');
+            Sqwerl.mainPage.signInDialog.contentView.password.passwordField.$().addClass('focus');
+          },
+          keyUp: function (event) {
+            var dialog = Sqwerl.mainPage.signInDialog,
+              contentView = dialog.contentView,
+              email = contentView.email.emailField.get('value'),
+              handledEvent = NO,
+              signInButton = contentView.signInButton;
+            if (this.get('isEnabled')) {
+              if (event.keyCode === 13) {
+                if (dialog.isValidEmailAddress(email)) {
+                  if (dialog.contentView.password.passwordField.get('value').length > 0) {
+                    if (dialog.get('allowSignIn')) {
+                      handledEvent = true;
+                      dialog.signIn();
+                    }
+                  } else {
+                    signInButton.$().removeClass('instructions');
+                    signInButton.$().addClass('invalid');
+                    dialog.set('signInButtonText', 'Enter your password');
+                    dialog.contentView.password.passwordHint.$().addClass('invalid');
+                    dialog.contentView.password.$().addClass('invalid');
+                    dialog.set('passwordHintText', 'You must enter your password');
                     handledEvent = true;
-                    dialog.signIn();
                   }
                 } else {
-                  signInButton.$().removeClass('instructions');
-                  signInButton.$().addClass('invalid');
-                  dialog.set('signInButtonText', 'Enter your password');
-                  handledEvent = true;
+                  if ((!email) || (email.length === 0)) {
+                    dialog.set('emailHintText', 'You must enter your email address');
+                    handledEvent = YES;
+                  } else {
+                    dialog.set('emailHintText', dialog.calculateEmailHintText(email, 'Bad email address. Please fix.'));
+                    handledEvent = YES;
+                  }
                 }
-              } else {
-                if ((!email) || (email.length == 0)) {
+                return handledEvent;
+              } else if (event.keyCode === 27) {
+                handledEvent = YES;
+                dialog.hide();
+              }
+/*
+                if (dialog.isValidEmailAddress(email)) {
+                  if (contentView.password.passwordField.get('value').length > 0) {
+                    dialog.set('allowSignIn', true);
+                    signInButton.$().removeClass('instructions');
+                    signInButton.$().removeClass('invalid');
+                    dialog.contentView.password.passwordHint.$().removeClass('invalid');
+                    dialog.contentView.password.$().removeClass('invalid');
+                    if (!dialog.get('wasValid')) {
+                      dialog.set('signInButtonText', 'Sign In');
+                      dialog.set('wasValid', true);
+                    }
+                  } else {
+                    dialog.set('allowSignIn', false);
+                    if (dialog.get('wasValid')) {
+                      dialog.contentView.password.passwordHint.$().addClass('invalid');
+                      dialog.contentView.password.$().addClass('invalid');
+                      dialog.set('passwordHintText', 'You must enter your password');
+                    }
+                  }
+                } else {
                   signInButton.$().removeClass('instructions');
                   signInButton.$().addClass('invalid');
                   dialog.set('signInButtonText', 'Enter your email address');
-                  handledEvent = YES;
-                } else {
-                  signInButton.$().removeClass('instructions');
-                  signInButton.$().addClass('invalid');
-                  dialog.set('signInButtonText', 'Invalid email address. Please fix');
-                  handledEvent = YES;
                 }
-              }
-              return handledEvent;
-            } else if (event.keyCode === 27) {
-              handledEvent = YES;
-              dialog.hide();
+*/
             } else {
-              if (dialog.isValidEmailAddress(email)) {
-                if (contentView.passwordField.get('value').length > 0) {
-                  dialog.set('allowSignIn', true);
-                  signInButton.$().removeClass('instructions');
-                  signInButton.$().removeClass('invalid');
-                  if (!dialog.get('wasValid')) {
-                    dialog.set('signInButtonText', 'Sign In');
-                    dialog.set('wasValid', true);
-                  }
-                } else {
-                  dialog.set('allowSignIn', false);
-                  if (dialog.get('wasValid')) {
-                    signInButton.$().removeClass('instructions');
-                    signInButton.$().addClass('invalid');
-                    dialog.set('signInButtonText', 'You must enter your password');
-                  }
-                }
-              } else {
+              handledEvent = YES;
+            }
+            return handledEvent;
+          },
+          layout: { height: Sqwerl.rowHeight, left: 6, top: (Sqwerl.rowHeight / 2) + 12, width: 340 },
+          leftAccessoryView: SC.View.extend({
+            layout: { height: 16, left: 4, top: 10, width: 18 },
+            render: function (context) {
+              context.begin('span').addClass(['ti-key password-field-icon']).end();
+            }
+          }),
+          onValueChanged: function () {
+            var dialog = Sqwerl.mainPage.signInDialog,
+              contentView = dialog.contentView,
+              email = contentView.email.emailField.get('value'),
+              hasNonEmptyPassword = (this.get('value').length > 0),
+              isValidEmailAddress = dialog.isValidEmailAddress(email),
+              signInButton = contentView.signInButton,
+              signInButtonText = 'Enter your email address and password';
+            if (hasNonEmptyPassword) {
+              if ((!dialog.get('wasValid') && dialog.isValidEmailAddress(email))) {
+                signInButton.$().removeClass('instructions');
+                signInButton.$().removeClass('invalid');
+                dialog.set('wasValid', true);
+                signInButtonText = 'Sign in';
+              }
+              dialog.set('passwordHintText', '');
+              dialog.contentView.password.passwordHint.$().removeClass('invalid');
+              dialog.contentView.password.$().removeClass('invalid');
+              dialog.set('allowSignIn', isValidEmailAddress);
+              dialog.set('wasPasswordEmpty', false);
+            } else {
+              if (dialog.get('passwordHasLostFocus') || (!dialog.get('wasPasswordEmpty'))) {
                 signInButton.$().removeClass('instructions');
                 signInButton.$().addClass('invalid');
-                dialog.set('signInButtonText', 'Enter your email address');
+                dialog.set('allowSignIn', false);
+                dialog.set('passwordHintText', 'You must enter your password');
+                dialog.contentView.password.passwordHint.$().addClass('invalid');
+                dialog.contentView.password.$().addClass('invalid');
+                signInButtonText = isValidEmailAddress ? 'Enter your password' : 'Enter your email address and password';
               }
+              dialog.set('wasPasswordEmpty', true);
             }
-          } else {
-            handledEvent = YES;
-          }
-          return handledEvent;
-        },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 3) + 10, width: 330 },
-        leftAccessoryView: SC.View.extend({
-          layout: { height: 16, left: 4, top: 10, width: 18 },
-          render: function (context) {
-            context.begin('span').addClass(['ti-key password-field-icon']).end();
-          }
-        }),
-        onValueChanged: function () {
-          var dialog = Sqwerl.mainPage.signInDialog,
-            contentView = dialog.contentView,
-            email = contentView.emailField.get('value'),
-            signInButton = contentView.signInButton;
-          if (this.get('value').length > 0) {
-            if ((!dialog.get('wasValid') && dialog.isValidEmailAddress(email))) {
-              signInButton.$().removeClass('instructions');
-              signInButton.$().removeClass('invalid');
-              dialog.set('wasValid', true);
-              dialog.set('signInButtonText', 'Sign in');
-            }
-            dialog.set('allowSignIn', dialog.isValidEmailAddress(contentView.emailField.get('value')));
-          } else {
-            signInButton.$().removeClass('instructions');
-            signInButton.$().addClass('invalid');
-            dialog.set('allowSignIn', false);
-            dialog.set('signInButtonText', 'You must enter your password');
+            dialog.set('signInButtonText', signInButtonText);
             dialog.set('wasValid', false);
-          }
-        }.observes('value'),
-        type: 'password'
+          }.observes('value'),
+          type: 'password'
+        }),
+
+        passwordHint: SC.LabelView.create({
+          classNames: ['sign-in-password-hint'],
+          displayProperties: 'Sqwerl.mainPage.signInDialog.passwordHintText'.w(),
+          layout: { height: Sqwerl.rowHeight / 2, left: 6, top: (Sqwerl.rowHeight * 2) + 1 },
+          render: function (context) {
+            if (this.$().hasClass('invalid')) {
+              context.begin('span').addClass('ti-alert input-warning-icon').end();
+            }
+            context.begin('span')
+              .addClass('sign-in-password-hint input-warning-text')
+              .push(SC.RenderContext.escapeHTML(Sqwerl.mainPage.signInDialog.get('passwordHintText')))
+              .end();
+          },
+          valueBinding: 'Sqwerl.mainPage.signInDialog.passwordHintText'
+        })
       }),
 
       signInButton: SC.ButtonView.create({
@@ -2500,7 +2711,7 @@ Sqwerl.mainPage = SC.Page.design({
           }
           return handledEvent;
         },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 4) + 20, width: 330 },
+        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 8) + 4, width: 330 },
         mouseDown: function (event) {
           var dialog = Sqwerl.mainPage.signInDialog;
           if (dialog.get('allowSignIn')) {
@@ -2509,15 +2720,19 @@ Sqwerl.mainPage = SC.Page.design({
         },
         render: function (context) {
           var dialog = Sqwerl.mainPage.signInDialog,
+            isBusySigningIn = !dialog.get('isNotSigningIn'),
             labelContext;
           context.addAttr('role', 'button');
           context.addClass('sc-button-view').addClass('square').addClass('button').addClass('sc-regular-size');
+          if (isBusySigningIn) {
+            context.addClass('busy');
+          }
           labelContext = context.begin('label');
           labelContext.addClass('sc-button-label').addClass('sc-regular-size').addClass('ellipsis');
-          if (this.$().hasClass('invalid')) {
-            context.begin('span').addClass('ti-alert').end();
-          }
-          if (!dialog.get('isNotSigningIn')) {
+          // if (this.$().hasClass('invalid')) {
+          //   context.begin('span').addClass('ti-alert').end();
+          // }
+          if (isBusySigningIn) {
             context.begin('span').addClass('sign-in-busy-indicator').end();
           }
           context.begin('span')
@@ -2549,7 +2764,7 @@ Sqwerl.mainPage = SC.Page.design({
           }
           return handledEvent;
         },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 5) + 30, width: 330 },
+        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 5) + 30 + (Sqwerl.rowHeight * 2), width: 330 },
         mouseDown: function () {
           var dialog = Sqwerl.mainPage.signInDialog;
           if (!dialog.get('isNotSigningIn')) {
@@ -2585,36 +2800,63 @@ Sqwerl.mainPage = SC.Page.design({
 
     allowSignIn: false,
 
+    /**
+     * Returns the email field's hint text that should be displayed when the email field contains a given value.
+     *
+     * @param {string} email            Text user has entered into the email field.
+     * @param {string} [defaultMessage] The email field's default hint text.
+     * @returns {string}
+     */
+    calculateEmailHintText: function (email, defaultMessage) {
+      var emailHintText = defaultMessage || '',
+        atIndex = email.indexOf('@');
+      if (atIndex === -1) {
+        emailHintText = 'Must have one @ symbol';
+      } else if (atIndex > 0) {
+        if ((atIndex < email.length) && (email.slice(atIndex + 1).indexOf('@') > -1)) {
+          emailHintText = 'Too many @ symbols';
+        } else if (email.indexOf('.') === -1) {
+          emailHintText = 'Missing periods after @ symbol';
+        }
+      }
+      return emailHintText.toString();
+    },
+
     cancelButtonText: 'Don\'t sign in',
 
     containsValidEmailAddress: false,
 
-    dialogWidth: 350,
+    dialogWidth: 380,
 
     email: null,
 
+    emailHintText: '',
+
     handleInvalidEmailAddress(email) {
-      var isEmpty = !(email && (email.length > 0));
-      this.set('signInButtonText', isEmpty ? 'Enter your email address' : 'Not a valid email address. Please fix.');
-      this.contentView.emailField.$().addClass('invalid');
-      this.contentView.signInButton.$().addClass('invalid');
-      this.contentView.signInButton.$().addClass('')
+      let isEmpty = !(email && (email.length > 0));
+      this.contentView.email.emailField.$().addClass('invalid');
+      this.contentView.email.$().addClass('invalid');
+      this.set('emailHintText', isEmpty ? 'You must enter your email address' : this.calculateEmailHintText(email));
+      this.contentView.email.emailHint.$().addClass('invalid');
+      this.contentView.email.emailHint.$().show();
       this.set('allowSignIn', false);
     },
 
     hasPassword: function () {
-      var password = Sqwerl.mainPage.signInDialog.contentView.passwordField.get('value');
+      var password = Sqwerl.mainPage.signInDialog.contentView.password.passwordField.get('value');
       return password && (password.length > 0);
     }.property(),
 
     hasUserId: function () {
-      var email = Sqwerl.mainPage.signInDialog.contentView.emailField.get('value');
+      var email = Sqwerl.mainPage.signInDialog.contentView.email.emailField.get('value');
       return email && this.isValidEmailAddress(email);
     }.property(),
 
     hide: function () {
       this.set('signInDialogIsVisible', false);
     },
+
+    isEmailEmpty: true,
 
     isEnabledBinding: 'Sqwerl.mainPage.signInDialog.isNotSigningIn',
 
@@ -2646,7 +2888,7 @@ Sqwerl.mainPage = SC.Page.design({
       }
     }.observes('signInDialogIsVisible'),
 
-    layout: { centerX: 0, centerY: -50, minHeight: 210, width: 350 },
+    layout: { centerX: 0, centerY: -50, minHeight: 310, width: 360 },
 
     message: ' ',
 
@@ -2660,21 +2902,90 @@ Sqwerl.mainPage = SC.Page.design({
       }
     }),
 
+    mouseDown: function (event) {
+      var layout = this.layout;
+      var dialogRightEdge = layout.left + layout.width;
+      if (event && (event.pageX > dialogRightEdge)) {
+        Sqwerl.mainPage.signInDialog.hide();
+      }
+    },
+
+    passwordHasLostFocus: false,
+
+    passwordHintText: '',
+
+    /**
+     * Shakes this sign in dialog. Animates this sign in dialog shaking (in order to get the user's attention).
+     *
+     * @param {number} repeatCount  Non-negative number of times to shake dialog.
+     * @param {function} callback   Function to call when finished shaking dialog.
+     */
+    shakeDialog: function (repeatCount, callback) {
+      let dialog = Sqwerl.mainPage.signInDialog;
+      dialog.animate({
+        left: dialog.layout.left - (15 - (3 - repeatCount))
+      }, {
+        duration: 0.01,
+        timing: 'ease-in-out'
+      }, function (result) {
+        dialog.animate({
+          left: dialog.layout.left
+        }, {
+          duration: 0.02,
+          timing: 'ease-in-out'
+        }, function (result) {
+          dialog.animate({
+            left: dialog.layout.left + 15 - (3 - repeatCount)
+          }, {
+            duration: 0.01,
+            timing: 'ease-in-out'
+          }, function (result) {
+            repeatCount -= 1;
+            if (repeatCount > 0) {
+              dialog.shakeDialog(repeatCount, callback);
+            } else {
+              callback();
+            }
+          })
+        })
+      });
+    },
+
     show: function () {
       var element = $('.sign-in-menu'),
-        email = this.contentView.emailField.get('value'),
-        emailField = this.contentView.emailField,
+        email = this.contentView.email.emailField.get('value'),
+        emailField = this.contentView.email.emailField,
+        emailHintText = '',
+        isEmailEmpty = (!email) || (email.length === 0),
         mainPane = Sqwerl.mainPage.mainPane,
-        passwordField = this.contentView.passwordField,
+        passwordField = this.contentView.password.passwordField,
         x = element.offset().left + ((element.width() - this.signInDialogWidth) / 2),
-        y = mainPane.applicationBar.layout.top + 40;
+        y = mainPane.applicationBar.layout.top + Sqwerl.mainPage.dialogTop;
+      this.set('isEmailEmpty', isEmailEmpty);
+      if (isEmailEmpty) {
+        emailHintText = 'For example: albert@sqwerl.com';
+        this.contentView.email.emailHint.$().removeClass('invalid');
+        this.contentView.email.$().removeClass('invalid');
+        this.set('wasValidEmailAddress', false);
+      } else if (this.isValidEmailAddress(email)) {
+        this.set('wasValidEmailAddress', true);
+      } else {
+        emailHintText = this.calculateEmailHintText(email);
+        this.contentView.email.emailHint.$().addClass('invalid');
+        this.contentView.email.$().addClass('invalid');
+        this.set('wasValidEmailAddress', false);
+      }
+      this.set('emailHintText', emailHintText);
+      this.set('isSignInFailedMessageVisible', false);
       if ((x + this.signInDialogWidth) > window.innerWidth) {
         x = window.innerWidth - this.signInDialogWidth;
       }
       this.set('layout', { height: this.signInDialogHeight, left: x, top: y, width: this.signInDialogWidth });
       this.set('wasValid', false);
-      this.set('wasValidEmailAddress');
-      this.contentView.passwordField.set('value', '');
+      this.set('passwordHasLostFocus', false);
+      passwordField.set('value', '');
+      this.contentView.password.$().removeClass('invalid');
+      this.contentView.password.passwordField.$().removeClass('invalid');
       this.contentView.signInButton.$().addClass('instructions');
       this.contentView.cancelButton.$().removeClass('busy');
       this.set('cancelButtonText', 'Don\'t sign in');
@@ -2696,19 +3007,29 @@ Sqwerl.mainPage = SC.Page.design({
       }
       this.set('isNotSigningIn', YES);
       this.set('signInDialogIsVisible', YES);
-      this.contentView.emailLabel.set('isEnabled', true);
-      this.contentView.emailField.set('isEnabled', true);
-      this.contentView.emailField.$().attr('tabindex', 0);
-      this.contentView.passwordLabel.set('isEnabled', true);
-      this.contentView.passwordField.set('isEnabled', true);
-      this.contentView.passwordField.$().attr('tabindex', 0);
+      this.contentView.email.emailLabel.set('isEnabled', true);
+      emailField.set('isEnabled', true);
+/*
+      emailField.$().attr('tabindex', -1);
+      emailField.$('input').attr('tabindex', 0);
+*/
+      this.contentView.password.passwordLabel.set('isEnabled', true);
+      passwordField.set('isEnabled', true);
+/*
+      passwordField.$().attr('tabindex', -1);
+      passwordField.$('input').attr('tabindex', 0);
+      this.contentView.email.$().attr('tabIndex', -1);
+      this.contentView.password.$().attr('tabIndex', -1);
+      this.contentView.instructionsPanel.$().attr('tabIndex', -1);
+      this.$().attr('tabIndex', -1);
+*/
     },
 
     signIn: function () {
       var signInButton = this.contentView.signInButton,
         cancelButton = this.contentView.cancelButton,
-        email = this.contentView.emailField.get('value'),
-        password = this.contentView.passwordField.get('value'),
+        email = this.contentView.email.emailField.get('value'),
+        password = this.contentView.password.passwordField.get('value'),
         signInButtonElement = signInButton.$();
       this.set('isNotSigningIn', NO);
       // TODO - Randomly choose this text from a set of choices that reinforce Sqwerl's voice.
@@ -2718,46 +3039,64 @@ Sqwerl.mainPage = SC.Page.design({
       signInButtonElement.removeClass('instructions');
       signInButtonElement.removeClass('invalid');
       signInButtonElement.addClass('busy');
-      this.contentView.emailLabel.set('isEnabled', false);
-      this.contentView.emailField.set('isEnabled', false);
-      this.contentView.emailField.$().attr('tabindex', -1);
-      this.contentView.passwordLabel.set('isEnabled', false);
-      this.contentView.passwordField.set('isEnabled', false);
-      this.contentView.passwordField.$().attr('tabindex', -1);
+      this.contentView.email.emailLabel.set('isEnabled', false);
+      this.contentView.email.emailField.set('isEnabled', false);
+      this.contentView.email.emailField.$().attr('tabindex', -1);
+      this.contentView.password.passwordLabel.set('isEnabled', false);
+      this.contentView.password.passwordField.set('isEnabled', false);
+      this.contentView.password.passwordField.$().attr('tabindex', -1);
       $.post(
         window.location.protocol + '//' + window.location.host + '/sign-in', {
           email: email,
           password: password
         },
         function onSuccessfulSignIn(result) {
+          var dialog = Sqwerl.mainPage.signInDialog;
           Sqwerl.set('userId', result.userId);
           Sqwerl.set('userName', result.userName);
           Sqwerl.mainPage.set('userName', result.userName);
           Sqwerl.set('isSignedIn', true);
           Sqwerl.token = result;
           Sqwerl.updateUserSignInStatus();
-          Sqwerl.mainPage.signInDialog.contentView.signInButton.$().removeClass('busy');
-          Sqwerl.mainPage.signInDialog.hide();
+          dialog.set('isNotSigningIn', true);
+          dialog.contentView.signInButton.$().removeClass('busy');
+          dialog.hide();
           Sqwerl.navigationController.goTo('/', function (response) {
              console.error('Unable to show home view after successful sign in. Response: ' + response);
           });
+          Sqwerl.mainPage.set('isBusy', false);
         }
       ).fail(function (error) {
-        // TODO - Handle sign in failure.
-        Sqwerl.mainPage.signInDialog.contentView.signInButton.$().removeClass('busy');
-        console.log('Sign in failed');
+        Sqwerl.mainPage.signInDialog.shakeDialog(3, function () {
+          let dialog = Sqwerl.mainPage.signInDialog,
+            view = dialog.contentView;
+          view.email.emailLabel.set('isEnabled', true);
+          view.email.emailField.set('isEnabled', true);
+          view.email.emailField.$().attr('tabindex', 0);
+          view.password.passwordLabel.set('isEnabled', true);
+          view.password.passwordField.set('isEnabled', true);
+          view.password.passwordField.$().attr('tabindex', 0);
+          view.email.emailField.becomeFirstResponder();
+          view.signInButton.$().removeClass('busy');
+          dialog.set('isNotSigningIn', true);
+          dialog.set('signInButtonText', 'Sign in');
+          dialog.set('isSignInFailedMessageVisible', true);
+          Sqwerl.mainPage.set('isBusy', false);
+        });
       });
     },
 
     signInButtonText: 'Enter your email address and password',
 
-    signInDialogHeight: (Sqwerl.rowHeight * 6) + 40,
+    signInDialogHeight: (Sqwerl.rowHeight * 10) + 40,
 
     signInDialogIsVisible: NO,
 
-    signInDialogWidth: 350,
+    signInDialogWidth: 360,
 
     warning: NO,
+
+    wasPasswordEmpty: true,
 
     wasValid: false,
 

@@ -36,13 +36,13 @@
                     {{#each tagged.members}}
                         <div class="read-only-field-value">
                             <span class="ordinal">{{position}}.</span>
-                            <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
+                            <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
                                     tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
                         </div>
                     {{/each}}
                 {{else}}
                     {{#each tagged.members class="read-only-field-value" tagName="div"}}
-                        <span><a href="#{{id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
+                        <span><a href="#{{ref id}}">{{name}}</a> ({{#typeOfThingName}}{{/typeOfThingName}}) has {{numberFormat
                                 tagsCount}} {{singularOrPlural tagsCount tag tags}}</span>
                     {{/each}}
                 {{/if}}

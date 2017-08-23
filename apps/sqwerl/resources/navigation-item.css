@@ -93,6 +93,82 @@ $selected-list-item-background: #1E69DE;
     }
 }
 
+@-moz-keyframes select {
+    0% {
+        background: rgba(30, 105, 222, 0.3);
+        color: #0016e4;
+    }
+    25% {
+        background: rgba(30, 105, 222, 0.5);
+    }
+    50% {
+        background: rgba(30, 105, 222, 0.6);
+        color: #576bff;
+    }
+    65% {
+        background: rgba(30, 105, 222, 0.7);
+    }
+    75% {
+        background: rgba(30, 105, 222, 0.8);
+        color: #e2e1ff;
+    }
+    85% {
+        background: rgba(30, 105, 222, 0.9);
+    }
+    100% {
+        background: rgba(30, 105, 222, 1);
+        color: white;
+    }
+}
+
+@-webkit-keyframes select {
+    0% {
+        background: rgba(30, 105, 222, 0.3);
+    }
+    25% {
+        background: rgba(30, 105, 222, 0.5);
+    }
+    50% {
+        background: rgba(30, 105, 222, 0.6);
+    }
+    65% {
+        background: rgba(30, 105, 222, 0.7);
+    }
+    75% {
+        background: rgba(30, 105, 222, 0.8);
+    }
+    85% {
+        background: rgba(30, 105, 222, 0.9);
+    }
+    100% {
+        background: rgba(30, 105, 222, 1);
+    }
+}
+
+@keyframes select {
+    0% {
+        background: rgba(30, 105, 222, 0.3);
+    }
+    25% {
+        background: rgba(30, 105, 222, 0.5);
+    }
+    50% {
+        background: rgba(30, 105, 222, 0.6);
+    }
+    65% {
+        background: rgba(30, 105, 222, 0.7);
+    }
+    75% {
+        background: rgba(30, 105, 222, 0.8);
+    }
+    85% {
+        background: rgba(30, 105, 222, 0.9);
+    }
+    100% {
+        background: rgba(30, 105, 222, 1);
+    }
+}
+
 @keyframes slide-in {
     0% {
         margin-left: 100%;
@@ -144,60 +220,6 @@ $selected-list-item-background: #1E69DE;
     }
     100% {
         margin-left: 0%;
-    }
-}
-
-@keyframes trailbar-hover {
-    0% {
-        background: rgba(51, 152, 254, 0.05);
-    }
-    25% {
-        background: rgba(51, 152, 254, 0.10);
-    }
-    50% {
-        background: rgba(51, 152, 254, 0.15);
-    }
-    75% {
-        background: rgba(51, 152, 254, 0.2);
-    }
-    100% {
-        background: rgba(51, 152, 254, 0.21);
-    }
-}
-
-@-moz-keyframes trailbar-hover {
-    0% {
-        background: rgba(51, 152, 254, 0.05);
-    }
-    25% {
-        background: rgba(51, 152, 254, 0.10);
-    }
-    50% {
-        background: rgba(51, 152, 254, 0.15);
-    }
-    75% {
-        background: rgba(51, 152, 254, 0.2);
-    }
-    100% {
-        background: rgba(51, 152, 254, 0.21);
-    }
-}
-
-@-webkit-keyframes trailbar-hover {
-    0% {
-        background: rgba(51, 152, 254, 0.05);
-    }
-    25% {
-        background: rgba(51, 152, 254, 0.10);
-    }
-    50% {
-        background: rgba(51, 152, 254, 0.15);
-    }
-    75% {
-        background: rgba(51, 152, 254, 0.2);
-    }
-    100% {
-        background: rgba(51, 152, 254, 0.21);
     }
 }
 
@@ -254,12 +276,15 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     &.even.list-item-selected {
-        animation: none;
-        background: $selected-list-item-background;
+        -moz-animation-name: select;
+        -moz-animation-duration: 0.3s;
+        -webkit-animation-name: select;
+        -webkit-animation-duration: 0.3s;
+        animation-name: select;
+        animation-duration: 0.3s;
+        background: rgba(30, 105, 222, 1);
         color: white;
         cursor: default;
-        -moz-animation: none;
-        -webkit-animation: none;
 
         .loading {
             cursor: wait;
@@ -272,14 +297,17 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
         .sc-outline.loading {
             background: $even-list-item-background;
             color: $loading-text-color;
-         }
+        }
     }
 
     &.odd.list-item-selected {
-        -moz-animation: none;
-        -webkit-animation: none;
-        animation: none;
-        background: $selected-list-item-background;
+        -moz-animation-name: select;
+        -moz-animation-duration: 0.3s;
+        -webkit-animation-name: select;
+        -webkit-animation-duration: 0.3s;
+        animation-name: select;
+        animation-duration: 0.3s;
+        background: rgba(30, 105, 222, 1);
         color: white;
         cursor: default;
 
@@ -303,14 +331,14 @@ $theme.sc-view.sc-list-item-view.item-view.sc-collection-item {
     }
 
     &.even.list-item-hover {
+        -moz-animation: hover;
+        -moz-animation-duration: .5s;
+        -webkit-animation-name: hover;
+        -webkit-animation-duration: .5s;
         animation-name: hover;
         animation-duration: .5s;
         background: rgba(51, 152, 254, 0.2);
         cursor: pointer;
-        -moz-animation-name: hover;
-        -moz-animation-duration: .5s;
-        -webkit-animation-name: hover;
-        -webkit-animation-duration: .5s;
 
         &.loading {
             -moz-animation: none;

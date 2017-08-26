@@ -82,9 +82,12 @@ gulp.task('stage', function () {
         './tmp/build/static/sqwerl/en/' + id + '/stylesheet@2x-packed.css',
         './apps/sqwerl/resources/themify.ttf',
         './apps/sqwerl/resources/small-sqwerl-logo.png',
-        './apps/sqwerl/resources/favicon.ico',
+        './apps/sqwerl/resources/favicon.ico'
+/*
         './apps/sqwerl/resources/AvenirNextLTPro-Bold.woff',
-        './apps/sqwerl/resources/AvenirNextLTPro-Regular.woff'])
+        './apps/sqwerl/resources/AvenirNextLTPro-Regular.woff'
+        */
+      ])
       .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/'))
       .pipe(gulp.dest('./tmp/staging/static/sqwerl/en/' + id + '/resources/'))
       .pipe(debug())

@@ -16,12 +16,11 @@ function main() {
 /**
  * Notifies the user that a fatal (non-recoverable) error has occurred.
  *
- * @param error     An error that occurred that prevents this application from executing.
+ * @param {Error} [error] An error that occurred that prevents this application from executing.
  */
 Sqwerl.handleError = function handleError(error) {
-  'use strict';
-  var stack = new Error().stack;
-  SC.error('%@ Nuts! Sqwerl has encountered an error condition that it can\'t recover from.\n%@', this, error.stack);
+  let stack = (error && error.stack) ? stack : new Error().stack;
+  SC.error('%@ Nuts! Sqwerl has encountered an error condition that it can\'t recover from.\n%@', this, stack);
   sweetAlert({
     /* confirmButtonColor: 'rgba(0, 40, 0, 0.8)', */
     confirmButtonColor: '#004f00',
@@ -30,7 +29,7 @@ Sqwerl.handleError = function handleError(error) {
     title: 'main.fatalErrorDialog.title'.loc(),
     type: 'error'
   }, function () {
-    var emailContent = '';
+    let emailContent = '';
     emailContent += 'applicationVersion=\'' + Sqwerl.VERSION + '\'\n';
     emailContent += 'browserVendor=\'' + navigator.vendor + '\'\n';
     emailContent += 'browserVersion=\'' + navigator.appVersion + '\'\n';
@@ -43,7 +42,7 @@ Sqwerl.handleError = function handleError(error) {
     emailContent += 'userAgent=\'' + navigator.userAgent + '\'\n';
     window.open('mailto:sqwerl@sqwerl.com?subject=Sqwerl Error Report&body=%@'.fmt(encodeURI(emailContent)));
   });
-  SC.error('%@: A serious error has occurred. %@', this, error.stack);
+  SC.error('%@: A serious error has occurred. %@', this, stack);
 };
 
 Sqwerl.highlightSearchTextInValue = function (searchText, value) {
@@ -220,6 +219,29 @@ Sqwerl.route = function (parameters) {
   Sqwerl.mainPage.searchDialog.hide();
   Sqwerl.mainPage.set('isSearching', false);
   Sqwerl.navigationController.goTo('/' + parameters[''], window.onerror);
+};
+
+Sqwerl.signOut = function (success, fail) {
+  $.post(
+    window.location.protocol + '//' + window.location.host + "/sign-out",
+    {},
+    function onSuccessfulSignOut(result) {
+      console.log('Successfully signed out');
+      Sqwerl.updateUserSignInStatus();
+      Sqwerl.navigationController.goTo('/', function (response) {
+        console.error('Unable to show home view after successful sign out. Response: ' + response);
+      });
+      if (typeof success === 'function') {
+        success();
+      }
+    }
+  ).fail(function (error) {
+    // TODO - Handle sign out failure.
+    console.log('Sign out failed');
+    if (typeof fail === 'function') {
+      fail(error);
+    }
+  });
 };
 
 window.onerror = function (errorMessage, url, lineNumber) {

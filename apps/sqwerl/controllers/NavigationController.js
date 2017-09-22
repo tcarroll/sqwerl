@@ -126,7 +126,21 @@ Sqwerl.NavigationController = SC.TreeController.extend({
           onError: function (response) {
             SC.error('%@: Could not fetch data at \'%@\'.', this, path);
             Sqwerl.mainPage.setNavigationBusy(false);
-            errorCallback(response);
+            let code = Number(response.status);
+            switch (code) {
+              case 440:
+                SC.error('%@: Invalid user token. User is not signed in', this);
+                document.cookie = 'sqwerl-session=0;expires=Thu 01 Jan 1970 00:00:00 GMT';
+                Sqwerl.updateUserSignInStatus();
+                Sqwerl.navigationController.goTo('/', function (response) {
+                  console.error('Unable to show home view after user token invalidated. Response: ' + response);
+                  Sqwerl.handleError(new Error())
+                });
+                break;
+              default:
+                errorCallback(response);
+                break;
+            }
           },
           onSuccess: function (results) {
             controller.nodeFound(path, results, errorCallback);

@@ -119,6 +119,7 @@
 
 .home-view-text {
     line-height: 1em;
+    max-width: 30em;
     padding: 1em 20px 0.35em 20px;
     white-space: nowrap;
 }
@@ -178,7 +179,7 @@
 
 .recent-changes-tooltip {
     background: #e8e815;
-    border: 0;
+    border: 1px solid #a0a0a0;
     border-radius: 5px;
     font: 12px sans-serif;
     height: 3.5em;
@@ -186,7 +187,8 @@
     pointer-events: none;
     position: absolute;
     text-align: center;
-    width: 8em;
+    width: 7em;
+    z-index: 1;
 }
 
 .recent-changes-tooltip::after {
@@ -196,13 +198,29 @@
     bottom: -5px;
     content: "";
     display: block;
-    left: 4em;
+    left: calc(4em - 2px);
     position: absolute;
     width: 0;
 }
 
 .recent-changes-tooltip-from-now {
-    font-size: 7pt;
+    font-size: 8pt;
+}
+
+.recent-changes-tooltip-shadow {
+    position: absolute;
+}
+
+.recent-changes-tooltip-shadow::after {
+    border-color: #a0a0a0 transparent;
+    border-style: solid;
+    border-width: 6px 6px 0;
+    bottom: -6px;
+    content: "";
+    display: block;
+    left: 4em;
+    position: absolute;
+    width: 0;
 }
 
 rect.bar {

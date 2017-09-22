@@ -7,6 +7,8 @@
  */
 Sqwerl.AccountView = SC.TemplateView.create({
 
+  isEnabledBinding: 'Sqwerl.AccountController.isEnabled',
+
   /**
    * Text to display to indicate that a user's account is enabled (hasn't been disabled).
    */
@@ -24,9 +26,24 @@ Sqwerl.AccountView = SC.TemplateView.create({
   isLockedTextBinding: 'Sqwerl.AccountController.isLockedText',
 
   /**
+   * Are we displaying the current user's account?
+   */
+  isMyAccountBinding: 'Sqwerl.AccountController.isMyAccount',
+
+  /**
+   * Is a signed in user viewing this account?
+   */
+  isSignedInBinding: 'Sqwerl.AccountController.isSignedIn',
+
+  /**
    * Text displayed to indicate that a user must change his or her password in order to be able to sign in to Sqwerl.
    */
   mustChangePasswordTextBinding: 'Sqwerl.AccountController.mustChangePasswordText',
+
+  /**
+   * An account's name.
+   */
+  nameBinding: 'Sqwerl.AccountController.name',
 
   /**
    * The name of this user interface view's Handlebars template used to render this view within a web browser.

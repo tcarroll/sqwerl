@@ -17,6 +17,8 @@ Sqwerl.Account = Sqwerl.Thing.extend({
 
   mustChangePassword: SC.Record.attr(Boolean),
 
+  name: SC.Record.attr(String),
+
   user: SC.Record.toOne('Sqwerl.User', {isMaster: SC.NO})
 })
 ;

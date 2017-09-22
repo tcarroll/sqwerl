@@ -2,7 +2,7 @@ $application-bar-background: #0A3815;
 $application-bar-button-background: rgba(0, 100, 0, 0.1);
 $application-bar-menu-button-text-color: #e0ece0;
 $disabled-text-color: #aaaaaa;
-$drop-down-menu-background-color: #f5f5f5;
+$drop-down-menu-background-color: #fdfdfd;
 $invalid-text-color: #cd4e45;
 $menu-button-background-color: #0A3815;
 $menu-button-border-color: #326F32;
@@ -41,6 +41,26 @@ $navigation-scroll-view-background: #DEE6E0;
     }
     to {
         background: #009200;
+    }
+}
+
+@keyframes focus-change-invalid {
+    from {
+        background: rgba(255, 91, 104, 0.02);
+    }
+    to {
+        background: rgba(255, 91, 104, 0.13);
+    }
+}
+
+@keyframes focus-change-valid {
+    from {
+        background: rgba(98, 180, 255, 0);
+        border: 1px solid #edeefc;
+    }
+    to {
+        background: rgba(98, 180, 255, 0.13);
+        border: 1px solid #ddddf1;
     }
 }
 
@@ -283,11 +303,12 @@ body {
     content: "\00d7";
     cursor: pointer;
     font-size: 20pt;
+    font-weight: 100;
     height: 20px;
     overflow: visible;
     padding: 0;
     position: absolute;
-    right: -28px;
+    right: -27px;
     top: 7px;
     width: 24px;
 }
@@ -298,7 +319,7 @@ body {
     cursor: pointer;
     font-size: 20pt;
     height: 20px;
-    left: -17px;
+    left: -18px;
     overflow: visible;
     padding: 0;
     position: absolute;
@@ -651,7 +672,8 @@ p.create-account-text {
         animation: create-account-ok 0.3s 1 ease-out;
         background: none;
         border: none;
-
+        visibility: hidden;
+/*
         &:hover {
             -moz-transition: none;
             -webkit-transition: none;
@@ -663,6 +685,7 @@ p.create-account-text {
             color: #606060;
             cursor: default;
         }
+*/
     }
 
     &.invalid {
@@ -1070,15 +1093,18 @@ p.create-account-text {
 }
 
 .sc-view.sign-in-field-focus {
+    -webkit-transition: opacity 0.3s ease-in;
     padding: 1px;
     border: 1px solid transparent;
     border-radius: 3px;
 
     &.focus {
+        -webkit-animation: focus-change-valid 0.3s ease-in;
         background: rgba(98, 180, 255, 0.13);
         border: 1px solid #ddddf1;
 
         &.invalid {
+            -webkit-animation: focus-change-invalid 0.3s ease-in;
             background: rgba(255, 91, 104, 0.13);
             border: 1px solid #f1b0bd;
         }
@@ -1169,7 +1195,7 @@ p.create-account-text {
     z-index: 1;
 }
 
-.sign-in-create-account {
+.sign-in-hyperlinks {
     color: $link-text-color;
     cursor: pointer;
 
@@ -1218,9 +1244,14 @@ p.create-account-text {
     margin-right: 10px;
 }
 
+.sign-in-forgot-password-link {
+    line-height: 27px;
+    vertical-align: middle;
+}
+
 .sign-in-instructions {
     line-height: 1.2;
-    padding-bottom: 0.5em;
+    padding-bottom: 0.2em;
 }
 
 .sign-in-password-field.sc-text-field-view {

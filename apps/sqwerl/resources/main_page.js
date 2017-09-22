@@ -1591,7 +1591,7 @@ Sqwerl.mainPage = SC.Page.design({
         minimumSize: 250,
 
         detailsBackgroundView: SC.View.design({
-          childViews: ['detailsTitleBar', 'detailsContentView', 'parentNavigatorItemIndicatorStrip'],
+          childViews: ['detailsTitleBar', 'detailsContentView'], // 'parentNavigatorItemIndicatorStrip'],
           classNames: ['details-background-view'],
           layout: { bottom: 0, left: 0, right: 0, top: 0 },
 
@@ -1605,6 +1605,7 @@ Sqwerl.mainPage = SC.Page.design({
             layout: { bottom: 0, left: 0, right: 0, top: Sqwerl.rowHeight },
           }),
 
+          /*
           parentNavigatorItemIndicatorStrip: SC.View.design({
             childViews: ['parentNavigationItemIndicator'],
             classNames: ['parent-navigation-item-indicator-strip'],
@@ -1615,6 +1616,7 @@ Sqwerl.mainPage = SC.Page.design({
               layout: { left: 0, right: 0, top: 0, width: 36 }
             })
           })
+          */
         }),
 
         detailsView: SC.ContainerView.design({
@@ -1797,21 +1799,12 @@ Sqwerl.mainPage = SC.Page.design({
     signOut: function () {
       console.log('User has requested to sign out');
       // TODO - Show user that application is busy signing out.
-      $.post(
-        window.location.protocol + '//' + window.location.host + "/sign-out",
-        {},
-        function onSuccessfulSignOut(result) {
-          console.log('Successfully signed out');
-          Sqwerl.updateUserSignInStatus();
-          Sqwerl.navigationController.goTo('/', function (response) {
-            console.error('Unable to show home view after successful sign out. Response: ' + response);
-          });
-        }
-      ).fail(function (error) {
-        // TODO - Handle sign out failure.
-        console.log('Sign out failed');
+      Sqwerl.signOut(() => {
+        // TODO - Show user that application has finished signing out.
+        this.hide()
+      }, (error) => {
+        console.log('Failed to sign out: ' + (error ? error.toString() : ''));
       });
-      this.hide();
     }
   }),
 
@@ -2313,20 +2306,19 @@ Sqwerl.mainPage = SC.Page.design({
     classNames: ['drop-down-menu'],
 
     contentView: SC.View.create({
-      childViews: 'instructionsPanel email password signInButton'.w(),
+      childViews: 'instructionsPanel email password signInButton forgotPasswordLink help'.w(),
       classNames: ['drop-down-menu-content'],
-
-      email: null,
 
       instructionsPanel: SC.LabelView.create({
         acceptsFirstResponder: NO,
         displayProperties: ['Sqwerl.mainPage.signInDialog.isSignInFailedMessageVisible'],
+        layout: { height: Sqwerl.rowHeight * 1.3, left: 11, right: 0, top: 15, width: 350 },
         render: function (context) {
           if (Sqwerl.mainPage.signInDialog.get('isSignInFailedMessageVisible')) {
             context.addClass('sign-in-failed-instructions');
             context.begin('span').addClass('sign-in-failed-icon').addClass('ti-alert').end();
             context.begin('p').addClass('sign-in-failed-message')
-              .push('Sign in failed! Check your email and password, then try again.').end();
+              .push('Sign in failed! Check your email and password, and try again.').end();
           } else {
             context.removeClass('sign-in-failed-instructions');
             context.begin('p')
@@ -2335,45 +2327,19 @@ Sqwerl.mainPage = SC.Page.design({
             .end()
             .begin('p')
             .addClass('sign-in-instructions')
-            .push('Don\'t have an account? <a class="sign-in-create-account hyperlink" onclick="Sqwerl.mainPage.signInDialog.hide();Sqwerl.mainPage.createAccountDialog.show()">Create an account</a>')
+            .push('Don\'t have an account? <a class="sign-in-hyperlinks hyperlink" onclick="Sqwerl.mainPage.signInDialog.hide();Sqwerl.mainPage.createAccountDialog.show()">Create an account</a>')
             .end();
           }
           return context;
         },
-/*
-        childViews: ['initialInstructions', 'defaultInstructions', 'signInFailedInstructions'],
-*/
-        layout: { height: Sqwerl.rowHeight * 1.5, left: 11, right: 0, top: 15, width: 350 },
         valueBinding: 'Sqwerl.mainPage.signInDialog.isSignInFailedMessageVisible',
-/*
-        initialInstructions: SC.View.create({
-          render: function (context) {
-            context.begin('p')
-              .push('To view all of <b>your</b> things, enter your Sqwerl account\'s')
-              .push(' email address and password.')
-              .end()
-              .begin('p')
-              .push('Don\'t have an account? <a onclick="">Create an account</a>')
-              .end();
-            return context;
-          }
-        }),
-
-        defaultInstructions: SC.PanelPane.create({
-
-        }),
-
-        signInFailedInstructions: SC.PanelPane.create({
-          
-        })
-*/
       }),
 
       email: SC.View.design({
         acceptsFirstResponder: YES,
         childViews: 'emailLabel emailField emailHint'.w(),
         classNames: ['sign-in-field-focus'],
-        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 2), width: 351 },
+        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 1.8), width: 351 },
 
         emailLabel: SC.LabelView.design({
           classNames: ['sign-in-email-label', 'sign-in-field-label'],
@@ -2472,6 +2438,7 @@ Sqwerl.mainPage = SC.Page.design({
                 emailHint.$().hide();
                 if (dialog.get('hasPassword')) {
                   signInButton.$().removeClass('instructions');
+                  signInButton.$().removeClass('invalid');
                   dialog.set('signInButtonText', 'Sign in');
                   dialog.set('allowSignIn', true);
                   dialog.set('wasValid', true);
@@ -2522,7 +2489,7 @@ Sqwerl.mainPage = SC.Page.design({
         acceptsFirstResponder: NO,
         childViews: ['passwordLabel', 'passwordField', 'passwordHint'],
         classNames: 'sign-in-field-focus',
-        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 5), width: 351 },
+        layout: { height: Sqwerl.rowHeight * 2.6, left: 3, top: (Sqwerl.rowHeight * 4.5), width: 351 },
 
         passwordLabel: SC.LabelView.create({
           classNames: ['sign-in-password-label', 'sign-in-field-label'],
@@ -2572,9 +2539,9 @@ Sqwerl.mainPage = SC.Page.design({
                       dialog.signIn();
                     }
                   } else {
-                    signInButton.$().removeClass('instructions');
+                    signInButton.$().addClass('instructions');
                     signInButton.$().addClass('invalid');
-                    dialog.set('signInButtonText', 'Enter your password');
+                    dialog.set('signInButtonText', '');
                     dialog.contentView.password.passwordHint.$().addClass('invalid');
                     dialog.contentView.password.$().addClass('invalid');
                     dialog.set('passwordHintText', 'You must enter your password');
@@ -2594,32 +2561,6 @@ Sqwerl.mainPage = SC.Page.design({
                 handledEvent = YES;
                 dialog.hide();
               }
-/*
-                if (dialog.isValidEmailAddress(email)) {
-                  if (contentView.password.passwordField.get('value').length > 0) {
-                    dialog.set('allowSignIn', true);
-                    signInButton.$().removeClass('instructions');
-                    signInButton.$().removeClass('invalid');
-                    dialog.contentView.password.passwordHint.$().removeClass('invalid');
-                    dialog.contentView.password.$().removeClass('invalid');
-                    if (!dialog.get('wasValid')) {
-                      dialog.set('signInButtonText', 'Sign In');
-                      dialog.set('wasValid', true);
-                    }
-                  } else {
-                    dialog.set('allowSignIn', false);
-                    if (dialog.get('wasValid')) {
-                      dialog.contentView.password.passwordHint.$().addClass('invalid');
-                      dialog.contentView.password.$().addClass('invalid');
-                      dialog.set('passwordHintText', 'You must enter your password');
-                    }
-                  }
-                } else {
-                  signInButton.$().removeClass('instructions');
-                  signInButton.$().addClass('invalid');
-                  dialog.set('signInButtonText', 'Enter your email address');
-                }
-*/
             } else {
               handledEvent = YES;
             }
@@ -2654,13 +2595,12 @@ Sqwerl.mainPage = SC.Page.design({
               dialog.set('wasPasswordEmpty', false);
             } else {
               if (dialog.get('passwordHasLostFocus') || (!dialog.get('wasPasswordEmpty'))) {
-                signInButton.$().removeClass('instructions');
+                signInButton.$().addClass('instructions');
                 signInButton.$().addClass('invalid');
                 dialog.set('allowSignIn', false);
                 dialog.set('passwordHintText', 'You must enter your password');
                 dialog.contentView.password.passwordHint.$().addClass('invalid');
                 dialog.contentView.password.$().addClass('invalid');
-                signInButtonText = isValidEmailAddress ? 'Enter your password' : 'Enter your email address and password';
               }
               dialog.set('wasPasswordEmpty', true);
             }
@@ -2711,7 +2651,7 @@ Sqwerl.mainPage = SC.Page.design({
           }
           return handledEvent;
         },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 8) + 4, width: 330 },
+        layout: { height: Sqwerl.rowHeight, left: 3, top: (Sqwerl.rowHeight * 7.5), width: 351 },
         mouseDown: function (event) {
           var dialog = Sqwerl.mainPage.signInDialog;
           if (dialog.get('allowSignIn')) {
@@ -2745,57 +2685,23 @@ Sqwerl.mainPage = SC.Page.design({
         titleBinding: 'Sqwerl.mainPage.signInDialog.signInButtonText'
       }),
 
-      cancelButton: SC.ButtonView.create({
-        acceptsFirstResponder: YES,
-        classNames: ['sign-in-cancel'],
-        displayProperties: ['Sqwerl.mainPage.signInDialog.cancelButtonText'],
-        keyUp: function (event) {
-          var dialog = Sqwerl.mainPage.signInDialog,
-            handledEvent = NO,
-            keyCode = event.keyCode;
-          if ((keyCode === 13) || (keyCode === 32) || (keyCode === 27)) {
-            handledEvent = YES;
-            if (!dialog.get('isNotSigningIn')) {
-              dialog.contentView.signInButton.$().removeClass('busy');
-              // TODO - Handle canceling signing in.
-            }
-            dialog.set('isNotSigningIn', true);
-            dialog.hide();
-          }
-          return handledEvent;
-        },
-        layout: { height: Sqwerl.rowHeight, left: 10, top: (Sqwerl.rowHeight * 5) + 30 + (Sqwerl.rowHeight * 2), width: 330 },
-        mouseDown: function () {
-          var dialog = Sqwerl.mainPage.signInDialog;
-          if (!dialog.get('isNotSigningIn')) {
-            dialog.contentView.signInButton.$().removeClass('busy');
-            // TODO - Handle canceling signing in.
-          }
-          dialog.set('isNotSigningIn', true);
-          dialog.hide();
-        },
+      forgotPasswordLink: SC.LabelView.create({
+        layout: { height: Sqwerl.rowHeight * 0.75, left: 11, top: (Sqwerl.rowHeight * 8.5) + 11, width: 125 },
         render: function (context) {
-          var labelContext;
-          context.addAttr('role', 'button');
-          context.addClass('sc-button-view').addClass('square').addClass('button').addClass('sc-regular-size');
-          labelContext = context.begin('label');
-          labelContext.addClass('sc-button-label').addClass('sc-regular-size').addClass('ellipsis');
-          /// context.begin('span').addClass('ti-close sign-in-cancel-button-icon').end();
-          context.begin('span').addClass('sign-in-cancel-button-text').push(
-            SC.RenderContext.escapeHTML(Sqwerl.mainPage.signInDialog.get('cancelButtonText')))
-            .end();
-          labelContext.end();
+          context.push('<a class="sign-in-forgot-password-link sign-in-hyperlinks hyperlink">' + this.get('title') + '</a>').end();
           return context;
         },
-        supportsFocusRing: YES,
-        titleBinding: 'Sqwerl.mainPage.signInDialog.cancelButtonText'
+        title: 'Forgot password'
+      }),
+
+      help: SC.LabelView.create({
+        layout: { height: Sqwerl.rowHeight * 0.75, right: 10, top: (Sqwerl.rowHeight * 8.5) + 11, width: 20 },
+        render: function (context) {
+          context.push('<a class="hyperlink">' + this.get('title') + '</a>').end();
+          return context;
+        },
+        title: '?'
       })
-      /*
-       forgotPasswordLink: SC.ButtonView.create({
-       layout: { top: 184, right: 20, height: 36 },
-       title: 'Forgot password?'
-       }),
-       */
     }),
 
     allowSignIn: false,
@@ -2821,8 +2727,6 @@ Sqwerl.mainPage = SC.Page.design({
       }
       return emailHintText.toString();
     },
-
-    cancelButtonText: 'Don\'t sign in',
 
     containsValidEmailAddress: false,
 
@@ -2987,22 +2891,16 @@ Sqwerl.mainPage = SC.Page.design({
       this.contentView.password.$().removeClass('invalid');
       this.contentView.password.passwordField.$().removeClass('invalid');
       this.contentView.signInButton.$().addClass('instructions');
-      this.contentView.cancelButton.$().removeClass('busy');
-      this.set('cancelButtonText', 'Don\'t sign in');
       if (this.isValidEmailAddress(email)) {
         passwordField.becomeFirstResponder();
         passwordField.invokeNext(function () { this.$().addClass('focus'); });
         this.contentView.signInButton.$().removeClass('invalid');
-        this.set('signInButtonText', 'Enter your password');
       } else {
         emailField.becomeFirstResponder();
         emailField.invokeNext(function () { this.$().addClass('focus'); });
         if (email && (email.length > 0)) {
           this.contentView.signInButton.$().addClass('invalid');
           this.contentView.signInButton.$().removeClass('instructions');
-          this.set('signInButtonText', 'Invalid email address. Please fix.');
-        } else {
-          this.set('signInButtonText', 'Enter your email address and password');
         }
       }
       this.set('isNotSigningIn', YES);
@@ -3027,15 +2925,12 @@ Sqwerl.mainPage = SC.Page.design({
 
     signIn: function () {
       var signInButton = this.contentView.signInButton,
-        cancelButton = this.contentView.cancelButton,
         email = this.contentView.email.emailField.get('value'),
         password = this.contentView.password.passwordField.get('value'),
         signInButtonElement = signInButton.$();
       this.set('isNotSigningIn', NO);
       // TODO - Randomly choose this text from a set of choices that reinforce Sqwerl's voice.
       this.set('signInButtonText', 'Signing in. Hold on....');
-      this.set('cancelButtonText', 'Stop signing in');
-      cancelButton.$().addClass('busy');
       signInButtonElement.removeClass('instructions');
       signInButtonElement.removeClass('invalid');
       signInButtonElement.addClass('busy');
@@ -3045,50 +2940,52 @@ Sqwerl.mainPage = SC.Page.design({
       this.contentView.password.passwordLabel.set('isEnabled', false);
       this.contentView.password.passwordField.set('isEnabled', false);
       this.contentView.password.passwordField.$().attr('tabindex', -1);
-      $.post(
-        window.location.protocol + '//' + window.location.host + '/sign-in', {
-          email: email,
-          password: password
-        },
-        function onSuccessfulSignIn(result) {
-          var dialog = Sqwerl.mainPage.signInDialog;
-          Sqwerl.set('userId', result.userId);
-          Sqwerl.set('userName', result.userName);
-          Sqwerl.mainPage.set('userName', result.userName);
-          Sqwerl.set('isSignedIn', true);
-          Sqwerl.token = result;
-          Sqwerl.updateUserSignInStatus();
-          dialog.set('isNotSigningIn', true);
-          dialog.contentView.signInButton.$().removeClass('busy');
-          dialog.hide();
-          Sqwerl.navigationController.goTo('/', function (response) {
-             console.error('Unable to show home view after successful sign in. Response: ' + response);
-          });
-          Sqwerl.mainPage.set('isBusy', false);
-        }
-      ).fail(function (error) {
-        Sqwerl.mainPage.signInDialog.shakeDialog(3, function () {
-          let dialog = Sqwerl.mainPage.signInDialog,
-            view = dialog.contentView;
-          view.email.emailLabel.set('isEnabled', true);
-          view.email.emailField.set('isEnabled', true);
-          view.email.emailField.$().attr('tabindex', 0);
-          view.password.passwordLabel.set('isEnabled', true);
-          view.password.passwordField.set('isEnabled', true);
-          view.password.passwordField.$().attr('tabindex', 0);
-          view.email.emailField.becomeFirstResponder();
-          view.signInButton.$().removeClass('busy');
-          dialog.set('isNotSigningIn', true);
-          dialog.set('signInButtonText', 'Sign in');
-          dialog.set('isSignInFailedMessageVisible', true);
-          Sqwerl.mainPage.set('isBusy', false);
-        });
-      });
+      setTimeout(function () {
+        $.post(
+          window.location.protocol + '//' + window.location.host + '/sign-in', {
+            email: email,
+            password: password
+          },
+          function onSuccessfulSignIn(result) {
+            var dialog = Sqwerl.mainPage.signInDialog;
+            Sqwerl.set('userId', result.userId);
+            Sqwerl.set('userName', result.userName);
+            Sqwerl.mainPage.set('userName', result.userName);
+            Sqwerl.set('isSignedIn', true);
+            Sqwerl.token = result;
+            Sqwerl.updateUserSignInStatus();
+            dialog.set('isNotSigningIn', true);
+            dialog.contentView.signInButton.$().removeClass('busy');
+            dialog.hide();
+            Sqwerl.navigationController.goTo('/', function (response) {
+               console.error('Unable to show home view after successful sign in. Response: ' + response);
+            });
+            Sqwerl.mainPage.set('isBusy', false);
+          }
+        ).fail(function (error) {
+          Sqwerl.mainPage.signInDialog.shakeDialog(3, function () {
+            let dialog = Sqwerl.mainPage.signInDialog,
+              view = dialog.contentView;
+            view.email.emailLabel.set('isEnabled', true);
+            view.email.emailField.set('isEnabled', true);
+            view.email.emailField.$().attr('tabindex', 0);
+            view.password.passwordLabel.set('isEnabled', true);
+            view.password.passwordField.set('isEnabled', true);
+            view.password.passwordField.$().attr('tabindex', 0);
+            view.email.emailField.becomeFirstResponder();
+            view.signInButton.$().removeClass('busy');
+            dialog.set('isNotSigningIn', true);
+            dialog.set('signInButtonText', 'Sign in');
+            dialog.set('isSignInFailedMessageVisible', true);
+            Sqwerl.mainPage.set('isBusy', false);
+          })
+        })
+      }, 500);
     },
 
-    signInButtonText: 'Enter your email address and password',
+    signInButtonText: 'Sign in',
 
-    signInDialogHeight: (Sqwerl.rowHeight * 10) + 40,
+    signInDialogHeight: (Sqwerl.rowHeight * 10),
 
     signInDialogIsVisible: NO,
 

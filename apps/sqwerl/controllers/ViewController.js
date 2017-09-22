@@ -102,6 +102,15 @@ Sqwerl.ViewController = SC.ObjectController.extend({
   },
 
   /**
+   * Is the current user signed in to an account?
+   *
+   * @returns {Boolean} true if the user is signed into an account (authenticated), false if the user is a guest user.
+   */
+  isSignedIn: Sqwerl.property(function () {
+    return Sqwerl.isSignedIn();
+  }),
+
+  /**
    * Does this view's thing has more than one connection (link) to other things?
    *
    * @returns {boolean} true if this view's thing is linked to more than one other thing.

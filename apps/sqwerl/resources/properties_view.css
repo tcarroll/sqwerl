@@ -86,6 +86,8 @@ a:hover {
 }
 
 .properties-title {
+    background: $title-bar-background;
+    border-bottom: $title-bar-bottom-border;
     height: $row-height;
     line-height: $row-height;
     min-width: 100%;

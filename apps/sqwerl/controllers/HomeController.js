@@ -216,15 +216,6 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
     return Sqwerl.anonymousUserName;
   }),
 
-  /**
-   * Is the current user signed in to an account?
-   *
-   * @returns {Boolean} true if the user is signed into an account (authenticated), false if the user is a guest user.
-   */
-  isSignedIn: Sqwerl.property(function () {
-    return Sqwerl.isSignedIn();
-  }),
-
   membersToSort: function (recentChangeIndex) {
     var members = null,
       recentChanges = this.defaultDb.get('recentChanges');
@@ -243,7 +234,7 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
     if (recentChanges) {
       let changes = recentChanges.content;
       let data = [];
-      let formatTime = d3.timeFormat('%B %e, %Y');
+      let formatTime = d3.timeFormat('%b %e, %Y');
       let graph = d3.select('#recent-changes-graph-container');
       let margin = { bottom: 50, left: 60, right: 30, top: 20 };
       let width = 600 - margin.left - margin.right;
@@ -270,6 +261,10 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
       let tooltip = d3.select('body')
         .append('div')
         .attr('class', 'recent-changes-tooltip')
+        .style('opacity', 0);
+      let tooltipShadow = d3.select('body')
+        .append('div')
+        .attr('class', 'recent-changes-tooltip-shadow')
         .style('opacity', 0);
       x.domain([new Date(), d3.timeDay.offset(new Date(), -30)].reverse());
       let histogram = d3.histogram()
@@ -309,9 +304,7 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
         .on('mouseover', function (d) {
           let changeCount = d.changeCount;
           let position = $('#recent-changes-graph-container > svg').position();
-          tooltip.transition()
-            .duration(200)
-            .style('opacity', 0.9);
+          tooltip.transition().duration(500).style('opacity', 0.95);
           tooltip.html(
               '<span class="recent-changes-tooltip-date">' + formatTime(d.x0) + '</span>' +
               '<br/>' +
@@ -321,15 +314,19 @@ Sqwerl.HomeController = Sqwerl.ViewController.create({
               ' ' +
               ((changeCount == 1) ? 'change' : 'changes'))
             .style('left', position.left + x(d.x0) + (x(d.x0) - x(d.x1)) - 1 + 'px')
-            .style('top', Math.max(0, y(changeCount) + position.top - 50) + 'px');
+            .style('top', Math.max(0, y(changeCount) + position.top - 43) + 'px');
+          tooltipShadow.transition().duration(500).style('opacity', 0.95);
+          tooltipShadow.style('left', position.left + x(d.x0) + 3 + 'px')
+            .style('top', Math.max(0, y(changeCount) + position.top + 13) + 'px');
         })
         .on('mouseout', function (d) {
           tooltip.transition().duration(500).style('opacity', 0);
+          tooltipShadow.transition().duration(500).style('opacity', 0);
         });
       svg.append('g')
         .attr('class', 'x-axis home-view-graph-axes')
         .attr('transform', 'translate(' + (margin.left + barWidth) + ',' + (height + margin.top) + ')')
-        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)).tickFormat(d3.timeFormat('%B %e')))
+        .call(d3.axisBottom(x).ticks(d3.timeWeek.every(1)).tickFormat(d3.timeFormat('%b %e')))
         .selectAll('text')
         .style('text-anchor', 'end')
         .attr('dx', '2em')

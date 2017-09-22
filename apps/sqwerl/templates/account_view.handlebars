@@ -1,6 +1,5 @@
 <div class="properties-title">
-    <div class="title-bar-title">{{name}}</div>
-    <div class="title-bar-type">is a user's account</div>
+    <div class="title-bar-title">{{name}}'s Sqwerl Account</div>
     <span class="title-bar-links">
         {{#if hasConnections}}
             <span>with</span>
@@ -16,22 +15,63 @@
 
 <div class="properties-scrollable-content">
     <div class="read-only-label-and-value">
-        <div class="read-only-field-label">Enabled</div>
-        <div class="read-only-field-value">{{isEnabledText}}</div>
+        <div class="read-only-field-label">Is enabled</div>
+        {{#if isMyAccount}}
+            {{#if isEnabled}}
+                <div class="read-only-field-value">{{isEnabledText}}, your account is enabled. You are allowed to sign in.</div>
+            {{else}}
+                <div class="read-only-field-value">{{isEnabledText}}, your account has been disabled. You are not allowed to sigin in .</div>
+            {{/if}}
+        {{else}}
+            {{#if isEnabled}}
+                <div class="read-only-field-value">{{isEnabledText}}, {{name}}'s account is enabled. {{name}} is allowed to sign in.</div>
+            {{else}}
+                <div class="read-only-field-value">{{isEnabledText}}, {{name}}'s account has been disabled. {{name}} is not allowed to sign in.</div>
+            {{/if}}
+        {{/if}}
     </div>
 
     <div class="read-only-label-and-value">
-        <div class="read-only-field-label">Last signed in at:</div>
-        <div class="read-only-field-value">{{lastSignedInTimeText}}</div>
+        <div class="read-only-field-label">Last sign in time</div>
+        {{#if isMyAccount}}
+            <div class="read-only-field-value">You last signed in at {{lastSignedInTimeText}}.</div>
+        {{else}}
+            <div class="read-only-field-value">{{name}} last signed in at {{lastSignedInTimeText}}.</div>
+        {{/if}}
     </div>
 
     <div class="read-only-label-and-value">
-        <div class="read-only-field-label">Locked</div>
-        <div class="read-only-field-value">{{isLockedText}}</div>
+        <div class="read-only-field-label">Is locked</div>
+        {{#if isMyAccount}}
+            {{#if isLocked}}
+                <div class="read-only-field-value">{{isLockedText}}, your account has been locked. You must change your password.</div>
+            {{else}}
+                <div class="read-only-field-value">{{isLockedText}}, your account is not locked.</div>
+            {{/if}}
+        {{else}}
+            {{#if isLocked}}
+                <div class="read-only-field-value">{{isLockedText}}, {{name}}'s account has been locked. {{name}} must change password.</div>
+            {{else}}
+                <div class="read-only-field-value">{{isLockedText}}, {{name}}'s account has not been locked.</div>
+            {{/if}}
+        {{/if}}
     </div>
 
     <div class="read-only-label-and-value">
         <div class="read-only-field-label">Must change password</div>
-        <div class="read-only-field-value">{{mustChangePasswordText}}</div>
+        {{#if isMyAccount}}
+            {{#if mustChangePassword}}
+                <div class="read-only-field-value">{{mustChangePasswordText}}, the next time you sign in you will have to change your password.</div>
+            {{else}}
+                <div class="read-only-field-value">{{mustChangePasswordText}}, you won't have to change your password the next time you sign in.</div>
+            {{/if}}
+            <div class="read-only-field-label"></div>
+        {{else}}
+            {{#if mustChangePassword}}
+                <div class="read-only-field-value">{{mustChangePasswordText}}, {{name}} must change his or her password.</div>
+            {{else}}
+                <div class="read-only-field-value">{{mustChangePasswordText}}, {{name}} doesn't have to change his or her password.</div>
+            {{/if}}
+        {{/if}}
     </div>
 </div>

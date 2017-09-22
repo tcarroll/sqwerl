@@ -21,6 +21,12 @@ Sqwerl.AccountController = Sqwerl.ViewController.create({
     return this.get('isLocked') ? 'Yes' : 'No';
   }),
 
+  isMyAccount: Sqwerl.property(function () {
+    let isSignedIn = this.get('isSignedIn');
+    let user = this.get('user');
+    return isSignedIn && user && (user.id === Sqwerl.userId);
+  }),
+
   mustChangePasswordText: Sqwerl.property(function () {
     return this.get('mustChangePassword') ? 'Yes' : 'No';
   }),

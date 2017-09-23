@@ -19,7 +19,7 @@ function main() {
  * @param {Error} [error] An error that occurred that prevents this application from executing.
  */
 Sqwerl.handleError = function handleError(error) {
-  let stack = (error && error.stack) ? stack : new Error().stack;
+  let stack = (error && error.stack) ? error.stack : new Error().stack;
   SC.error('%@ Nuts! Sqwerl has encountered an error condition that it can\'t recover from.\n%@', this, stack);
   sweetAlert({
     /* confirmButtonColor: 'rgba(0, 40, 0, 0.8)', */
